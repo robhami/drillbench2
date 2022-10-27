@@ -1,0 +1,99 @@
+@font-face {
+  font-family: 'LEMON MILK Regular';
+  font-style: normal;
+  font-weight:  normal;
+  src:  local('LEMON MILK Regular'), url('LEMONMILK-Regular.otf') ;
+}
+
+
+
+h1 {
+  font-family: 'LEMON MILK Regular';
+  font-weight: 200;
+  color: #0ccac4;
+}
+
+
+#topRight {
+  position: absolute;
+  top: 8px;
+  right: 16px;
+  /*font-size: 18px;*/
+}
+
+#nav-link* > .nav-link {
+  margin-top:  21.44px ;
+  color:  green;
+}
+
+
+#DD
+ {
+  margin-top:  21.44px ;
+  width:  400px;
+}
+
+.btn {
+  
+  width:  140px;
+  
+
+}
+
+.form-control {
+
+  float:left;
+    width:140px;
+}
+
+
+.dropdown-menu.show {
+  
+  min-width:  140px;
+  /*padding-right: 0px;*/
+  /*padding-left: 1px;*/
+
+}
+
+.dropdown-item {
+  
+  width:  140px;
+  padding-right: 10px;
+  padding-left: 10px;
+/*  margin-right: -100px;*/
+
+}
+
+#unitsTab > .nav-item > .nav-link {
+
+  width: 90px;
+  border: solid #007BFF 1px ;
+  padding-right: 0px;
+  padding-left: 0px;
+  margin: 0.5px;
+}
+
+#unitsTab > .nav-item > .nav-link > .a {  
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+dt {
+  text-align: left;
+
+} 
+
+.card {
+
+  max-width: 300px;
+  min-width:300px;
+}
+
+ .container {
+
+  padding-top:10px;
+ }
+
+ .card-header {
+    padding: 0px;
+ }
