@@ -15,7 +15,7 @@ const CardList = ({widgets}) => {
 						id={widgets[i].id} 
 						name={widgets[i].name} 
 						image={widgets[i].image}
-						// app={widgets[i].app}
+						app={widgets[i].app}
 						/>
 					
 					

@@ -26,7 +26,7 @@ const Card= ({ name, id, image, app } ) => {
 		        			{/* <div className="handle">Drag from here</div> */}
 							{/* <LockButton onChange={onSlide}/> */}
 							
-							<div> {name} </div>	
+							<div> {app} </div>	
 					</div>	
 		        </Draggable>	
 			</div>
