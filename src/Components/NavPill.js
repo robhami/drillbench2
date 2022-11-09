@@ -2,14 +2,11 @@ import React, {Component} from 'react';
 import Nav from 'react-bootstrap/Nav';
 
 const NavPill = (props) => {
-
-// props passed from UnitCon NavPill element in UnitCon
 	const pillClick = props.pillClick
 	const unitsType = props.unitsType
 
 	return (
 		<>
-{/* create Navlist element that takes pillclick and unitsType props */}
 			<NavList unitsType={unitsType} pillClick={pillClick} activeKey="2"/>
 		</>
 		)
@@ -24,8 +21,7 @@ const NavList = (props) => {
 		return(
 			<>
 				{
-					unitsType.map((unit,i) => {
-						console.log(unit, i)
+					props.unitsType.map((unit,i) => {
 
 						return (
 

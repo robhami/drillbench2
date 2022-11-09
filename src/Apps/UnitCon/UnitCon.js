@@ -4,10 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import Nav from 'react-bootstrap/Nav'
+
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
-import NavPill from './NavPill.js';
+import Nav from 'react-bootstrap/Nav'
+import NavPill from '../../Components/NavPill.js';
 import {unitsType} from '../UnitCon/unitsType.js';
 import UnitsDrop from '../UnitCon/UnitsDrop.js'
 
@@ -22,7 +23,8 @@ class UnitCon extends Component {
 		valToConv: '',
 		result: ''
 	}
- 
+
+//could this be imported as plan to use it on BHA entry as well 
 	pillClick = (event) => {
 	console.log(event) 
 	//reset dd units from and to 

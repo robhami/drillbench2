@@ -83,6 +83,11 @@ dt {
 
 } 
 
+#bhaCard  {
+  max-width: 600px;
+  /*min-width:500px;*/
+ }
+
 .card {
 
   max-width: 300px;
@@ -97,3 +102,9 @@ dt {
  .card-header {
     padding: 0px;
  }
+
+ 
+
+
+
+
