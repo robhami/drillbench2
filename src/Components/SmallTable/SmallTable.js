@@ -8,7 +8,9 @@ const SmallTable=(props)=> {
   console.log(TableHeads)
 
   return (
-    <Table striped bordered hover size="sm">
+    <Table responsive
+    // striped bordered hover size="sm"
+    >
       <thead>
         <tr>
          <TableHeads tableHeadx={tableHeadx}/> 
@@ -24,16 +26,16 @@ const SmallTable=(props)=> {
               </select>
           </td>
           <td>
-            <input/>
+            <input className="numInput"/>
           </td>
           <td>
-            <input/>
+            <input className="numInput"/>
           </td>
           <td>
-            <input/>
+            <input className="numInput"/>
           </td>
           <td>
-            <input/>
+            <input className="numInput"/>
           </td>
 
           

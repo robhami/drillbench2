@@ -84,7 +84,7 @@ dt {
 } 
 
 #bhaCard  {
-  max-width: 600px;
+  max-width: 450px;
   /*min-width:500px;*/
  }
 
@@ -103,8 +103,29 @@ dt {
     padding: 0px;
  }
 
- 
+/* .react-bootstrap-table {
+  max-width: 400px;
+  display: block;
+  width: auto !important;
+  overflow: auto;
+ }*/
 
+.numInput {
+  width:50px;
+  padding: 0px;
+}
 
+th {
+  padding: 0px !important;
+  width: 20px !important;
+}
 
+td {
+  padding: 0px !important;
+ /*max-width: 20px !important;*/
+}
+
+table {
+  /*table-layout: fixed;*/
+}
 

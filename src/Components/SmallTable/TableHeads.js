@@ -14,6 +14,7 @@ const TableHeads=(props)=> {
         return (
 
           <th 
+          
           key={i}
           id={tableHeadx[i].id}
           name={tableHeadx[i].name}
