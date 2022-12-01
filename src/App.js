@@ -12,8 +12,8 @@ class App extends Component {
    state = {
     widgets: widgets,
     searchfield: []
+  
   }
-
 
   onChange = (event) => { 
     console.log(event)
@@ -44,7 +44,6 @@ class App extends Component {
           <CardList widgets={filteredWidgets}/> 
           {/* <MyFirstGrid/> */}
         </Scroll>
-        <UnitCon/>
       </div>
     )       
   } 

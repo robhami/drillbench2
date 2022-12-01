@@ -1,6 +1,7 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
 import TableHeads from './TableHeads.js';
+import Form from 'react-bootstrap/Form';
 
 const SmallTable=(props)=> {
   console.log(props)
@@ -21,9 +22,9 @@ const SmallTable=(props)=> {
         <tr>
           <td>1</td>
           <td>
-            <select id="toolDD" value="tool" onchange="DD(this.selectedIndex, this.id)" required >
-                  <option value="pend" disabled selected="true" >Select Tool</option>
-              </select>
+            <Form.Select className="numInput" size="sm" aria-label="Default select example">
+                  <option >Select Tool</option>
+              </Form.Select>
           </td>
           <td>
             <input className="numInput"/>

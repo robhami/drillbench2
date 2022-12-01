@@ -111,18 +111,19 @@ dt {
  }*/
 
 .numInput {
-  width:50px;
+  width:40px;
   padding: 0px;
+  height: 31px;
 }
 
 th {
   padding: 0px !important;
-  width: 20px !important;
+  max-width: 40px !important;
 }
 
 td {
   padding: 0px !important;
- /*max-width: 20px !important;*/
+ min-width: 20px !important;
 }
 
 table {

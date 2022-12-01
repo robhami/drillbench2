@@ -7,24 +7,26 @@ import Nav from 'react-bootstrap/Nav'
 import NavPill from '../../Components/NavPill.js';
 import {toolType} from './toolType.js';
 import {tableHeadObj} from './tableHeadObj.js';
-import SmallTable from '../../Components/SmallTable/SmallTable.js'
+import SmallTable from '../../Components/SmallTable/SmallTable.js';
+import DDTool from '../../Components/DDTool.js';
 
 // const BHAEntry = (props) => {
 class BHAEntry extends Component {
 
 
 
-pillClick = (event) => {
-	console.log(event) 
+DDClick = event => {
+	console.log(event.target.value) 
 	//reset dd units from and to 
 		// this.setState({ddHeadUnitsFrom: 'Units From'})	
 		// this.setState({ddHeadUnitsTo: 'Units To'})
-	// get name of pill clicked 
-// 	 	let unitSelect = event.target.id
-// 	 	console.log(unitSelect)
+	//get name of pill clicked 
+	 	let unitSelect = event.target.value
+	 	console.log(unitSelect)
 // 
 // 	 	this.createUnitsObject(unitSelect)
 	}
+
 	render() {
 
 		return (
@@ -35,12 +37,10 @@ pillClick = (event) => {
 						 <Card.Header>
 							<h2>BHA Entry</h2>
 							<dt> Select Tool Type: </dt>
-							<Nav variant="pills" id="unitsTab" defaultActiveKey="0">		
-								{/* get unitsType from imported text array file, add pillClick function, these are passed as props to NavPill component*/}
-								<NavPill unitsType={toolType} 
-								pillClick={this.pillClick}
+							<DDTool unitsType={toolType} 
+								DDClick={this.DDClick}
 								/>
-							</Nav>
+							
 							
 						</Card.Header>
 				
@@ -50,7 +50,7 @@ pillClick = (event) => {
 						<dt> Select BHA Components: </dt>
 							
 						<SmallTable tableHeadObj={tableHeadObj}/>			
-
+						
 				</Card.Body>
 			</Card>
 		</Container>

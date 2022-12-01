@@ -9,10 +9,10 @@ class Navbar extends Component {
      
 		  	<Nav
 			  activeKey="/home"
-			  onSelect={(selectedKey) => alert(`selected ${selectedKey}`)}
+			  // onSelect={(selectedKey) => alert(`selected={true}`)}
 			>
 
-				<h1 >drillBenchx</h1>
+				<h1 >drillBenchX</h1>
 			  	<Nav.Item>
 				    <Nav.Link href="/home">Active</Nav.Link>
 			  	</Nav.Item>

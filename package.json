@@ -6,6 +6,8 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "ag-grid-community": "^28.2.1",
+    "ag-grid-react": "^28.2.1",
     "bootstrap": "^5.2.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.6.0",
@@ -20,8 +22,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "node-env-run server --exec nodemon | pino-colada",
+    "dev": "run-p server start"
   },
+  "proxy": "http://localhost:3001",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -39,5 +44,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "express-pino-logger": "^7.0.0",
+    "node-env-run": "^4.0.2",
+    "nodemon": "^2.0.20",
+    "npm-run-all": "^4.1.5",
+    "pino-colada": "^2.2.2"
   }
 }
