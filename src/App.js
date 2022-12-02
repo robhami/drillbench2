@@ -4,7 +4,8 @@ import {widgets} from './widgets';
 import './App.css';
 import Navbar from './Navbar.js'
 import Scroll from './Scroll.js'
-import SearchDrop from './SearchDrop.js'
+import SearchDrop from './SearchDrop.js';
+import UnitCon from './Apps/UnitCon/UnitCon.js';
 
 class App extends Component {
  
@@ -43,7 +44,7 @@ class App extends Component {
           <CardList widgets={filteredWidgets}/> 
           {/* <MyFirstGrid/> */}
         </Scroll>
-        {/* <UnitCon/> */}
+        <UnitCon/>
       </div>
     )       
   } 

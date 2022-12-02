@@ -1,6 +1,6 @@
 import React from 'react';
-// import UnitCon from '../components/UnitCon/UnitCon.js';
-// import BHADrag from '../components/BHADrag/BHADrag.js';
+import UnitCon from './Apps/UnitCon/UnitCon.js';
+import BHAEntry from './Apps/BHAEntry/BHAEntry.js';
 // import MyFirstGrid from '../components/BHADrag/MyFirstGrid.js';
 
 export const widgets = [
@@ -10,7 +10,7 @@ export const widgets = [
 		name: 'Units Converter',
 		image: 'https://cdn.iconscout.com/icon/free/png-128/emi-calculator-1795294-1522560.png',
 		value: 'Units Converter',
-		// app: <UnitCon/>
+		app: <UnitCon/>
 		
 	},
 
@@ -19,7 +19,7 @@ export const widgets = [
 		name: 'BHA entry',
 		image: 'https://cdn.iconscout.com/icon/premium/png-128-thumb/oil-well-6-1049520.png',
 		value: 'BHA entry',
-		// app: <BHADrag/>
+		app: <BHAEntry/>
 
 	},
 
