@@ -22,13 +22,11 @@ const Card= ({ name, id, image, app } ) => {
 		         <Draggable 
 		         	disabled={!checked}
 			        >
-		        	<div 
-		        	className='bg-light-green dib br3 pa3 ma2 grow bw shadow-5'
-		        	>	
+		        	<div className='bg-light-green dib br3 pa3 ma2 grow bw shadow-5'>	
 		        			{/* <div className="handle">Drag from here</div> */}
 							{/* <LockButton onChange={onSlide}/> */}
 							
-							<div> {app} </div>	
+							<div> {name} </div>	
 					</div>	
 		        </Draggable>	
 			</div>
