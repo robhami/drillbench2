@@ -1,10 +1,25 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const pino = require('express-pino-logger')();
-
 const app = express();
+const cors = require('cors');
+
+
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(pino);
+
+const knex = require ('knex')
+
+const dbTool =knex({
+    client: 'pg',
+    connection: {
+    host : '127.0.0.1',
+    user : 'postgres',
+    password : 'Elodie2005',
+    database : 'tooldata'
+  }
+});
 
 app.get('/api/greeting', (req, res) => {
   const name = req.query.name || 'World';
@@ -18,28 +33,3 @@ app.listen(3001, () =>
 
 
 
-// const path = require("path")
-// const express = require("express");
-// const app = express(); // create express app
-// 
-// // app.get("/", (req, res) => {
-// //   res.send("This is from express.js");
-// // });
-// 
-// 
-// app.use(express.static(path.join(__dirname, "..",  "build")));
-// app.use(express.static("public"));
-// 
-// 
-// app.use((req, res, next) => {
-//   res.sendFile(path.join(__dirname, "..", "build", "index.html"));
-// });
-// 
-// // app.get("/", (req, res) => {
-// //   res.sendFile(path.join( __dirname, "..", "public", "index.html"));
-// // });
-// 
-// // start express server on port 5000
-// app.listen(5000, () => {
-//   console.log("server started on port 5000");
-// });

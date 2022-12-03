@@ -25,6 +25,16 @@ class App extends Component {
     this.setState({searchfield: searchArray}) 
   }
 
+
+
+
+
+
+
+
+
+  
+
   render(){
     const {widgets, searchfield} = this.state
     const filteredWidgets = widgets.filter(widget=>{
