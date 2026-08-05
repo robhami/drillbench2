@@ -1,7 +1,7 @@
 import React from 'react';
 import UnitCon from './Apps/UnitCon/UnitCon.js';
 import BHAEntry from './Apps/BHAEntry/BHAEntry.js';
-import AppMatrix from './Apps/AppMatrix/AppMatrix.js';
+// import AppMatrix from './Apps/AppMatrix/AppMatrix.js';
 // import MyFirstGrid from '../components/BHADrag/MyFirstGrid.js';
 
 export const widgets = [
@@ -33,7 +33,7 @@ export const widgets = [
 	},
 
 
-	{
+	/*{
 		id: 3,
 		name: 'App Matrix',
 		image: 'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
@@ -41,7 +41,7 @@ export const widgets = [
 		app: <AppMatrix/>
 	},
 
-
+*/
 
 
 
