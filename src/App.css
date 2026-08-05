@@ -1,11 +1,9 @@
 @font-face {
   font-family: 'LEMON MILK Regular';
   font-style: normal;
-  font-weight:  normal;
-  src:  local('LEMON MILK Regular'), url('LEMONMILK-Regular.otf') ;
+  font-weight: normal;
+  src: local('LEMON MILK Regular'), url('LEMONMILK-Regular.otf');
 }
-
-
 
 h1 {
   font-family: 'LEMON MILK Regular';
@@ -13,120 +11,195 @@ h1 {
   color: #0ccac4;
 }
 
-
 #topRight {
   position: absolute;
   top: 8px;
   right: 16px;
-  /*font-size: 18px;*/
 }
 
-#nav-link* > .nav-link {
-  margin-top:  21.44px ;
-  color:  green;
-}
-
-
-#DD
- {
-  margin-top:  21.44px ;
-  width:  400px;
-}
-
-.btn {
-  
-  width:  140px;
-  
-
+#DD {
+  margin-top: 21.44px;
+  width: 400px;
 }
 
 .form-control {
-
-  float:left;
-    width:140px;
+  float: left;
+  width: 140px;
 }
 
-
 .dropdown-menu.show {
-  
-  min-width:  140px;
-  /*padding-right: 0px;*/
-  /*padding-left: 1px;*/
-
+  min-width: 140px;
 }
 
 .dropdown-item {
-  
-  width:  140px;
+  width: 140px;
   padding-right: 10px;
   padding-left: 10px;
-/*  margin-right: -100px;*/
-
 }
 
 #unitsTab > .nav-item > .nav-link {
-
   width: 90px;
-  border: solid #007BFF 1px ;
-  padding-right: 0px;
-  padding-left: 0px;
+  border: solid #007bff 1px;
+  padding-right: 0;
+  padding-left: 0;
   margin: 0.5px;
 }
 
-#unitsTab > .nav-item > .nav-link > .a {  
-  padding-right: 0px;
-  padding-left: 0px;
+#unitsTab > .nav-item > .nav-link > .a {
+  padding-right: 0;
+  padding-left: 0;
 }
 
 dt {
   text-align: left;
-
-} 
-
-#bhaCard  {
-  max-width: 450px;
-  /*min-width:500px;*/
- }
-
-.card {
-
-  max-width: 300px;
-  min-width:300px;
 }
 
- .container {
+.container {
+  padding-top: 10px;
+}
 
-  padding-top:10px;
- }
+.card-header {
+  padding: 0;
+}
 
- .card-header {
-    padding: 0px;
- }
+/* BHA Builder */
 
-/* .react-bootstrap-table {
-  max-width: 400px;
-  display: block;
-  width: auto !important;
-  overflow: auto;
- }*/
+#bhaCard {
+  width: 950px;
+  max-width: 95vw;
+}
 
-.numInput {
-  width:40px;
-  padding: 0px;
+#bhaCard .card-body {
+  overflow-x: auto;
+}
+
+#bhaCard table {
+  min-width: 900px;
+}
+
+#bhaCard th,
+#bhaCard td {
+  padding: 4px !important;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+#bhaCard select {
+  min-width: 120px;
+}
+
+#bhaCard .numInput {
+  width: 85px;
+  min-width: 85px;
   height: 31px;
+  padding: 2px 6px;
+  text-align: right;
 }
 
-th {
-  padding: 0px !important;
-  max-width: 40px !important;
+#bhaCard .btn {
+  width: auto;
 }
 
-td {
-  padding: 0px !important;
- min-width: 20px !important;
+#bhaCard table {
+  width: 100%;
+  table-layout: fixed;
 }
 
-table {
-  /*table-layout: fixed;*/
+#bhaCard th {
+  text-align: center;
+  vertical-align: middle;
 }
 
+#bhaCard td {
+  vertical-align: middle;
+}
+
+#bhaCard th:nth-child(1),
+#bhaCard td:nth-child(1) {
+  width: 40px;
+  text-align: center;
+}
+
+#bhaCard th:nth-child(2),
+#bhaCard td:nth-child(2) {
+  width: 120px;
+}
+
+#bhaCard th:nth-child(3),
+#bhaCard td:nth-child(3) {
+  width: 285px;
+}
+
+#bhaCard th:nth-child(4),
+#bhaCard td:nth-child(4),
+#bhaCard th:nth-child(5),
+#bhaCard td:nth-child(5),
+#bhaCard th:nth-child(6),
+#bhaCard td:nth-child(6),
+#bhaCard th:nth-child(7),
+#bhaCard td:nth-child(7) {
+  width: 95px;
+}
+
+#bhaCard th:nth-child(8),
+#bhaCard td:nth-child(8) {
+  width: 50px;
+  text-align: center;
+}
+
+#bhaCard select,
+#bhaCard input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#bhaCard input[type="number"] {
+  text-align: right;
+  padding-right: 8px;
+}
+
+#bhaCard .btn-outline-danger {
+  width: 28px;
+  height: 32px;
+  padding: 0;
+}
+
+#bhaCard .btn-outline-primary {
+  display: block;
+  margin: 16px 0 0;
+}
+
+#bhaCard .bhaDragHandle {
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  padding: 2px 6px;
+  font-size: 18px;
+  line-height: 1;
+  color: #6c757d;
+  touch-action: none;
+}
+
+#bhaCard .bhaDragHandle:active {
+  cursor: grabbing;
+}
+
+#bhaCard th:first-child,
+#bhaCard td:first-child {
+  width: 36px;
+  text-align: center;
+}
+
+
+#bhaCard .bhaDetails {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+#bhaCard .bhaDetails .form-control {
+  width: 100%;
+  float: none;
+}

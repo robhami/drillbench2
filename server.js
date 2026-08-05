@@ -5,7 +5,7 @@ const cors = require('cors');
 // const c = require ('./public/script.js');
 
 // console.log(c.saveObject);
-
+require("dotenv").config();
 app.use(cors());
 app.use(bodyParser.json());
 // app.use(express.static(__dirname + '/Public'))
@@ -21,24 +21,26 @@ app.use(bodyParser.json());
 const knex = require ('knex') 
 
 
-const db  = knex({
-  	client: 'pg',
-  	connection: {
-    host : '127.0.0.1',
-    user : 'postgres',
-    password : 'Elodie2005',
-    database : 'bhadata'
+const db = knex({
+  client: 'pg',
+  connection: {
+    host: process.env.BHA_DB_HOST || '127.0.0.1',
+    port: process.env.BHA_DB_PORT || 5432,
+    user: process.env.BHA_DB_USER,
+    password: process.env.BHA_DB_PASSWORD,
+    database: process.env.BHA_DB_NAME
   }
 });
 
-const dbTool =knex({
-  	client: 'pg',
-  	connection: {
-    host : '127.0.0.1',
-    user : 'postgres',
-    password : 'Elodie2005',
-    database : 'tooldata'
-  }
+const dbTool = knex({
+    client: 'pg',
+    connection: {
+        host: process.env.DB_HOST || '127.0.0.1',
+        port: process.env.DB_PORT || 5432,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DB_NAME
+    }
 });
 
 
@@ -214,6 +216,23 @@ app.get('/rename',(req,res) => {
 			res.json(response)
 		})
 })
+
+app.get('/api/health', async (req, res) => {
+    try {
+        await dbTool.raw('select 1');
+
+        res.json({
+            server: 'running',
+            database: 'connected'
+        });
+    } catch (err) {
+        res.status(500).json({
+            server: 'running',
+            database: 'disconnected',
+            error: err.message
+        });
+    }
+});
 
 app.listen(3000, ()=>{
 	console.log('app is running on port 3000');
