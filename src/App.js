@@ -17,30 +17,24 @@ class App extends Component {
 
   onChange = (event) => { 
     console.log(event)
+    console.log(event.length)
     let x
     let searchArray=[]
-    for (x=0;x<event.length;x++){
+    for (x=0;x<(event.length);x++){
       searchArray.push(event[x].value)
+      console.log(searchArray)
     }
     this.setState({searchfield: searchArray}) 
   }
 
-
-
-
-
-
-
-
-
-  
 
   render(){
     const {widgets, searchfield} = this.state
     const filteredWidgets = widgets.filter(widget=>{
       return (    
         this.state.searchfield.includes(widget.value)
-      )     
+      )  
+      console.log(filteredWidgets)   
     })
     
     return !widgets.length ?

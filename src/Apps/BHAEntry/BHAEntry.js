@@ -14,6 +14,15 @@ import DDTool from '../../Components/DDTool.js';
 class BHAEntry extends Component {
 
 
+	state = {
+		units: [],
+		unitsFrom: '',
+		unitsTo: '',
+		ddHeadUnitsFrom: 'Units From',
+		ddHeadUnitsTo: 'Units To',
+		valToConv: '',
+		result: ''
+	}
 
 DDClick = event => {
 	console.log(event.target.value) 
@@ -35,7 +44,7 @@ DDClick = event => {
 				{/* <Card > */}
 					<Card id="bhaCard" className="text-center">
 						 <Card.Header>
-							<h2>BHA Entry</h2>
+							<h2>BHAx Entry</h2>
 							<dt> Select Tool Type: </dt>
 							<DDTool unitsType={toolType} 
 								DDClick={this.DDClick}

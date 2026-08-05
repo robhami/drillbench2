@@ -1,6 +1,7 @@
 import React from 'react';
 import UnitCon from './Apps/UnitCon/UnitCon.js';
 import BHAEntry from './Apps/BHAEntry/BHAEntry.js';
+import AppMatrix from './Apps/AppMatrix/AppMatrix.js';
 // import MyFirstGrid from '../components/BHADrag/MyFirstGrid.js';
 
 export const widgets = [
@@ -27,16 +28,17 @@ export const widgets = [
 		id: 2,
 		name: 'Parameter entry',
 		image: 'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
-		value: 'Parameter entry'
+		value: 'Parameter entry',
+		// app: <AppMatrix/>
 	},
 
 
 	{
 		id: 3,
-		name: 'BHA Builder',
+		name: 'App Matrix',
 		image: 'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
-		value: 'BHA Builder',
-		// app: <MyFirstGrid/>
+		value: 'App Matrix',
+		app: <AppMatrix/>
 	},
 
 
