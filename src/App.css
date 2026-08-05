@@ -203,3 +203,27 @@ dt {
   width: 100%;
   float: none;
 }
+
+#bhaCard .wellDetails,
+#bhaCard .bhaDetails {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+  text-align: left;
+}
+
+#bhaCard .wellDetails {
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+#bhaCard .bhaDetails {
+  margin-bottom: 16px;
+}
+
+#bhaCard .wellDetails .form-control,
+#bhaCard .bhaDetails .form-control {
+  float: none;
+  width: 100%;
+}

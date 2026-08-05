@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 
-import SmallTable from '../../Components/SmallTable/SmallTable.js';
+import BHABuilder from '../../Components/BHABuilder/BHABuilder.js';
 
 class BHAEntry extends Component {
   render() {
@@ -14,7 +14,7 @@ class BHAEntry extends Component {
           </Card.Header>
 
           <Card.Body>
-            <SmallTable />
+            <BHABuilder />
           </Card.Body>
         </Card>
       </Container>

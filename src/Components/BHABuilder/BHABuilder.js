@@ -196,14 +196,31 @@ const SortableRow = ({
 };
 
 const SmallTable = () => {
-  const [bha, setBha] = useState({
+ const [well, setWell] = useState({
   name: '',
-  holeSize: '',
-  mudWeight: '',
-  rows: [createEmptyRow()]
+  field: '',
+  operator: '',
+  currentBha: {
+    name: '',
+    holeSize: '',
+    mudWeight: '',
+    rows: [createEmptyRow()]
+  }
 });
 
+const bha = well.currentBha;
 const rows = bha.rows;
+
+
+const updateBha = (bhaChanges) => {
+  setWell((currentWell) => ({
+    ...currentWell,
+    currentBha: {
+      ...currentWell.currentBha,
+      ...bhaChanges
+    }
+  }));
+};
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -217,65 +234,125 @@ const rows = bha.rows;
   );
 
   const updateRow = (rowId, changes) => {
-  setBha((currentBha) => ({
-    ...currentBha,
-    rows: currentBha.rows.map((row) =>
-      row.rowId === rowId
-        ? { ...row, ...changes }
-        : row
-    )
+  setWell((currentWell) => ({
+    ...currentWell,
+    currentBha: {
+      ...currentWell.currentBha,
+      rows: currentWell.currentBha.rows.map((row) =>
+        row.rowId === rowId
+          ? { ...row, ...changes }
+          : row
+      )
+    }
   }));
 };
 
  const addRow = () => {
-  setBha((currentBha) => ({
-    ...currentBha,
-    rows: [
-      ...currentBha.rows,
-      createEmptyRow()
-    ]
+  setWell((currentWell) => ({
+    ...currentWell,
+    currentBha: {
+      ...currentWell.currentBha,
+      rows: [
+        ...currentWell.currentBha.rows,
+        createEmptyRow()
+      ]
+    }
   }));
 };
 
   const removeRow = (rowId) => {
-  setBha((currentBha) => ({
-    ...currentBha,
-    rows:
-      currentBha.rows.length === 1
-        ? currentBha.rows
-        : currentBha.rows.filter(
-            (row) => row.rowId !== rowId
-          )
+  setWell((currentWell) => ({
+    ...currentWell,
+    currentBha: {
+      ...currentWell.currentBha,
+      rows:
+        currentWell.currentBha.rows.length === 1
+          ? currentWell.currentBha.rows
+          : currentWell.currentBha.rows.filter(
+              (row) => row.rowId !== rowId
+            )
+    }
   }));
 };
 
-   const handleDragEnd = ({ active, over }) => {
-    if (!over || active.id === over.id) {
-      return;
-    }
+  const handleDragEnd = ({ active, over }) => {
+  if (!over || active.id === over.id) {
+    return;
+  }
 
-    setBha((currentBha) => {
-      const oldIndex = currentBha.rows.findIndex(
-        (row) => row.rowId === active.id
-      );
+  setWell((currentWell) => {
+    const currentRows = currentWell.currentBha.rows;
 
-      const newIndex = currentBha.rows.findIndex(
-        (row) => row.rowId === over.id
-      );
+    const oldIndex = currentRows.findIndex(
+      (row) => row.rowId === active.id
+    );
 
-      return {
-        ...currentBha,
-        rows: arrayMove(
-          currentBha.rows,
-          oldIndex,
-          newIndex
-        )
-      };
-    });
-  };
+    const newIndex = currentRows.findIndex(
+      (row) => row.rowId === over.id
+    );
+
+    return {
+      ...currentWell,
+      currentBha: {
+        ...currentWell.currentBha,
+        rows: arrayMove(currentRows, oldIndex, newIndex)
+      }
+    };
+  });
+};
 
   return (
     <>
+<div className="wellDetails">
+  <Form.Group>
+    <Form.Label>Well Name</Form.Label>
+    <Form.Control
+      type="text"
+      placeholder="e.g. Demo Well A"
+      value={well.name}
+      onChange={(event) =>
+        setWell((currentWell) => ({
+          ...currentWell,
+          name: event.target.value
+                }
+              )
+            )
+        }
+
+    />
+  </Form.Group>
+
+  <Form.Group>
+    <Form.Label>Field</Form.Label>
+    <Form.Control
+      type="text"
+      placeholder="e.g. Demo Field"
+      value={well.field}
+      onChange={(event) =>
+        setWell((currentWell) => ({
+          ...currentWell,
+          field: event.target.value
+        }))
+      }
+    />
+  </Form.Group>
+
+  <Form.Group>
+    <Form.Label>Operator</Form.Label>
+    <Form.Control
+      type="text"
+      placeholder="e.g. Demo Operator"
+      value={well.operator}
+      onChange={(event) =>
+        setWell((currentWell) => ({
+          ...currentWell,
+          operator: event.target.value
+        }))
+      }
+    />
+  </Form.Group>
+</div>
+
       <div className="bhaDetails">
         <Form.Group>
           <Form.Label>BHA Name</Form.Label>
@@ -284,10 +361,9 @@ const rows = bha.rows;
             placeholder='e.g. 8½" Production BHA'
             value={bha.name}
             onChange={(event) =>
-              setBha((currentBha) => ({
-                ...currentBha,
-                name: event.target.value
-              }))
+              updateBha({
+              name: event.target.value
+               })
             }
           />
         </Form.Group>
@@ -299,11 +375,10 @@ const rows = bha.rows;
             step="any"
             value={bha.holeSize}
             onChange={(event) =>
-              setBha((currentBha) => ({
-                ...currentBha,
-                holeSize: event.target.value
-              }))
-            }
+              updateBha({
+              holeSize: event.target.value
+            })
+          }
           />
         </Form.Group>
 
@@ -313,11 +388,10 @@ const rows = bha.rows;
             type="number"
             step="any"
             value={bha.mudWeight}
-            onChange={(event) =>
-              setBha((currentBha) => ({
-                ...currentBha,
-                mudWeight: event.target.value
-              }))
+           onChange={(event) =>
+              updateBha({
+              mudWeight: event.target.value
+             })
             }
           />
         </Form.Group>
@@ -373,5 +447,6 @@ const rows = bha.rows;
     </>
   );
 };
+
 
 export default SmallTable;
