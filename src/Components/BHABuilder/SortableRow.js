@@ -3,11 +3,10 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-
-import { toolLibrary } from '../../Apps/BHAEntry/toolLibrary.js';
+import componentLibraryData from '../../data/components.json';
 import { toolType } from '../../Apps/BHAEntry/toolType.js';
 
-
+const componentLibrary = componentLibraryData.components;
 const SortableRow = ({
   row,
   index,
@@ -33,7 +32,7 @@ const SortableRow = ({
     backgroundColor: isDragging ? '#f8f9fa' : undefined
   };
 
-  const availableTools = toolLibrary.filter(
+  const availableTools = componentLibrary.filter(
     (tool) => tool.category === row.category
   );
 
@@ -49,7 +48,7 @@ const SortableRow = ({
   };
 
   const handleToolChange = (toolId) => {
-    const selectedTool = toolLibrary.find(
+    const selectedTool = componentLibrary.find(
       (tool) =>
         tool.category === row.category &&
         String(tool.id) === toolId
@@ -142,15 +141,15 @@ const SortableRow = ({
         <td key={field}>
           <input
             className="numInput"
-            type="number"
-            step="any"
+            type="text"
+            inputMode="decimal"
             value={value}
             onChange={(event) =>
-              updateRow(row.rowId, {
+                updateRow(row.rowId, {
                 [field]: event.target.value
-              })
+                })
             }
-          />
+            />
         </td>
       ))}
 

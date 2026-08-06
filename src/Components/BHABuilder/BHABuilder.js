@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import BHASummary from '../BHASummary/BHASummary.js';
 
 import {
   DndContext,
@@ -213,8 +214,8 @@ const updateBha = (bhaChanges) => {
         <Form.Group>
           <Form.Label>Hole Size (in)</Form.Label>
           <Form.Control
-            type="number"
-            step="any"
+            type="text"
+            inputMode="decimal"
             value={bha.holeSize}
             onChange={(event) =>
               updateBha({
@@ -227,8 +228,8 @@ const updateBha = (bhaChanges) => {
         <Form.Group>
           <Form.Label>Mud Weight (ppg)</Form.Label>
           <Form.Control
-            type="number"
-            step="any"
+            type="text"
+            inputMode="decimal"
             value={bha.mudWeight}
            onChange={(event) =>
               updateBha({
@@ -286,6 +287,14 @@ const updateBha = (bhaChanges) => {
       >
         + Add Component
       </Button>
+
+      <BHASummary bha={bha} />
+
+
+
+
+
+
     </>
   );
 };

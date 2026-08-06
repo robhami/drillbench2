@@ -1,4 +1,4 @@
-export const toolLibrary = [
+export const componentLibrary = [
   {
     id: 1,
     category: 'DP',

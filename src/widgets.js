@@ -41,8 +41,8 @@ export const widgets = [
 		app: <AppMatrix/>
 	},
 
-*/
 
+	*/
 
 
 
