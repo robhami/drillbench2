@@ -8,163 +8,162 @@ import { toolType } from '../../Apps/BHAEntry/toolType.js';
 
 const componentLibrary = componentLibraryData.components;
 const SortableRow = ({
-  row,
-  index,
-  rowsLength,
-  updateRow,
-  removeRow
+    row,
+    index,
+    rowsLength,
+    updateRow,
+    removeRow
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({
-    id: row.rowId
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.6 : 1,
-    backgroundColor: isDragging ? '#f8f9fa' : undefined
-  };
-
-  const availableTools = componentLibrary.filter(
-    (tool) => tool.category === row.category
-  );
-
-  const handleCategoryChange = (category) => {
-    updateRow(row.rowId, {
-      category,
-      selectedToolId: '',
-      od: '',
-      idSize: '',
-      weight: '',
-      length: ''
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging
+    } = useSortable({
+        id: row.rowId
     });
-  };
 
-  const handleToolChange = (toolId) => {
-    const selectedTool = componentLibrary.find(
-      (tool) =>
-        tool.category === row.category &&
-        String(tool.id) === toolId
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.6 : 1,
+        backgroundColor: isDragging ? '#f8f9fa' : undefined
+    };
+
+    const availableTools = componentLibrary.filter(
+        (tool) => tool.category === row.category
     );
 
-    if (!selectedTool) {
-      updateRow(row.rowId, {
-        selectedToolId: '',
-        od: '',
-        idSize: '',
-        weight: '',
-        length: ''
-      });
+    const handleCategoryChange = (category) => {
+        updateRow(row.rowId, {
+            category,
+            selectedToolId: '',
+            od: '',
+            idSize: '',
+            weight: '',
+            length: ''
+        });
+    };
 
-      return;
-    }
+    const handleToolChange = (toolId) => {
+        const selectedTool = componentLibrary.find(
+            (tool) =>
+                tool.category === row.category &&
+                String(tool.id) === toolId
+        );
 
-    updateRow(row.rowId, {
-      selectedToolId: toolId,
-      od: selectedTool.od ?? '',
-      idSize: selectedTool.idSize ?? '',
-      weight: selectedTool.weight ?? '',
-      length: selectedTool.length ?? ''
-    });
-  };
+        if (!selectedTool) {
+            updateRow(row.rowId, {
+                selectedToolId: '',
+                od: '',
+                idSize: '',
+                weight: '',
+                length: ''
+            });
 
-  return (
-    <tr ref={setNodeRef} style={style}>
-      <td>
-        <button
-          type="button"
-          className="bhaDragHandle"
-          aria-label={`Move component ${index + 1}`}
-          {...attributes}
-          {...listeners}
-        >
-          ☰
-        </button>
-      </td>
+            return;
+        }
 
-      <td>{index + 1}</td>
+        updateRow(row.rowId, {
+            selectedToolId: toolId,
+            od: selectedTool.od ?? '',
+            idSize: selectedTool.idSize ?? '',
+            weight: selectedTool.weight ?? '',
+            length: selectedTool.length ?? ''
+        });
+    };
 
-      <td>
-        <Form.Select
-          size="sm"
-          value={row.category}
-          onChange={(event) =>
-            handleCategoryChange(event.target.value)
-          }
-        >
-          <option value="">Select Type</option>
+    return (
+        <tr ref={setNodeRef} style={style}>
+            <td>
+                <button
+                    type="button"
+                    className="bhaDragHandle"
+                    aria-label={`Move component ${index + 1}`}
+                    {...attributes}
+                    {...listeners}
+                >
+                    ☰
+                </button>
+            </td>
 
-          {toolType.map((type) => (
-            <option key={type.id} value={type.name}>
-              {type.name}
-            </option>
-          ))}
-        </Form.Select>
-      </td>
+            <td>{index + 1}</td>
 
-      <td>
-        <Form.Select
-          size="sm"
-          value={row.selectedToolId}
-          disabled={!row.category}
-          onChange={(event) =>
-            handleToolChange(event.target.value)
-          }
-        >
-          <option value="">
-            {row.category
-              ? 'Select Tool'
-              : 'Select Type First'}
-          </option>
+            <td>
+                <Form.Select
+                    size="sm"
+                    value={row.category}
+                    onChange={(event) =>
+                        handleCategoryChange(event.target.value)
+                    }
+                >
+                    <option value="">Select Type</option>
 
-          {availableTools.map((tool) => (
-            <option key={tool.id} value={tool.id}>
-              {tool.name}
-            </option>
-          ))}
-        </Form.Select>
-      </td>
+                    {toolType.map((type) => (
+                        <option key={type.id} value={type.name}>
+                            {type.name}
+                        </option>
+                    ))}
+                </Form.Select>
+            </td>
 
-      {[
-        ['od', row.od],
-        ['idSize', row.idSize],
-        ['weight', row.weight],
-        ['length', row.length]
-      ].map(([field, value]) => (
-        <td key={field}>
-          <input
-            className="numInput"
-            type="text"
-            inputMode="decimal"
-            value={value}
-            onChange={(event) =>
-                updateRow(row.rowId, {
-                [field]: event.target.value
-                })
-            }
-            />
-        </td>
-      ))}
+            <td>
+                <Form.Select
+                    size="sm"
+                    value={row.selectedToolId}
+                    disabled={!row.category}
+                    onChange={(event) =>
+                        handleToolChange(event.target.value)
+                    }
+                >
+                    <option value="">
+                        {row.category
+                            ? 'Select Tool'
+                            : 'Select Type First'}
+                    </option>
 
-      <td>
-        <Button
-          variant="outline-danger"
-          size="sm"
-          disabled={rowsLength === 1}
-          onClick={() => removeRow(row.rowId)}
-        >
-          ×
-        </Button>
-      </td>
-    </tr>
-  );
+                    {availableTools.map((tool) => (
+                        <option key={tool.id} value={tool.id}>
+                            {tool.name}
+                        </option>
+                    ))}
+                </Form.Select>
+            </td>
+
+            {[
+                ['od', row.od],
+                ['idSize', row.idSize],
+                ['weight', row.weight],
+                ['length', row.length]
+            ].map(([field, value]) => (
+                <td key={field}>
+                    <input
+                        className="numInput"
+                        type="text"
+                        inputMode="decimal"
+                        value={value}
+                        onChange={(event) =>
+                            updateRow(row.rowId, {
+                                [field]: event.target.value
+                            })
+                        }
+                    />
+                </td>
+            ))}
+
+            <td>
+                <Button
+                    className="bhaDeleteButton"
+                    onClick={() => removeRow(row.rowId)}
+                    title="Delete component"
+                >
+                    <i className="bi bi-trash3"></i>
+                </Button>
+            </td>
+        </tr>
+    );
 };
 
 export default SortableRow;

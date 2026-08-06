@@ -12,7 +12,7 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
           title="Drag to move card"
         >
           <span className="cardHeaderGrip">⋮⋮⋮</span>
-          <span>Jar Analysis Inputs</span>
+          <span>Analysis Inputs</span>
         </Card.Header>
 
         <Card.Body>

@@ -1,37 +1,56 @@
-import React, {Component} from 'react';
-import Nav from 'react-bootstrap/Nav';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
 
-class Navbar extends Component {
+const AppNavbar = () => {
+  return (
+    <Navbar className="dbNavbar">
+      <Container fluid className="dbNavbarInner">
+        <div className="dbNavbarLeft">
+          <Button
+            type="button"
+            variant="link"
+            className="dbIconButton dbMenuButton"
+            aria-label="Open menu"
+            title="Menu"
+          >
+            <i className="bi bi-list" aria-hidden="true" />
+          </Button>
 
-	render () {
-		 return (
-     
-		  	<Nav
-			  activeKey="/home"
-			  // onSelect={(selectedKey) => alert(`selected={true}`)}
-			>
+          <Navbar.Brand className="dbBrand">
+            <span className="dbTitle">DrillBench</span>
+            <span className="dbSubtitle">
+              Drilling Analysis System
+            </span>
+          </Navbar.Brand>
+        </div>
 
-				<h1 >drillBenchX</h1>
-			  	<Nav.Item>
-				    <Nav.Link href="/home">Active</Nav.Link>
-			  	</Nav.Item>
-				<Nav.Item>
-		    		<Nav.Link eventKey="link-1">Link</Nav.Link>
-		  		</Nav.Item>
-			  	<Nav.Item>
-				    <Nav.Link eventKey="link-2">Link</Nav.Link>
-			  	</Nav.Item>
-			  	<Nav.Item>
-				    <Nav.Link eventKey="disabled" disabled>Disabled</Nav.Link>
-			  	</Nav.Item>
-				
-			</Nav>      
-    	)  
+        <div className="dbToolbar">
+          <Button
+            type="button"
+            variant="link"
+            className="dbActionButton"
+            aria-label="Save project"
+            title="Save"
+          >
+            <i className="bi bi-floppy" aria-hidden="true" />
+            <span>Save</span>
+          </Button>
 
-	}
-      
-}
+          <Button
+            type="button"
+            variant="link"
+            className="dbIconButton"
+            aria-label="Open settings"
+            title="Settings"
+          >
+            <i className="bi bi-gear" aria-hidden="true" />
+          </Button>
+        </div>
+      </Container>
+    </Navbar>
+  );
+};
 
-
-export default Navbar;
+export default AppNavbar;

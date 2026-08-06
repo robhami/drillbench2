@@ -170,11 +170,24 @@ dt {
 }
 
 .draggableCardHeader {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  cursor: move;
+  user-select: none;
 }
 
+.cardHeaderGrip {
+  display: inline-block;
+  flex: 0 0 auto;
+
+  color: #8d98a3;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: -2px;
+  opacity: 0.75;
+}
 /* =========================================
    BHA DATA ENTRY CARD
    ========================================= */
@@ -793,4 +806,305 @@ body {
 #bhaCard .bhaComponentTable td:nth-child(7),
 #bhaCard .bhaComponentTable td:nth-child(8) {
   text-align: center;
+}
+
+/* ==========================================
+   NAVBAR
+   ========================================== */
+
+.dbNavbar{
+    min-height:58px;
+    padding:8px 20px;
+
+    background:#fff;
+
+    border-bottom:1px solid #E5E7EB;
+}
+
+.dbBrand{
+    display:flex;
+    flex-direction:column;
+
+    text-decoration:none !important;
+}
+
+.dbTitle{
+    font-size:1.45rem;
+    font-weight:650;
+    letter-spacing:-0.03em;
+    color:#111827;
+    line-height:1.1;
+}
+
+.dbSubtitle{
+    margin-top:2px;
+
+    font-size:.72rem;
+
+    letter-spacing:.12em;
+
+    text-transform:uppercase;
+
+    color:#98A2B3;
+}
+
+.dbToolbar{
+    margin-left:auto;
+    display:flex;
+    gap:10px;
+}
+
+/* ==========================================
+   MODERN NAVBAR
+   ========================================== */
+
+.dbNavbar {
+  height: 60px;
+  padding: 0 20px;
+
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #e5e7eb;
+
+  backdrop-filter: blur(12px);
+}
+
+.dbNavbarInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 100%;
+  padding: 0 !important;
+}
+
+.dbNavbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  height: 100%;
+}
+
+.dbBrand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  text-decoration: none !important;
+}
+
+.dbTitle {
+  color: #111827;
+
+  font-family:
+    Inter,
+    "Segoe UI Variable",
+    "Segoe UI",
+    sans-serif;
+
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.05;
+
+  letter-spacing: -0.04em;
+}
+
+.dbSubtitle {
+  margin-top: 3px;
+
+  color: #98a2b3;
+
+  font-size: 0.70rem;
+  font-weight: 600;
+  line-height: 1;
+
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.dbToolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  height: 100%;
+}
+
+/* Buttons */
+
+.dbIconButton,
+.dbActionButton {
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 38px;
+  min-width: 38px;
+
+  padding: 0 12px !important;
+
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+
+  background: transparent !important;
+
+  color: #475467 !important;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    color .15s ease,
+    transform .15s ease;
+}
+
+.dbActionButton {
+  gap: 8px;
+}
+
+.dbActionButton span {
+  font-size: .85rem;
+  font-weight: 600;
+}
+
+.dbIconButton i,
+.dbActionButton i {
+  font-size: 1.05rem;
+}
+
+.dbIconButton:hover,
+.dbActionButton:hover {
+
+  background: #f3f4f6 !important;
+
+  border-color: #e5e7eb !important;
+
+  color: #111827 !important;
+}
+
+.dbIconButton:active,
+.dbActionButton:active {
+
+  transform: translateY(1px);
+}
+
+/* Hamburger */
+
+.dbMenuButton {
+
+  padding: 0 !important;
+
+  width: 40px;
+}
+
+.dbMenuButton i {
+
+  font-size: 1.5rem;
+
+  line-height: 1;
+}
+
+/* ==========================================
+   ADD COMPONENT BUTTON
+   ========================================== */
+
+.bhaTableActions {
+  padding: 12px 8px 6px;
+}
+
+.bhaAddButton {
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 14px !important;
+
+  background: #F3F6F9 !important;
+
+  border: 1px solid #D0D5DD !important;
+
+  border-radius: 8px !important;
+
+  color: #344054 !important;
+
+  font-size: .88rem;
+  font-weight: 500;
+
+  transition: all .15s ease;
+}
+
+.bhaAddButton i {
+
+  color: #475467;
+}
+
+.bhaAddButton:hover {
+
+  background: #E8EDF3 !important;
+
+  border-color: #98A2B3 !important;
+
+  color: #111827 !important;
+
+  transform: translateY(-1px);
+}
+
+.bhaAddButton:active {
+
+  background: #DEE6EF !important;
+
+  transform: translateY(0);
+}
+/* ==========================================
+   DELETE BUTTON
+   ========================================== */
+
+.bhaDeleteButton {
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 !important;
+
+  background: #ffffff !important;
+
+  border: 1px solid #D0D5DD !important;
+
+  border-radius: 3px !important;
+
+  color: #DC2626 !important;
+
+  transition:
+    background-color .15s ease,
+    border-color .15s ease,
+    color .15s ease,
+    transform .15s ease;
+}
+
+.bhaDeleteButton i {
+  font-size: 0.90rem;
+}
+
+.bhaDeleteButton:hover {
+
+  background: #FEE2E2 !important;
+
+  border-color: #98A2B3 !important;
+
+  color: #B91C1C !important;
+
+  transform: scale(1.05);
+}
+
+.bhaDeleteButton:active {
+
+  transform: scale(0.96);
 }

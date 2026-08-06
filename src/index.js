@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import 'tachyons';
 import reportWebVitals from './reportWebVitals';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

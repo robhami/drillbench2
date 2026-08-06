@@ -111,11 +111,11 @@ const BHABuilder = ({
 
         <div className="bhaTableActions">
           <Button
-            variant="outline-success"
-            size="sm"
+            className="bhaAddButton"
             onClick={addRow}
           >
-            + Add Component
+           <i className="bi bi-plus-square"></i>
+            <span>Insert Row</span>
           </Button>
         </div>
       </div>
