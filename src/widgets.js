@@ -1,49 +1,64 @@
 import React from 'react';
+
 import UnitCon from './Apps/UnitCon/UnitCon.js';
 import BHAEntry from './Apps/BHAEntry/BHAEntry.js';
-// import AppMatrix from './Apps/AppMatrix/AppMatrix.js';
-// import MyFirstGrid from '../components/BHADrag/MyFirstGrid.js';
+import AnalysisInputs from './Apps/AnalysisInputs/AnalysisInputs.js';
+import BHASummaryCard from './Apps/BHASummary/BHASummaryCard.js';
 
-export const widgets = [
+export const createWidgets = ({
+  bha,
+  updateBha,
+  updateRow,
+  addRow,
+  removeRow,
+  reorderRows
+}) => [
+  {
+    id: 0,
+    name: 'Units Converter',
+    image:
+      'https://cdn.iconscout.com/icon/free/png-128/emi-calculator-1795294-1522560.png',
+    value: 'Units Converter',
+    app: <UnitCon />
+  },
 
-	{
-		id: 0,
-		name: 'Units Converter',
-		image: 'https://cdn.iconscout.com/icon/free/png-128/emi-calculator-1795294-1522560.png',
-		value: 'Units Converter',
-		app: <UnitCon/>
-		
-	},
+  {
+    id: 1,
+    name: 'BHA Data Entry',
+    image:
+      'https://cdn.iconscout.com/icon/premium/png-128-thumb/oil-well-6-1049520.png',
+    value: 'BHA Data Entry',
+    app: (
+      <BHAEntry
+        bha={bha}
+        updateRow={updateRow}
+        addRow={addRow}
+        removeRow={removeRow}
+        reorderRows={reorderRows}
+      />
+    )
+  },
 
-	{
-		id: 1,
-		name: 'BHA entry',
-		image: 'https://cdn.iconscout.com/icon/premium/png-128-thumb/oil-well-6-1049520.png',
-		value: 'BHA entry',
-		app: <BHAEntry/>
+  {
+    id: 2,
+    name: 'Analysis Inputs',
+    image:
+      'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
+    value: 'Analysis Inputs',
+    app: (
+      <AnalysisInputs
+        bha={bha}
+        updateBha={updateBha}
+      />
+    )
+  },
 
-	},
-
-	{
-		id: 2,
-		name: 'Parameter entry',
-		image: 'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
-		value: 'Parameter entry',
-		// app: <AppMatrix/>
-	},
-
-
-	/*{
-		id: 3,
-		name: 'App Matrix',
-		image: 'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
-		value: 'App Matrix',
-		app: <AppMatrix/>
-	},
-
-
-	*/
-
-
-
-]
+  {
+    id: 3,
+    name: 'BHA Summary',
+    image:
+      'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
+    value: 'BHA Summary',
+    app: <BHASummaryCard bha={bha} />
+  }
+];

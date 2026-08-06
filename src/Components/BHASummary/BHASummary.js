@@ -1,9 +1,8 @@
 import React from 'react';
-import Card from 'react-bootstrap/Card';
 
-import { buildBhaSummary } from '../../calculations/buildBHASummary.js';
-
+import { buildBHASummary } from '../../calculations/buildBHASummary.js';
 import { calculateCentreOfGravity } from '../../calculations/calculateCentreOfGravity.js';
+import { calculateComponentPositions } from '../../calculations/calculateComponentPositions.js';
 
 const formatNumber = (value, decimals = 1) =>
   Number(value).toLocaleString(undefined, {
@@ -11,62 +10,99 @@ const formatNumber = (value, decimals = 1) =>
     maximumFractionDigits: decimals
   });
 
-const BHASummary = ({ bha }) => {
-  const summary = buildBhaSummary(bha);
+const SummaryItem = ({ label, value }) => (
+  <div className="bhaSummaryItem">
+    <span>{label}</span>
+    <span className="bhaSummaryDots" />
+    <strong>{value}</strong>
+  </div>
+);
 
-  const centreOfGravity =
-  calculateCentreOfGravity(bha);
+const BHASummary = ({ bha }) => {
+  const summary = buildBHASummary(bha);
+  const centreOfGravity = calculateCentreOfGravity(bha);
+  const positionResults = calculateComponentPositions(bha);
+
+  const hasMudWeight = summary.buoyancyFactor !== null;
 
   return (
-    <Card className="bhaSummary">
-      <Card.Header>
-        <strong>BHA Summary</strong>
-      </Card.Header>
+    <section className="bhaSummary">
+      
 
-      <Card.Body>
-        <div className="bhaSummaryGrid">
-          <span>Components</span>
-          <strong>{summary.componentCount}</strong>
+      <div className="bhaSummaryColumns">
+        <div>
+          <SummaryItem
+            label="Components"
+            value={summary.componentCount}
+          />
 
-          <span>Total length</span>
-          <strong>
-            {formatNumber(summary.totalLength)} ft
-          </strong>
+          <SummaryItem
+            label="Total length"
+            value={`${formatNumber(
+              summary.totalLength,
+              1
+            )} ft`}
+          />
 
-          <span>Total air weight</span>
-          <strong>
-            {formatNumber(summary.totalAirWeight, 0)} lb
-          </strong>
+          <SummaryItem
+            label="Total air weight"
+            value={`${formatNumber(
+              summary.totalAirWeight,
+              0
+            )} lb`}
+          />
 
-          <span>Buoyancy factor</span>
-          <strong>
-            {summary.buoyancyFactor === null
-              ? 'Enter mud weight'
-              : formatNumber(summary.buoyancyFactor, 3)}
-          </strong>
-
-          <span>Total buoyed weight</span>
-          <strong>
-            {summary.totalBuoyedWeight === null
-              ? '—'
-              : `${formatNumber(
-                  summary.totalBuoyedWeight,
-                  0
-                )} lb`}
-        </strong>
-        
-            <span>Centre of gravity</span>
-        <strong>
-            {centreOfGravity.centreOfGravityFromBit === null
-            ? '—'
-            : `${formatNumber(
-                centreOfGravity.centreOfGravityFromBit,
-                1
-            )} ft above bit`}
-        </strong>
+          <SummaryItem
+            label="Buoyancy factor"
+            value={
+              hasMudWeight
+                ? formatNumber(summary.buoyancyFactor, 3)
+                : '—'
+            }
+          />
         </div>
-      </Card.Body>
-    </Card>
+
+        <div>
+          <SummaryItem
+            label="Total buoyed weight"
+            value={
+              summary.totalBuoyedWeight === null
+                ? '—'
+                : `${formatNumber(
+                    summary.totalBuoyedWeight,
+                    0
+                  )} lb`
+            }
+          />
+
+          <SummaryItem
+            label="Centre of gravity"
+            value={
+              centreOfGravity.centreOfGravityFromBit === null
+                ? '—'
+                : `${formatNumber(
+                    centreOfGravity.centreOfGravityFromBit,
+                    1
+                  )} ft above bit`
+            }
+          />
+
+          <SummaryItem
+            label="Calculated BHA length"
+            value={`${formatNumber(
+              positionResults.totalLength,
+              1
+            )} ft`}
+          />
+        </div>
+      </div>
+
+      {!hasMudWeight && (
+        <div className="bhaSummaryNotice">
+          Enter mud weight to calculate buoyed values.
+        </div>
+      )}
+    </section>
   );
 };
 

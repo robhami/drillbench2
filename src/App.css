@@ -1,8 +1,22 @@
+/* =========================================
+   GLOBAL
+   ========================================= */
+
 @font-face {
   font-family: 'LEMON MILK Regular';
   font-style: normal;
   font-weight: normal;
-  src: local('LEMON MILK Regular'), url('LEMONMILK-Regular.otf');
+  src:
+    local('LEMON MILK Regular'),
+    url('LEMONMILK-Regular.otf');
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
 }
 
 h1 {
@@ -17,14 +31,19 @@ h1 {
   right: 16px;
 }
 
-#DD {
-  margin-top: 21.44px;
-  width: 400px;
+dt {
+  text-align: left;
 }
 
-.form-control {
-  float: left;
-  width: 140px;
+
+/* =========================================
+   UNITS CONVERTER
+   ========================================= */
+
+#DD {
+  width: 400px;
+  max-width: 100%;
+  margin-top: 21.44px;
 }
 
 .dropdown-menu.show {
@@ -37,233 +56,741 @@ h1 {
   padding-left: 10px;
 }
 
-#unitsTab > .nav-item > .nav-link {
+#unitsTab>.nav-item>.nav-link {
   width: 90px;
-  border: solid #007bff 1px;
-  padding-right: 0;
-  padding-left: 0;
   margin: 0.5px;
+  padding-right: 0;
+  padding-left: 0;
+  border: 1px solid #007bff;
 }
 
-#unitsTab > .nav-item > .nav-link > .a {
+#unitsTab>.nav-item>.nav-link>.a {
   padding-right: 0;
   padding-left: 0;
 }
 
-dt {
-  text-align: left;
+
+/* =========================================
+   DASHBOARD CARDS
+   ========================================= */
+
+.dashboardCardWrapper {
+  display: inline-block;
+  margin: 5px;
+  vertical-align: top;
 }
 
-.container {
-  padding-top: 10px;
+.dashboardCard {
+  position: relative;
+
+  width: 760px;
+  min-width: 360px;
+  max-width: 96vw;
+
+  padding: 0;
+
+  overflow-x: auto;
+  overflow-y: visible;
+
+  resize: horizontal;
+
+  border: 1px solid #ced4da;
+  border-radius: 7px;
+  background: #ffffff;
 }
 
-.card-header {
+/* Existing card title is now the drag handle */
+
+.dashboardCardContent .card-header {
+  min-height: 0;
+  padding: 5px 9px;
+
+  background: #e8edf1;
+  border-bottom: 1px solid #c7d0d9;
+
+  cursor: grab;
+  user-select: none;
+}
+
+.dashboardCardContent .card-header:active {
+  cursor: grabbing;
+}
+
+.dashboardCardContent .card-header:hover {
+  background: #dfe6ec;
+}
+
+.dashboardCardContent {
+  width: 100%;
+  min-width: 0;
   padding: 0;
 }
 
-/* BHA Builder */
-
-#bhaCard {
-  width: 950px;
-  max-width: 95vw;
+.dashboardCardContent .container {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin: 0;
 }
 
-#bhaCard .card-body {
+.dashboardCardContent .card {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.dashboardCardContent .card-header {
+  min-height: 0;
+  padding: 4px 8px;
+}
+
+.dashboardCardContent .card-body {
+  padding: 5px 7px 8px;
+}
+
+
+/* =========================================
+   SHARED COMPACT CARD HEADERS
+   ========================================= */
+
+.bhaHeader {
+  display: flex;
+  align-items: center;
+
+  padding: 4px 8px !important;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.draggableCardHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* =========================================
+   BHA DATA ENTRY CARD
+   ========================================= */
+
+#bhaCard {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+
+  margin: 0;
+  border: 0;
+}
+
+#bhaCard>.card-header {
+  min-height: 0;
+  padding: 4px 8px;
+}
+
+#bhaCard>.card-body {
+  padding: 4px 6px 7px;
+  overflow: visible;
+}
+
+.bhaWorkspace {
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+}
+
+#bhaCard .bhaTableSection {
+  width: 100%;
+
+  padding: 0;
+  margin: 0;
+
+  border: 0;
+  background: transparent;
+}
+
+.bhaTableWrapper {
+  width: 100%;
   overflow-x: auto;
 }
 
-#bhaCard table {
-  min-width: 900px;
+#bhaCard .bhaComponentTable {
+  width: 100%;
+  min-width: 880px;
+
+  margin: 0;
+
+  table-layout: fixed;
+  border-collapse: collapse;
 }
 
-#bhaCard th,
-#bhaCard td {
-  padding: 4px !important;
+#bhaCard .bhaComponentTable th {
+  padding: 3px !important;
+
+  border-bottom: 1px solid #ced4da;
+
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+
+  font-size: 0.78rem;
+}
+
+#bhaCard .bhaComponentTable th small {
+  display: block;
+
+  margin-top: 1px;
+
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+#bhaCard .bhaComponentTable td {
+  padding: 2px !important;
+
+  border-bottom: 1px solid #e9ecef;
+
   vertical-align: middle;
   white-space: nowrap;
 }
 
-#bhaCard select {
-  min-width: 120px;
+
+/* Drag column */
+
+#bhaCard .bhaComponentTable th:nth-child(1),
+#bhaCard .bhaComponentTable td:nth-child(1) {
+  width: 34px;
+  text-align: center;
 }
 
-#bhaCard .numInput {
-  width: 85px;
-  min-width: 85px;
-  height: 31px;
-  padding: 2px 6px;
-  text-align: right;
+
+/* Row number */
+
+#bhaCard .bhaComponentTable th:nth-child(2),
+#bhaCard .bhaComponentTable td:nth-child(2) {
+  width: 36px;
+  text-align: center;
 }
 
-#bhaCard .btn {
-  width: auto;
+
+/* Type */
+
+#bhaCard .bhaComponentTable th:nth-child(3),
+#bhaCard .bhaComponentTable td:nth-child(3) {
+  width: 130px;
 }
 
-#bhaCard table {
+
+/* Tool */
+
+#bhaCard .bhaComponentTable th:nth-child(4),
+#bhaCard .bhaComponentTable td:nth-child(4) {
+  width: 200px;
+}
+
+
+/* OD, ID, WT and LEN */
+
+#bhaCard .bhaComponentTable th:nth-child(5),
+#bhaCard .bhaComponentTable td:nth-child(5),
+#bhaCard .bhaComponentTable th:nth-child(6),
+#bhaCard .bhaComponentTable td:nth-child(6),
+#bhaCard .bhaComponentTable th:nth-child(7),
+#bhaCard .bhaComponentTable td:nth-child(7),
+#bhaCard .bhaComponentTable th:nth-child(8),
+#bhaCard .bhaComponentTable td:nth-child(8) {
+  width: 70px;
+}
+
+
+/* Delete */
+
+#bhaCard .bhaComponentTable th:nth-child(9),
+#bhaCard .bhaComponentTable td:nth-child(9) {
+  width: 38px;
+  text-align: center;
+}
+
+#bhaCard .bhaComponentTable select,
+#bhaCard .bhaComponentTable .numInput {
   width: 100%;
-  table-layout: fixed;
-}
+  min-width: 0;
+  height: 28px;
 
-#bhaCard th {
-  text-align: center;
-  vertical-align: middle;
-}
-
-#bhaCard td {
-  vertical-align: middle;
-}
-
-#bhaCard th:nth-child(1),
-#bhaCard td:nth-child(1) {
-  width: 40px;
-  text-align: center;
-}
-
-#bhaCard th:nth-child(2),
-#bhaCard td:nth-child(2) {
-  width: 120px;
-}
-
-#bhaCard th:nth-child(3),
-#bhaCard td:nth-child(3) {
-  width: 285px;
-}
-
-#bhaCard th:nth-child(4),
-#bhaCard td:nth-child(4),
-#bhaCard th:nth-child(5),
-#bhaCard td:nth-child(5),
-#bhaCard th:nth-child(6),
-#bhaCard td:nth-child(6),
-#bhaCard th:nth-child(7),
-#bhaCard td:nth-child(7) {
-  width: 95px;
-}
-
-#bhaCard th:nth-child(8),
-#bhaCard td:nth-child(8) {
-  width: 50px;
-  text-align: center;
-}
-
-#bhaCard select,
-#bhaCard input {
-  width: 100%;
   box-sizing: border-box;
+
+  font-size: 0.8rem;
 }
 
-#bhaCard input[type="number"] {
+#bhaCard .bhaComponentTable select {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+#bhaCard .bhaComponentTable .numInput {
+  padding: 2px 5px;
   text-align: right;
-  padding-right: 8px;
 }
 
-#bhaCard .btn-outline-danger {
-  width: 28px;
-  height: 32px;
+#bhaCard .bhaComponentTable .btn-outline-danger {
+  width: 26px;
+  min-width: 26px;
+  height: 28px;
+
   padding: 0;
 }
 
-#bhaCard .btn-outline-primary {
-  display: block;
-  margin: 16px 0 0;
-}
-
 #bhaCard .bhaDragHandle {
+  padding: 1px 4px;
+
   border: 0;
   background: transparent;
+
   cursor: grab;
-  padding: 2px 6px;
-  font-size: 18px;
+  touch-action: none;
+
+  font-size: 16px;
   line-height: 1;
   color: #6c757d;
-  touch-action: none;
 }
 
 #bhaCard .bhaDragHandle:active {
   cursor: grabbing;
 }
 
-#bhaCard th:first-child,
-#bhaCard td:first-child {
-  width: 36px;
-  text-align: center;
+.bhaTableActions {
+  display: flex;
+  justify-content: flex-start;
+
+  margin-top: 7px;
+}
+
+.bhaTableActions .btn {
+  width: auto;
 }
 
 
-#bhaCard .bhaDetails {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-  text-align: left;
-}
+/* =========================================
+   JAR ANALYSIS INPUTS CARD
+   ========================================= */
 
-#bhaCard .bhaDetails .form-control {
-  width: 100%;
-  float: none;
-}
-
-#bhaCard .wellDetails,
-#bhaCard .bhaDetails {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 12px;
-  text-align: left;
-}
-
-#bhaCard .wellDetails {
-  padding-bottom: 16px;
-  margin-bottom: 16px;
-  border-bottom: 1px solid #dee2e6;
-}
-
-#bhaCard .bhaDetails {
-  margin-bottom: 16px;
-}
-
-#bhaCard .wellDetails .form-control,
-#bhaCard .bhaDetails .form-control {
-  float: none;
-  width: 100%;
-}
-
-#bhaCard .bhaSummary {
+.analysisInputsCard {
   width: 100%;
   max-width: none;
   min-width: 0;
-  margin-top: 18px;
+}
+
+.analysisInputsCard>.card-body {
+  padding: 7px 9px 9px;
+}
+
+.analysisInputGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.analysisInputGrid .form-label {
+  margin-bottom: 2px;
+
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.analysisInputGrid .form-control {
+  float: none;
+
+  width: 100%;
+  height: 32px;
+
+  padding: 4px 7px;
+
+  font-size: 0.84rem;
+}
+
+.bhaInputWithUnit {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+
+.bhaInputWithUnit .form-control {
+  min-width: 0;
+
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.bhaInputWithUnit>span {
+  display: flex;
+  align-items: center;
+
+  padding: 0 8px;
+
+  border: 1px solid #ced4da;
+  border-left: 0;
+  border-radius: 0 0.375rem 0.375rem 0;
+
+  background: #f8f9fa;
+
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+
+/* =========================================
+   BHA SUMMARY CARD
+   ========================================= */
+
+.bhaSummaryCard {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+}
+
+.bhaSummaryCard>.card-body {
+  padding: 7px 10px 9px;
+}
+
+.bhaSummary {
+  width: 100%;
+  min-width: 0;
+
+  padding: 0;
+  margin: 0;
+
+  border: 0;
+  background: transparent;
+
   text-align: left;
 }
 
-#bhaCard .bhaSummary .card-header {
-  padding: 8px 12px;
-}
-
-#bhaCard .bhaSummaryGrid {
+.bhaSummaryColumns {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 7px 24px;
-  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 24px;
 }
 
-#bhaCard .bhaSummaryGrid strong {
+.bhaSummaryColumns>div+div {
+  padding-left: 20px;
+  border-left: 1px solid #dee2e6;
+}
+
+.bhaSummaryItem {
+  display: flex;
+  align-items: baseline;
+
+  min-height: 27px;
+  gap: 7px;
+
+  font-size: 0.84rem;
+}
+
+.bhaSummaryItem>span:first-child {
+  white-space: nowrap;
+}
+
+.bhaSummaryDots {
+  flex: 1;
+  min-width: 14px;
+
+  border-bottom: 1px dashed #ced4da;
+}
+
+.bhaSummaryItem strong {
+  white-space: nowrap;
   text-align: right;
 }
 
-.cardHeader {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 6px;
+.bhaSummaryNotice {
+  margin-top: 8px;
+  padding: 6px 9px;
+
+  border: 1px solid #cfe2ff;
+  border-radius: 5px;
+
+  background: #f7fbff;
+
+  font-size: 0.78rem;
+  color: #495057;
+}
+
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+
+@media (max-width: 800px) {
+  .dashboardCard {
+    width: 94vw;
+    min-width: 320px;
+  }
+
+  /* BHA Data Entry */
+  .dashboardCard-1 {
+    width: 760px;
+  }
+
+  /* Jar Analysis Inputs */
+  .dashboardCard-2 {
+    width: 500px;
+  }
+
+  /* BHA Summary */
+  .dashboardCard-3 {
+    width: 620px;
+  }
+
+  .bhaSummaryColumns {
+    grid-template-columns: 1fr;
+  }
+
+  .bhaSummaryColumns>div+div {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .analysisInputGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================
+   DRILLBENCH INDUSTRIAL THEME
+   ========================================= */
+
+body {
+    background: #f2f2f0;
+}
+
+.dashboardCard {
+
+    background: #ffffff;
+
+    border: 1px solid #bcc7d3;
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 2px 6px rgba(0,0,0,.08),
+        0 10px 24px rgba(0,0,0,.06);
+}
+
+.dashboardCardControls {
+  background: #dde3e8;
+  border-bottom: 1px solid #c7d0d9;
 }
 
 .cardDragHandle {
-    cursor: grab;
-    font-size: 22px;
-    color: #666;
-    user-select: none;
+  color: #586674;
 }
 
-.cardDragHandle:active {
-    cursor: grabbing;
+.dashboardCardContent {
+  background: #ffffff;
+}
+
+.dashboardCardContent .card-header,
+.bhaHeader {
+
+    background: #dbe3eb;
+
+    color: #23313f;
+
+    font-weight: 600;
+
+    border-bottom: 1px solid #bcc7d3;
+}
+
+.dashboardCardContent .card-body {
+  background: #ffffff;
+}
+
+/* BHA table */
+
+#bhaCard .bhaComponentTable thead {
+
+    background: #d5dde5;
+
+}
+
+#bhaCard .bhaComponentTable th {
+  color: #364550;
+  border-bottom-color: #bfc9d2;
+}
+
+#bhaCard .bhaComponentTable tbody tr:nth-child(even) {
+  background: #f5f7f9;
+}
+
+#bhaCard .bhaComponentTable tbody tr:hover {
+  background: #eaf1f5;
+}
+
+#bhaCard .bhaComponentTable td {
+  border-bottom-color: #dce2e7;
+}
+
+/* Inputs */
+
+.form-control,
+.form-select,
+#bhaCard .numInput {
+  background: #fbfcfd;
+  border-color: #bfc9d2;
+  color: #27313b;
+}
+
+.form-control:focus,
+.form-select:focus,
+#bhaCard .numInput:focus {
+  background: #ffffff;
+  border-color: #5f8f86;
+  box-shadow: 0 0 0 0.15rem rgba(95, 143, 134, 0.18);
+}
+
+/* Unit labels */
+
+.bhaInputWithUnit > span {
+  background: #e8edf1;
+  border-color: #bfc9d2;
+  color: #53616d;
+}
+
+/* Buttons */
+
+.btn-outline-success {
+  color: #356d62;
+  border-color: #5f8f86;
+}
+
+.btn-outline-success:hover {
+  color: #ffffff;
+  background: #4f7f75;
+  border-color: #4f7f75;
+}
+
+.btn-outline-danger {
+  color: #9a4d4d;
+  border-color: #c58a8a;
+}
+
+.btn-outline-danger:hover {
+  color: #ffffff;
+  background: #a85555;
+  border-color: #a85555;
+}
+
+/* Summary */
+
+.bhaSummaryColumns > div + div {
+  border-left-color: #cfd7de;
+}
+
+.bhaSummaryDots {
+  border-bottom-color: #c4cdd5;
+}
+
+.bhaSummaryNotice {
+  background: #eef4f3;
+  border-color: #bdcfcb;
+  color: #415c56;
+}
+
+/* =========================================
+   BHA DATA ENTRY SIZING
+   ========================================= */
+
+/* Wider default card for the BHA table */
+.dashboardCard-1 {
+  width: 980px;
+  min-width: 900px;
+}
+
+/* Keep the other cards smaller */
+.dashboardCard-2 {
+  width: 760px;
+}
+
+.dashboardCard-3 {
+  width: 760px;
+}
+
+/* Let the BHA table use the full card width */
+#bhaCard .bhaComponentTable {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+/* Drag */
+#bhaCard .bhaComponentTable th:nth-child(1),
+#bhaCard .bhaComponentTable td:nth-child(1) {
+  width: 30px;
+}
+
+/* Row number */
+#bhaCard .bhaComponentTable th:nth-child(2),
+#bhaCard .bhaComponentTable td:nth-child(2) {
+  width: 35px;
+}
+
+/* Type */
+#bhaCard .bhaComponentTable th:nth-child(3),
+#bhaCard .bhaComponentTable td:nth-child(3) {
+  width: auto;
+}
+
+/* Tool */
+#bhaCard .bhaComponentTable th:nth-child(4),
+#bhaCard .bhaComponentTable td:nth-child(4) {
+  width: 260px;
+}
+
+/* OD, ID, WT, LEN */
+#bhaCard .bhaComponentTable th:nth-child(5),
+#bhaCard .bhaComponentTable td:nth-child(5),
+#bhaCard .bhaComponentTable th:nth-child(6),
+#bhaCard .bhaComponentTable td:nth-child(6),
+#bhaCard .bhaComponentTable th:nth-child(7),
+#bhaCard .bhaComponentTable td:nth-child(7),
+#bhaCard .bhaComponentTable th:nth-child(8),
+#bhaCard .bhaComponentTable td:nth-child(8) {
+  width: 72px;
+}
+
+/* Delete */
+#bhaCard .bhaComponentTable th:nth-child(9),
+#bhaCard .bhaComponentTable td:nth-child(9) {
+  width: 36px;
+}
+
+/* Compact row controls */
+#bhaCard .bhaComponentTable select,
+#bhaCard .bhaComponentTable .numInput {
+  height: 30px;
+  font-size: 0.8rem;
+}
+
+/* Centre numeric values */
+#bhaCard .bhaComponentTable .numInput {
+  text-align: center;
+  padding: 2px 4px;
+}
+
+/* Centre the row number and numeric columns */
+#bhaCard .bhaComponentTable td:nth-child(2),
+#bhaCard .bhaComponentTable td:nth-child(5),
+#bhaCard .bhaComponentTable td:nth-child(6),
+#bhaCard .bhaComponentTable td:nth-child(7),
+#bhaCard .bhaComponentTable td:nth-child(8) {
+  text-align: center;
 }

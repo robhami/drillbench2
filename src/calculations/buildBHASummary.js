@@ -1,4 +1,4 @@
-export const buildBhaSummary = (bha) => {
+export const buildBHASummary = (bha) => {
   const rows = bha?.rows || [];
 
   const completedRows = rows.filter(
@@ -79,4 +79,4 @@ export const buildBhaSummary = (bha) => {
   };
 };
 
-export default buildBhaSummary;
+export default buildBHASummary;
