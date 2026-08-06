@@ -10,7 +10,7 @@ class BHAEntry extends Component {
       <Container>
         <Card id="bhaCard" className="text-center">
           <Card.Header>
-            <h2>BHAx Entry</h2>
+            <h2>BHA Builder</h2>
           </Card.Header>
 
           <Card.Body>

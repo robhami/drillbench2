@@ -195,7 +195,7 @@ const SortableRow = ({
   );
 };
 
-const SmallTable = () => {
+const BHABuilder = () => {
  const [well, setWell] = useState({
   name: '',
   field: '',
@@ -449,4 +449,4 @@ const updateBha = (bhaChanges) => {
 };
 
 
-export default SmallTable;
+export default BHABuilder;
