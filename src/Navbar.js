@@ -19,7 +19,7 @@ const AppNavbar = () => {
           </Button>
 
           <Navbar.Brand className="dbBrand">
-            <span className="dbTitle">DrillBench</span>
+            <span className="dbTitle">WellBench</span>
             <span className="dbSubtitle">
               Drilling Analysis System
             </span>
