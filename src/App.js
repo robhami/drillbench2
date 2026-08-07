@@ -34,7 +34,24 @@ class App extends Component {
       }
     }
   };
+  componentDidMount() {
+    const savedWell = localStorage.getItem('drillbenchWell');
 
+    if (savedWell) {
+      this.setState({
+        well: JSON.parse(savedWell)
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.well !== this.state.well) {
+      localStorage.setItem(
+        'drillbenchWell',
+        JSON.stringify(this.state.well)
+      );
+    }
+  }
   onChange = (event) => {
     const searchfield = event.map((item) => item.value);
 

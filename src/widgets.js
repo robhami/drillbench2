@@ -4,7 +4,7 @@ import UnitCon from './Apps/UnitCon/UnitCon.js';
 import BHAEntry from './Apps/BHAEntry/BHAEntry.js';
 import AnalysisInputs from './Apps/AnalysisInputs/AnalysisInputs.js';
 import BHASummaryCard from './Apps/BHASummary/BHASummaryCard.js';
-
+import EngineeringResultsCard from './Apps/EngineeringResults/EngineeringResultsCard.js';
 export const createWidgets = ({
   bha,
   updateBha,
@@ -60,5 +60,21 @@ export const createWidgets = ({
       'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
     value: 'BHA Summary',
     app: <BHASummaryCard bha={bha} />
-  }
+  },
+
+{
+  id: 4,
+  name: 'Engineering Results',
+  image:
+    'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
+  value: 'Engineering Results',
+  app: <EngineeringResultsCard bha={bha} />
+}
+
+
+
+
+
+
+
 ];

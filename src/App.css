@@ -1060,7 +1060,7 @@ body {
   transform: translateY(0);
 }
 /* ==========================================
-   DELETE BUTTON
+   DELETE BUTTON (BHA CARD)
    ========================================== */
 
 .bhaDeleteButton {
@@ -1107,4 +1107,87 @@ body {
 .bhaDeleteButton:active {
 
   transform: scale(0.96);
+}
+
+#engineeringResults table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+#engineeringResults thead {
+  background: #dfe6ee;
+}
+
+#engineeringResults th {
+  padding: 6px 8px;
+  border: 1px solid #c9d2dc;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+#engineeringResults td {
+  padding: 5px 8px;
+  border: 1px solid #d9e0e7;
+  white-space: nowrap;
+}
+
+#engineeringResults tbody tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+#engineeringResults tbody tr:hover {
+  background: #eef5fb;
+}
+
+#engineeringResults .left {
+  text-align: left;
+}
+
+#engineeringResults .centre {
+  text-align: center;
+}
+
+#engineeringResults .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#engineeringResults .tool {
+  min-width: 180px;
+}
+
+#engineeringResults .position {
+  width: 45px;
+}
+
+#engineeringResults .length {
+  width: 80px;
+}
+
+#engineeringResults .weight {
+  width: 95px;
+}
+
+#engineeringResults .distance {
+  width: 75px;
+}
+
+#engineeringResults th {
+    text-align: center;
+}
+
+#engineeringResults td {
+    vertical-align: middle;
+}
+
+#engineeringResults .left {
+    text-align: left;
+}
+
+#engineeringResults .centre,
+#engineeringResults .num {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
 }

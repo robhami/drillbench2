@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { buildBHASummary } from '../../calculations/buildBHASummary.js';
-import { calculateCentreOfGravity } from '../../calculations/calculateCentreOfGravity.js';
-import { calculateComponentPositions } from '../../calculations/calculateComponentPositions.js';
-
+import { basicBHACalcs } from '../../engineering/bha/basicBHACalcs.js';
+import { calcCentreOfGravity } from '../../engineering/bha/calcCentreOfGravity.js';
+import { calcComponentPositions } from '../../engineering/bha/calcComponentPositions.js';
+import { calcNeutralPoint } from '../../engineering/forces/calcNeutralPoint.js';
 const formatNumber = (value, decimals = 1) =>
   Number(value).toLocaleString(undefined, {
     minimumFractionDigits: decimals,
@@ -19,15 +19,19 @@ const SummaryItem = ({ label, value }) => (
 );
 
 const BHASummary = ({ bha }) => {
-  const summary = buildBHASummary(bha);
-  const centreOfGravity = calculateCentreOfGravity(bha);
-  const positionResults = calculateComponentPositions(bha);
+  const summary = basicBHACalcs(bha);
+  const centreOfGravityResult = calcCentreOfGravity(bha);
+  const positionResults = calcComponentPositions(bha);
 
   const hasMudWeight = summary.buoyancyFactor !== null;
 
+  const neutralPointResult = calcNeutralPoint(bha);
+
+
+
   return (
     <section className="bhaSummary">
-      
+
 
       <div className="bhaSummaryColumns">
         <div>
@@ -69,21 +73,21 @@ const BHASummary = ({ bha }) => {
               summary.totalBuoyedWeight === null
                 ? '—'
                 : `${formatNumber(
-                    summary.totalBuoyedWeight,
-                    0
-                  )} lb`
+                  summary.totalBuoyedWeight,
+                  0
+                )} lb`
             }
           />
 
           <SummaryItem
             label="Centre of gravity"
             value={
-              centreOfGravity.centreOfGravityFromBit === null
+              centreOfGravityResult.centreOfGravityFromBit === null
                 ? '—'
                 : `${formatNumber(
-                    centreOfGravity.centreOfGravityFromBit,
-                    1
-                  )} ft above bit`
+                  centreOfGravityResult.centreOfGravityFromBit,
+                  1
+                )} ft above bit`
             }
           />
 
@@ -94,6 +98,19 @@ const BHASummary = ({ bha }) => {
               1
             )} ft`}
           />
+
+          <SummaryItem
+            label="Neutral point"
+            value={
+              neutralPointResult.neutralPointFound
+                ? `${formatNumber(
+                  neutralPointResult.neutralPointFromBit,
+                  1
+                )} ft above bit`
+                : '—'
+            }
+          />
+
         </div>
       </div>
 

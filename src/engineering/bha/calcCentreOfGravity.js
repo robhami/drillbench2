@@ -1,4 +1,4 @@
-export const calculateCentreOfGravity = (bha) => {
+export const calcCentreOfGravity = (bha) => {
   const rows = bha?.rows || [];
 
   let cumulativeLength = 0;

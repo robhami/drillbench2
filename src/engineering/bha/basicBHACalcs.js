@@ -1,4 +1,11 @@
-export const buildBHASummary = (bha) => {
+
+import {
+  calcBuoyancyFactor,
+  calcBuoyedWeight
+} from '../forces/calcBuoyancy.js';
+
+
+export const basicBHACalcs = (bha) => {
   const rows = bha?.rows || [];
 
   const completedRows = rows.filter(
@@ -37,12 +44,9 @@ export const buildBHASummary = (bha) => {
    * Steel density is approximated as 65.5 ppg.
    */
   const mudWeight = Number(bha?.mudWeight) || 0;
-  const steelDensity = 65.5;
+  const DEFAULT_STEEL_DENSITY = 65.5;
 
-  const buoyancyFactor =
-    mudWeight > 0
-      ? 1 - mudWeight / steelDensity
-      : null;
+  const buoyancyFactor = calcBuoyancyFactor(bha.mudWeight);
 
   const totalBuoyedWeight =
     buoyancyFactor === null
@@ -79,4 +83,4 @@ export const buildBHASummary = (bha) => {
   };
 };
 
-export default buildBHASummary;
+export default basicBHACalcs;

@@ -2,26 +2,25 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 
-import BHASummary from './BHASummary.js';
+import EngineeringResults from './EngineeringResults.js';
 
-const BHASummaryCard = ({ bha }) => {
+const EngineeringResultsCard = ({ bha }) => {
   return (
     <Container>
-      <Card className="bhaSummaryCard">
+      <Card>
         <Card.Header
           className="bhaHeader draggableCardHeader"
           title="Drag to move card"
         >
-          <span className="cardHeaderGrip">⋮⋮⋮</span>
-          <span>BHA Summary</span>
+          ⋮⋮⋮ Engineering Results
         </Card.Header>
 
         <Card.Body>
-          <BHASummary bha={bha} />
+          <EngineeringResults bha={bha} />
         </Card.Body>
       </Card>
     </Container>
   );
 };
 
-export default BHASummaryCard;
+export default EngineeringResultsCard;
