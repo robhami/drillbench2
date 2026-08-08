@@ -27,7 +27,8 @@ class App extends Component {
       'BHA Data Entry',
       'Analysis Inputs',
       'BHA Summary',
-      'Engineering Results'
+      'Engineering Results',
+      'Engineering String'
 
 
 

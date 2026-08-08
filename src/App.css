@@ -188,6 +188,7 @@ dt {
   letter-spacing: -2px;
   opacity: 0.75;
 }
+
 /* =========================================
    BHA DATA ENTRY CARD
    ========================================= */
@@ -582,20 +583,20 @@ dt {
    ========================================= */
 
 body {
-    background: #f2f2f0;
+  background: #f2f2f0;
 }
 
 .dashboardCard {
 
-    background: #ffffff;
+  background: #ffffff;
 
-    border: 1px solid #bcc7d3;
+  border: 1px solid #bcc7d3;
 
-    border-radius: 8px;
+  border-radius: 8px;
 
-    box-shadow:
-        0 2px 6px rgba(0,0,0,.08),
-        0 10px 24px rgba(0,0,0,.06);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, .08),
+    0 10px 24px rgba(0, 0, 0, .06);
 }
 
 .dashboardCardControls {
@@ -614,13 +615,13 @@ body {
 .dashboardCardContent .card-header,
 .bhaHeader {
 
-    background: #dbe3eb;
+  background: #dbe3eb;
 
-    color: #23313f;
+  color: #23313f;
 
-    font-weight: 600;
+  font-weight: 600;
 
-    border-bottom: 1px solid #bcc7d3;
+  border-bottom: 1px solid #bcc7d3;
 }
 
 .dashboardCardContent .card-body {
@@ -631,7 +632,7 @@ body {
 
 #bhaCard .bhaComponentTable thead {
 
-    background: #d5dde5;
+  background: #d5dde5;
 
 }
 
@@ -672,7 +673,7 @@ body {
 
 /* Unit labels */
 
-.bhaInputWithUnit > span {
+.bhaInputWithUnit>span {
   background: #e8edf1;
   border-color: #bfc9d2;
   color: #53616d;
@@ -704,7 +705,7 @@ body {
 
 /* Summary */
 
-.bhaSummaryColumns > div + div {
+.bhaSummaryColumns>div+div {
   border-left-color: #cfd7de;
 }
 
@@ -812,46 +813,46 @@ body {
    NAVBAR
    ========================================== */
 
-.dbNavbar{
-    min-height:58px;
-    padding:8px 20px;
+.dbNavbar {
+  min-height: 58px;
+  padding: 8px 20px;
 
-    background:#fff;
+  background: #fff;
 
-    border-bottom:1px solid #E5E7EB;
+  border-bottom: 1px solid #E5E7EB;
 }
 
-.dbBrand{
-    display:flex;
-    flex-direction:column;
+.dbBrand {
+  display: flex;
+  flex-direction: column;
 
-    text-decoration:none !important;
+  text-decoration: none !important;
 }
 
-.dbTitle{
-    font-size:1.45rem;
-    font-weight:650;
-    letter-spacing:-0.03em;
-    color:#111827;
-    line-height:1.1;
+.dbTitle {
+  font-size: 1.45rem;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  color: #111827;
+  line-height: 1.1;
 }
 
-.dbSubtitle{
-    margin-top:2px;
+.dbSubtitle {
+  margin-top: 2px;
 
-    font-size:.72rem;
+  font-size: .72rem;
 
-    letter-spacing:.12em;
+  letter-spacing: .12em;
 
-    text-transform:uppercase;
+  text-transform: uppercase;
 
-    color:#98A2B3;
+  color: #98A2B3;
 }
 
-.dbToolbar{
-    margin-left:auto;
-    display:flex;
-    gap:10px;
+.dbToolbar {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
 }
 
 /* ==========================================
@@ -1059,6 +1060,7 @@ body {
 
   transform: translateY(0);
 }
+
 /* ==========================================
    DELETE BUTTON (BHA CARD)
    ========================================== */
@@ -1175,19 +1177,88 @@ body {
 }
 
 #engineeringResults th {
-    text-align: center;
+  text-align: center;
 }
 
 #engineeringResults td {
-    vertical-align: middle;
+  vertical-align: middle;
 }
 
 #engineeringResults .left {
-    text-align: left;
+  text-align: left;
 }
 
 #engineeringResults .centre,
 #engineeringResults .num {
-    text-align: center;
-    font-variant-numeric: tabular-nums;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* ==========================
+   Engineering String
+   ========================== */
+
+.engString {
+  width: 220px;
+  margin: 0 auto;
+}
+
+.engStringComponent {
+  position: relative;
+  min-height: 48px;
+  margin: 0 auto 3px;
+  border: 1px solid #c8d1da;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.engStringComponent.compression {
+  background: #f5cccc;
+  border-color: #c85d5d;
+}
+
+.engStringComponent.tension {
+  background: #cfe1f5;
+  border-color: #5b8fc8;
+}
+
+.engStringComponent.mixed {
+  background:
+    linear-gradient(to bottom,
+      #cfe1f5 0%,
+      #cfe1f5 50%,
+      #f5cccc 50%,
+      #f5cccc 100%);
+  border-color: #8a8a8a;
+}
+
+.engStringComponent.neutral {
+  background: #eeeeee;
+}
+
+.engStringLabel {
+  padding: 4px 7px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.engStringBody {
+  padding: 3px 7px 5px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.engStringBit {
+  margin-top: 5px;
+  padding: 5px;
+  border: 1px solid #555;
+  text-align: center;
+  font-weight: 700;
+}
+
+.engStringEmpty {
+  padding: 15px;
+  text-align: center;
+  color: #777;
 }

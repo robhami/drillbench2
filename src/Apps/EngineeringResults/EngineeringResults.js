@@ -12,6 +12,7 @@ const EngineeringResults = ({ bha }) => {
   const engModel = buildEngModel(bha);
 
   const results = engModel.positions;
+  const axialResults = engModel.axialLoads;
 
   return (
     <div id="engineeringResults">
@@ -30,11 +31,13 @@ const EngineeringResults = ({ bha }) => {
             <th className="distance num">End</th>
             <th className="weight num">Air wt</th>
             <th className="weight num">Buoyed wt</th>
+            <th>Bottom Load</th>
+            <th>Top Load</th>
           </tr>
         </thead>
 
         <tbody>
-          {results.components.map((component) => (
+          {axialResults.components.map((component) => (
             <tr key={component.position}>
               <td className="centre">{component.position}</td>
               <td className="left">
@@ -50,6 +53,16 @@ const EngineeringResults = ({ bha }) => {
                   ? "—"
                   : formatNumber(component.buoyedWeight, 0)}
               </td>
+              <td className="centre">
+                {formatNumber(component.bottomAxialForce, 0)}
+              </td>
+
+              <td className="centre">
+                {formatNumber(component.topAxialForce, 0)}
+              </td>
+
+
+
             </tr>
           ))}
         </tbody>

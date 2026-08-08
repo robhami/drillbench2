@@ -1,26 +1,25 @@
 import React from 'react';
 
+import { buildEngModel } from './engineering/models/buildEngModel.js';
+
 import UnitCon from './Apps/UnitCon/UnitCon.js';
 import BHAEntry from './Apps/BHAEntry/BHAEntry.js';
 import AnalysisInputs from './Apps/AnalysisInputs/AnalysisInputs.js';
 import BHASummaryCard from './Apps/BHASummary/BHASummaryCard.js';
 import EngineeringResultsCard from './Apps/EngineeringResults/EngineeringResultsCard.js';
-import BHAManagerCard from './Apps/BHAManager/BHAManagerCard.js';
-
+import EngineeringStringCard from './Apps/EngineeringString/EngineeringStringCard.js';
 
 export const createWidgets = ({
   bha,
-  savedBhas,
-  saveBha,
-  loadBha,
-  deleteBha,
-  newBha,
   updateBha,
   updateRow,
   addRow,
   removeRow,
   reorderRows
-}) => [
+}) => {
+  const engModel = buildEngModel(bha);
+
+  return [
     {
       id: 0,
       name: 'Units Converter',
@@ -81,24 +80,15 @@ export const createWidgets = ({
 
     {
       id: 5,
-      name: 'BHA Manager',
+      name: 'Engineering String',
       image:
         'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
-      value: 'BHA Manager',
+      value: 'Engineering String',
       app: (
-        <BHAManagerCard
-          currentBha={bha}
-          savedBhas={savedBhas}
-          saveBha={saveBha}
-          loadBha={loadBha}
-          deleteBha={deleteBha}
-          newBha={newBha}
+        <EngineeringStringCard
+          engModel={engModel}
         />
       )
     }
-
-
-
-
-
   ];
+};
