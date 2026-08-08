@@ -7,6 +7,7 @@ import Navbar from './Navbar.js';
 import Scroll from './Scroll.js';
 import SearchDrop from './SearchDrop.js';
 
+
 const createEmptyRow = () => ({
   rowId: `${Date.now()}-${Math.random()}`,
   category: '',
@@ -18,6 +19,8 @@ const createEmptyRow = () => ({
   length: ''
 });
 
+
+
 class App extends Component {
   state = {
     searchfield: [],
@@ -26,20 +29,39 @@ class App extends Component {
       field: '',
       operator: '',
       currentBha: {
+        id: '',
         name: '',
         holeSize: '',
         mudWeight: '',
         wob: '',
         rows: [createEmptyRow()]
-      }
+      },
+      savedBhas: []
     }
   };
+
   componentDidMount() {
     const savedWell = localStorage.getItem('drillbenchWell');
 
     if (savedWell) {
+      const parsedWell = JSON.parse(savedWell);
+
       this.setState({
-        well: JSON.parse(savedWell)
+        well: {
+          name: parsedWell.name || '',
+          field: parsedWell.field || '',
+          operator: parsedWell.operator || '',
+          currentBha: {
+            id: '',
+            name: '',
+            holeSize: '',
+            mudWeight: '',
+            wob: '',
+            rows: [createEmptyRow()],
+            ...parsedWell.currentBha
+          },
+          savedBhas: parsedWell.savedBhas || []
+        }
       });
     }
   }
@@ -52,6 +74,7 @@ class App extends Component {
       );
     }
   }
+
   onChange = (event) => {
     const searchfield = event.map((item) => item.value);
 
@@ -155,12 +178,110 @@ class App extends Component {
     });
   };
 
+  saveBha = () => {
+    this.setState((currentState) => {
+      const currentBha = currentState.well.currentBha;
+
+      const bhaId =
+        currentBha.id || `${Date.now()}`;
+
+      const bhaToSave = {
+        ...currentBha,
+        id: bhaId
+      };
+
+      const existingIndex =
+        currentState.well.savedBhas.findIndex(
+          (bha) => bha.id === bhaId
+        );
+
+      let savedBhas;
+
+      if (existingIndex >= 0) {
+        savedBhas = currentState.well.savedBhas.map(
+          (bha) =>
+            bha.id === bhaId
+              ? bhaToSave
+              : bha
+        );
+      } else {
+        savedBhas = [
+          ...currentState.well.savedBhas,
+          bhaToSave
+        ];
+      }
+
+      return {
+        well: {
+          ...currentState.well,
+          currentBha: bhaToSave,
+          savedBhas
+        }
+      };
+    });
+  };
+
+  loadBha = (bhaId) => {
+    this.setState((currentState) => {
+      const bhaToLoad =
+        currentState.well.savedBhas.find(
+          (bha) => bha.id === bhaId
+        );
+
+      if (!bhaToLoad) {
+        return null;
+      }
+
+      return {
+        well: {
+          ...currentState.well,
+          currentBha: {
+            ...bhaToLoad
+          }
+        }
+      };
+    });
+  };
+
+  deleteBha = (bhaId) => {
+    this.setState((currentState) => ({
+      well: {
+        ...currentState.well,
+        savedBhas:
+          currentState.well.savedBhas.filter(
+            (bha) => bha.id !== bhaId
+          )
+      }
+    }));
+  };
+
+  newBha = () => {
+    this.setState((currentState) => ({
+      well: {
+        ...currentState.well,
+        currentBha: {
+          id: '',
+          name: '',
+          holeSize: '',
+          mudWeight: '',
+          wob: '',
+          rows: [createEmptyRow()]
+        }
+      }
+    }));
+  };
+
   render() {
     const { well, searchfield } = this.state;
     const bha = well.currentBha;
 
     const widgets = createWidgets({
       bha,
+      savedBhas: well.savedBhas,
+      saveBha: this.saveBha,
+      loadBha: this.loadBha,
+      deleteBha: this.deleteBha,
+      newBha: this.newBha,
       updateBha: this.updateBha,
       updateRow: this.updateRow,
       addRow: this.addRow,
@@ -174,7 +295,16 @@ class App extends Component {
 
     return (
       <div>
-        <Navbar />
+        <Navbar
+          currentBha={bha}
+          savedBhas={well.savedBhas}
+          saveBha={this.saveBha}
+          loadBha={this.loadBha}
+          newBha={this.newBha}
+          deleteBha={this.deleteBha}
+        />
+
+
 
         <SearchDrop
           widgets={widgets}
@@ -188,5 +318,4 @@ class App extends Component {
     );
   }
 }
-
 export default App;

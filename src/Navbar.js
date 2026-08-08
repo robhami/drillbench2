@@ -2,8 +2,19 @@ import React from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
-const AppNavbar = () => {
+const AppNavbar = ({
+
+  currentBha,
+  savedBhas = [],
+  saveBha,
+  loadBha,
+  newBha,
+  deleteBha
+}) => {
+
+
   return (
     <Navbar className="dbNavbar">
       <Container fluid className="dbNavbarInner">
@@ -31,12 +42,53 @@ const AppNavbar = () => {
             type="button"
             variant="link"
             className="dbActionButton"
-            aria-label="Save project"
-            title="Save"
+            onClick={newBha}
+            title="New BHA"
+          >
+            <i className="bi bi-file-earmark-plus" aria-hidden="true" />
+            <span>New</span>
+          </Button>
+
+          <Button
+            type="button"
+            variant="link"
+            className="dbActionButton"
+            onClick={saveBha}
+            title="Save BHA"
           >
             <i className="bi bi-floppy" aria-hidden="true" />
             <span>Save</span>
           </Button>
+
+          <Button
+            type="button"
+            variant="link"
+            className="dbActionButton"
+            onClick={() => deleteBha(currentBha.id)}
+            disabled={!currentBha?.id}
+            title="Delete BHA"
+          >
+            <i className="bi bi-trash" aria-hidden="true" />
+            <span>Delete</span>
+          </Button>
+
+          <Form.Select
+            className="dbBhaSelect"
+            value={currentBha?.id || ''}
+            onChange={(event) => {
+              if (event.target.value) {
+                loadBha(event.target.value);
+              }
+            }}
+          >
+            <option value="">Current BHA...</option>
+
+            {savedBhas.map((bha) => (
+              <option key={bha.id} value={bha.id}>
+                {bha.name || 'Unnamed BHA'}
+              </option>
+            ))}
+          </Form.Select>
 
           <Button
             type="button"
