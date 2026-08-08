@@ -1,8 +1,7 @@
 import React from 'react';
 import Table from 'react-bootstrap/Table';
 
-import { calcComponentPositions } from '../../engineering/bha/calcComponentPositions.js';
-
+import { buildEngModel } from '../../engineering/models/buildEngModel.js';
 const formatNumber = (value, decimals = 1) =>
   Number(value).toLocaleString(undefined, {
     minimumFractionDigits: decimals,
@@ -10,18 +9,20 @@ const formatNumber = (value, decimals = 1) =>
   });
 
 const EngineeringResults = ({ bha }) => {
-  const results = calcComponentPositions(bha);
+  const engModel = buildEngModel(bha);
+
+  const results = engModel.positions;
 
   return (
     <div id="engineeringResults">
-      <Table 
+      <Table
         bordered
         hover
         responsive
         size="sm">
         <thead>
           <tr>
-             <th className="position">Pos</th>
+            <th className="position">Pos</th>
             <th className="tool left">Component</th>
             <th className="length num">Length</th>
             <th className="distance num">Start</th>
@@ -34,22 +35,22 @@ const EngineeringResults = ({ bha }) => {
 
         <tbody>
           {results.components.map((component) => (
-                 <tr key={component.position}>
-            <td className="centre">{component.position}</td>
-            <td className="left">
+            <tr key={component.position}>
+              <td className="centre">{component.position}</td>
+              <td className="left">
                 {component.toolName || component.category}
-            </td>
-            <td className="num">{formatNumber(component.length,1)}</td>
-            <td className="num">{formatNumber(component.startFromBit,1)}</td>
-            <td className="num">{formatNumber(component.centreFromBit,1)}</td>
-            <td className="num">{formatNumber(component.endFromBit,1)}</td>
-            <td className="num">{formatNumber(component.airWeight,0)}</td>
-            <td className="num">
+              </td>
+              <td className="num">{formatNumber(component.length, 1)}</td>
+              <td className="num">{formatNumber(component.startFromBit, 1)}</td>
+              <td className="num">{formatNumber(component.centreFromBit, 1)}</td>
+              <td className="num">{formatNumber(component.endFromBit, 1)}</td>
+              <td className="num">{formatNumber(component.airWeight, 0)}</td>
+              <td className="num">
                 {component.buoyedWeight === null
-                    ? "—"
-                    : formatNumber(component.buoyedWeight,0)}
-            </td>
-        </tr>
+                  ? "—"
+                  : formatNumber(component.buoyedWeight, 0)}
+              </td>
+            </tr>
           ))}
         </tbody>
       </Table>

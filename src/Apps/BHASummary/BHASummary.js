@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { basicBHACalcs } from '../../engineering/bha/basicBHACalcs.js';
-import { calcCentreOfGravity } from '../../engineering/bha/calcCentreOfGravity.js';
-import { calcComponentPositions } from '../../engineering/bha/calcComponentPositions.js';
+
 import { calcNeutralPoint } from '../../engineering/forces/calcNeutralPoint.js';
+import { buildEngModel } from '../../engineering/models/buildEngModel.js';
+
+
 const formatNumber = (value, decimals = 1) =>
   Number(value).toLocaleString(undefined, {
     minimumFractionDigits: decimals,
@@ -19,9 +20,11 @@ const SummaryItem = ({ label, value }) => (
 );
 
 const BHASummary = ({ bha }) => {
-  const summary = basicBHACalcs(bha);
-  const centreOfGravityResult = calcCentreOfGravity(bha);
-  const positionResults = calcComponentPositions(bha);
+  const engModel = buildEngModel(bha);
+
+  const summary = engModel.basics;
+  const centreOfGravityResult = engModel.centreOfGravity;
+  const positionResults = engModel.positions;
 
   const hasMudWeight = summary.buoyancyFactor !== null;
 

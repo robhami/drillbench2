@@ -23,7 +23,18 @@ const createEmptyRow = () => ({
 
 class App extends Component {
   state = {
-    searchfield: [],
+    searchfield: [
+      'BHA Data Entry',
+      'Analysis Inputs',
+      'BHA Summary',
+      'Engineering Results'
+
+
+
+
+
+
+    ],
     well: {
       name: '',
       field: '',
@@ -42,28 +53,37 @@ class App extends Component {
 
   componentDidMount() {
     const savedWell = localStorage.getItem('drillbenchWell');
+    const savedSearchfield =
+      localStorage.getItem('drillbenchOpenWidgets');
+
+    const stateChanges = {};
 
     if (savedWell) {
       const parsedWell = JSON.parse(savedWell);
 
-      this.setState({
-        well: {
-          name: parsedWell.name || '',
-          field: parsedWell.field || '',
-          operator: parsedWell.operator || '',
-          currentBha: {
-            id: '',
-            name: '',
-            holeSize: '',
-            mudWeight: '',
-            wob: '',
-            rows: [createEmptyRow()],
-            ...parsedWell.currentBha
-          },
-          savedBhas: parsedWell.savedBhas || []
-        }
-      });
+      stateChanges.well = {
+        name: parsedWell.name || '',
+        field: parsedWell.field || '',
+        operator: parsedWell.operator || '',
+        currentBha: {
+          id: '',
+          name: '',
+          holeSize: '',
+          mudWeight: '',
+          wob: '',
+          rows: [createEmptyRow()],
+          ...parsedWell.currentBha
+        },
+        savedBhas: parsedWell.savedBhas || []
+      };
     }
+
+    if (savedSearchfield) {
+      stateChanges.searchfield =
+        JSON.parse(savedSearchfield);
+    }
+
+    this.setState(stateChanges);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -73,15 +93,14 @@ class App extends Component {
         JSON.stringify(this.state.well)
       );
     }
+
+    if (prevState.searchfield !== this.state.searchfield) {
+      localStorage.setItem(
+        'drillbenchOpenWidgets',
+        JSON.stringify(this.state.searchfield)
+      );
+    }
   }
-
-  onChange = (event) => {
-    const searchfield = event.map((item) => item.value);
-
-    this.setState({
-      searchfield
-    });
-  };
 
   updateBha = (changes) => {
     this.setState((currentState) => ({
@@ -271,6 +290,48 @@ class App extends Component {
     }));
   };
 
+  duplicateBha = () => {
+    this.setState((currentState) => {
+      const currentBha = currentState.well.currentBha;
+
+      const duplicate = {
+        ...currentBha,
+        id: `${Date.now()}`,
+        name: `${currentBha.name || 'New BHA'} Copy`,
+        rows: currentBha.rows.map((row) => ({
+          ...row,
+          rowId: `${Date.now()}-${Math.random()}`
+        }))
+      };
+
+      return {
+        well: {
+          ...currentState.well,
+          currentBha: duplicate,
+          savedBhas: [
+            ...currentState.well.savedBhas,
+            duplicate
+          ]
+        }
+      };
+    });
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   render() {
     const { well, searchfield } = this.state;
     const bha = well.currentBha;
@@ -301,6 +362,7 @@ class App extends Component {
           saveBha={this.saveBha}
           loadBha={this.loadBha}
           newBha={this.newBha}
+          duplicateBha={this.duplicateBha}
           deleteBha={this.deleteBha}
         />
 

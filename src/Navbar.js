@@ -11,7 +11,8 @@ const AppNavbar = ({
   saveBha,
   loadBha,
   newBha,
-  deleteBha
+  deleteBha,
+  duplicateBha
 }) => {
 
 
@@ -58,6 +59,17 @@ const AppNavbar = ({
           >
             <i className="bi bi-floppy" aria-hidden="true" />
             <span>Save</span>
+          </Button>
+
+          <Button
+            type="button"
+            variant="link"
+            className="dbActionButton"
+            onClick={duplicateBha}
+            title="Duplicate BHA"
+          >
+            <i className="bi bi-files" aria-hidden="true" />
+            <span>Duplicate</span>
           </Button>
 
           <Button
