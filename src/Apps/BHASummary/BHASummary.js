@@ -28,7 +28,7 @@ const BHASummary = ({ bha }) => {
 
   const hasMudWeight = summary.buoyancyFactor !== null;
 
-  const neutralPointResult = calcNeutralPoint(bha);
+  const neutralPointResult = calcNeutralPoint(engModel);
 
 
 
