@@ -23,6 +23,7 @@ export const buildEngModel = (bha) => {
         basics,
         positions,
         centreOfGravity,
+        baseModel,
         axialLoads
     };
 };

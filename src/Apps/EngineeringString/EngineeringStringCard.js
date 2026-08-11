@@ -1,25 +1,13 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container';
-import Card from 'react-bootstrap/Card';
+import WidgetCard from '../../Workspace/WidgetCard';
 
-import EngineeringString from './EngineeringString.js';
+import EngineeringString3D from './EngineeringString3D';
 
-const EngineeringStringCard = ({ engModel }) => {
+const EngineeringStringCard = (props) => {
     return (
-        <Container>
-            <Card>
-                <Card.Header
-                    className="bhaHeader draggableCardHeader"
-                    title="Drag to move card"
-                >
-                    ⋮⋮⋮ Engineering String
-                </Card.Header>
-
-                <Card.Body>
-                    <EngineeringString engModel={engModel} />
-                </Card.Body>
-            </Card>
-        </Container>
+        <WidgetCard title="Engineering String">
+            <EngineeringString3D {...props} />
+        </WidgetCard>
     );
 };
 
