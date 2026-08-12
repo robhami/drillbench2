@@ -6,6 +6,11 @@ import './App.css';
 import Navbar from './Navbar.js';
 import Scroll from './Scroll.js';
 import SearchDrop from './SearchDrop.js';
+import Workspace from './WorkspaceV2/Workspace.js';
+
+
+
+const USE_WORKSPACE_V2 = true;
 
 
 const createEmptyRow = () => ({
@@ -319,20 +324,6 @@ class App extends Component {
   };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   render() {
     const { well, searchfield } = this.state;
     const bha = well.currentBha;
@@ -357,26 +348,30 @@ class App extends Component {
 
     return (
       <div>
-        <Navbar
-          currentBha={bha}
-          savedBhas={well.savedBhas}
-          saveBha={this.saveBha}
-          loadBha={this.loadBha}
-          newBha={this.newBha}
-          duplicateBha={this.duplicateBha}
-          deleteBha={this.deleteBha}
-        />
+        {USE_WORKSPACE_V2 ? (
+          <Workspace bha={bha} />
+        ) : (
+          <>
+            <Navbar
+              currentBha={bha}
+              savedBhas={well.savedBhas}
+              saveBha={this.saveBha}
+              loadBha={this.loadBha}
+              newBha={this.newBha}
+              duplicateBha={this.duplicateBha}
+              deleteBha={this.deleteBha}
+            />
 
+            <SearchDrop
+              widgets={widgets}
+              onChange={this.onChange}
+            />
 
-
-        <SearchDrop
-          widgets={widgets}
-          onChange={this.onChange}
-        />
-
-        <Scroll>
-          <CardList widgets={filteredWidgets} />
-        </Scroll>
+            <Scroll>
+              <CardList widgets={filteredWidgets} />
+            </Scroll>
+          </>
+        )}
       </div>
     );
   }

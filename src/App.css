@@ -1262,3 +1262,26 @@ body {
   text-align: center;
   color: #777;
 }
+
+/* =========================================================
+   ENGINEERING STRING CARD
+   ========================================================= */
+
+.dashboardCard-5 {
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+}
+
+
+
+
+
+
+
+.engineeringString3D {
+  width: 100%;
+  height: 600px;
+  min-height: 420px;
+  overflow: hidden;
+}
