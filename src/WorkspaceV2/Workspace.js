@@ -5,14 +5,21 @@ import Widget from './Widget';
 
 const WORKSPACE_STORAGE_KEY = 'wellbenchWorkspaceV2';
 
-const Workspace = ({ bha }) => {
-
+const Workspace = ({
+    bha,
+    savedBhas,
+    saveBha,
+    loadBha,
+    newBha,
+    duplicateBha,
+    deleteBha,
+    updateBha,
+    updateRow,
+    addRow,
+    removeRow,
+    reorderRows
+}) => {
     const canvasRef = React.useRef(null);
-
-
-
-
-
 
     const defaultWidgets = [
         {
@@ -36,6 +43,39 @@ const Workspace = ({ bha }) => {
             visible: true,
             minimized: false,
             z: 2
+        },
+        {
+            id: 'bhaEntry1',
+            type: 'bhaEntry',
+            x: 80,
+            y: 70,
+            width: 760,
+            height: 520,
+            visible: false,
+            minimized: false,
+            z: 3
+        },
+        {
+            id: 'analysisInputs1',
+            type: 'analysisInputs',
+            x: 180,
+            y: 90,
+            width: 520,
+            height: 420,
+            visible: false,
+            minimized: false,
+            z: 4
+        },
+        {
+            id: 'engineeringString1',
+            type: 'engineeringString',
+            x: 220,
+            y: 140,
+            width: 700,
+            height: 520,
+            visible: false,
+            minimized: false,
+            z: 5
         }
     ];
 
@@ -142,6 +182,7 @@ const Workspace = ({ bha }) => {
             )
         );
     };
+
     const minimizeWidget = (id) => {
         setWidgets((currentWidgets) =>
             currentWidgets.map((widget) =>
@@ -176,7 +217,6 @@ const Workspace = ({ bha }) => {
         });
     };
 
-
     const getWidgetState = (type) => {
         const widget = widgets.find(
             (widget) => widget.type === type
@@ -202,15 +242,21 @@ const Workspace = ({ bha }) => {
 
                 <button
                     type="button"
-                    className={getWidgetState('bhaSummary')}
+                    className={getWidgetState('bhaEntry')}
                     onClick={() =>
-                        openWidget('bhaSummary')
+                        openWidget('bhaEntry')
                     }
                 >
                     BHA
                 </button>
 
-                <button type="button">
+                <button
+                    type="button"
+                    className={getWidgetState('analysisInputs')}
+                    onClick={() =>
+                        openWidget('analysisInputs')
+                    }
+                >
                     Analysis
                 </button>
 
@@ -226,14 +272,22 @@ const Workspace = ({ bha }) => {
 
                 <button
                     type="button"
+                    className={getWidgetState('engineeringString')}
+                    onClick={() =>
+                        openWidget('engineeringString')
+                    }
+                >
+                    String
+                </button>
+
+                <button
+                    type="button"
                     onClick={resetWorkspace}
                     title="Reset workspace layout"
                 >
                     Reset
                 </button>
             </aside>
-
-
 
             <main
                 ref={canvasRef}
@@ -246,6 +300,12 @@ const Workspace = ({ bha }) => {
                             key={widget.id}
                             widget={widget}
                             bha={bha}
+                            updateBha={updateBha}
+                            updateRow={updateRow}
+                            addRow={addRow}
+                            removeRow={removeRow}
+                            reorderRows={reorderRows}
+                            canvasRef={canvasRef}
                             onFocus={bringToFront}
                             onMove={updateWidgetPosition}
                             onResize={updateWidgetSize}
@@ -266,8 +326,6 @@ const Workspace = ({ bha }) => {
                         />
                     ))}
             </main>
-
-
         </div>
     );
 };

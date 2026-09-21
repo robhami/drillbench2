@@ -8,12 +8,7 @@ const EngineeringStringCard = ({ engModel }) => {
     return (
         <Container className="engineeringStringCard">
             <Card>
-                <Card.Header
-                    className="bhaHeader draggableCardHeader"
-                    title="Drag to move card"
-                >
-                    ⋮⋮⋮ Engineering String
-                </Card.Header>
+
 
                 <Card.Body>
                     <EngineeringString3D engModel={engModel} />

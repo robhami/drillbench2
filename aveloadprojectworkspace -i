@@ -1,0 +1,15 @@
+[33m59ba7ad[m[33m ([m[1;32mbackup/workspace-experiment[m[33m)[m WIP workspace refactor and 3D engineering string
+[33m604cdb6[m Add engineering model, axial force calculations and engineering string visualization
+[33mcc6f9fa[m Introduce engineering model abstraction
+[33m7ea4582[m Add engineering model abstraction
+[33m37220fe[m Add BHA management and application toolbar
+[33m0bbb5d7[m Refactor engineering calculations and add engineering results
+[33m5d64ee7[m Rename calculations module to engineering
+[33m26dfe37[m Refactor DrillBench dashboard and modernize BHA workflow UI
+[33m17861cb[m Refactor dashboard layout and split BHA workflow into modular cards
+[33mc6d9fdf[m Replace tool library with imported component database
+[33m8479260[m Split sortable BHA row into separate component
+[33m41eab1d[m Add well and BHA data model
+[33m6eddc43[m Rename SmallTable to BHA Builder
+[33md307e8a[m Add sortable multi-row BHA builder
+[33mfd24db6[m[33m ([m[1;31morigin/recovery-2026[m[33m, [m[1;32mrecovery-2026[m[33m)[m Hide App Matrix from public interface

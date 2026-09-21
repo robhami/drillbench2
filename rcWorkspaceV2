@@ -1,0 +1,8 @@
+[33m1d3529b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/workspace-v2[m[33m, [m[1;31morigin/feature/workspace-v2[m[33m)[m Add resizable workspace windows and minimize behavior
+[33m447c947[m Create Workspace V2 framework
+[33ma3aa53f[m Add project documentation and product vision
+[33m0be952e[m Restore 3D engineering string viewer
+[33m0da0a04[m[33m ([m[1;31morigin/feature/bha-tool-selection[m[33m, [m[1;32mfeature/bha-tool-selection[m[33m)[m Add 3D engineering string viewer
+[33m604cdb6[m Add engineering model, axial force calculations and engineering string visualization
+[33mcc6f9fa[m Introduce engineering model abstraction
+[33m7ea4582[m Add engineering model abstraction

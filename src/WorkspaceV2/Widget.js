@@ -1,10 +1,17 @@
 import React from 'react';
 import { Rnd } from 'react-rnd';
 import WidgetRegistry from './WidgetRegistry';
+import { buildEngModel } from '../engineering/models/buildEngModel.js';
+
 
 const Widget = ({
     widget,
     bha,
+    updateBha,
+    updateRow,
+    addRow,
+    removeRow,
+    reorderRows,
     canvasRef,
     onClose,
     onFocus,
@@ -22,6 +29,8 @@ const Widget = ({
 
     const Component =
         registryEntry.component;
+
+    const engModel = buildEngModel(bha);
 
     const minimizedHeight = 36;
     const minimizedMargin = 8;
@@ -148,7 +157,15 @@ const Widget = ({
                 </header>
                 {!widget.minimized && (
                     <div className="wb2WidgetBody">
-                        <Component bha={bha} />
+                        <Component
+                            bha={bha}
+                            engModel={engModel}
+                            updateBha={updateBha}
+                            updateRow={updateRow}
+                            addRow={addRow}
+                            removeRow={removeRow}
+                            reorderRows={reorderRows}
+                        />
                     </div>
                 )}
             </section>

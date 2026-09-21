@@ -349,7 +349,32 @@ class App extends Component {
     return (
       <div>
         {USE_WORKSPACE_V2 ? (
-          <Workspace bha={bha} />
+          <>
+            <Navbar
+              currentBha={bha}
+              savedBhas={well.savedBhas}
+              saveBha={this.saveBha}
+              loadBha={this.loadBha}
+              newBha={this.newBha}
+              duplicateBha={this.duplicateBha}
+              deleteBha={this.deleteBha}
+            />
+
+            <Workspace
+              bha={bha}
+              savedBhas={well.savedBhas}
+              saveBha={this.saveBha}
+              loadBha={this.loadBha}
+              newBha={this.newBha}
+              duplicateBha={this.duplicateBha}
+              deleteBha={this.deleteBha}
+              updateBha={this.updateBha}
+              updateRow={this.updateRow}
+              addRow={this.addRow}
+              removeRow={this.removeRow}
+              reorderRows={this.reorderRows}
+            />
+          </>
         ) : (
           <>
             <Navbar
@@ -374,6 +399,7 @@ class App extends Component {
         )}
       </div>
     );
+
   }
 }
 export default App;

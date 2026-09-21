@@ -7,13 +7,7 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
   return (
     <Container>
       <Card className="analysisInputsCard">
-        <Card.Header
-          className="bhaHeader draggableCardHeader"
-          title="Drag to move card"
-        >
-          <span className="cardHeaderGrip">⋮⋮⋮</span>
-          <span>Analysis Inputs</span>
-        </Card.Header>
+
 
         <Card.Body>
           <div className="analysisInputGrid">

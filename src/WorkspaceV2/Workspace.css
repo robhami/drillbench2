@@ -2,7 +2,7 @@
     display: flex;
 
     width: 100%;
-    min-height: 100vh;
+    height: calc(100vh - 62px);
 
     background: #f3f5f7;
 }
@@ -14,7 +14,7 @@
     flex: 0 0 72px;
 
     width: 72px;
-    min-height: 100vh;
+    height: 100%;
 
     padding: 10px 8px;
 
@@ -100,7 +100,7 @@
     flex: 1;
     min-width: 0;
 
-    height: 100vh;
+    height: 100%;
 
     overflow: hidden;
 

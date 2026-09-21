@@ -15,13 +15,7 @@ const BHAEntry = ({
   return (
     <Container>
       <Card id="bhaCard">
-        <Card.Header
-          className="bhaHeader draggableCardHeader"
-          title="Drag to move card"
-        >
-         <span className="cardHeaderGrip">⋮⋮⋮</span>
-          <span>BHA Entry</span>
-        </Card.Header>
+
 
         <Card.Body>
           <BHABuilder
