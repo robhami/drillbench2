@@ -20,6 +20,13 @@ const Widget = ({
     onMinimize,
     onRestore
 }) => {
+
+
+    const engModel = React.useMemo(
+        () => buildEngModel(bha),
+        [bha]
+    );
+
     const registryEntry =
         WidgetRegistry[widget.type];
 
@@ -30,7 +37,6 @@ const Widget = ({
     const Component =
         registryEntry.component;
 
-    const engModel = buildEngModel(bha);
 
     const minimizedHeight = 36;
     const minimizedMargin = 8;

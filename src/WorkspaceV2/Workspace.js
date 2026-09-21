@@ -69,10 +69,10 @@ const Workspace = ({
         {
             id: 'engineeringString1',
             type: 'engineeringString',
-            x: 220,
-            y: 140,
-            width: 700,
-            height: 520,
+            x: 950,
+            y: 60,
+            width: 520,
+            height: 620,
             visible: false,
             minimized: false,
             z: 5

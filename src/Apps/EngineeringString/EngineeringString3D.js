@@ -28,7 +28,7 @@ const EngineeringString3D = ({ engModel }) => {
         const aspect =
             width / height;
 
-        const viewSize = 6.5;
+        const viewSize = 5.2;
 
         const camera =
             new THREE.OrthographicCamera(
@@ -63,8 +63,13 @@ const EngineeringString3D = ({ engModel }) => {
 
         renderer.setSize(
             width,
-            height
+            height,
+            false
         );
+
+        renderer.domElement.style.width = '100%';
+        renderer.domElement.style.height = '100%';
+        renderer.domElement.style.display = 'block';
 
         mount.appendChild(
             renderer.domElement
@@ -108,7 +113,7 @@ const EngineeringString3D = ({ engModel }) => {
                 engModel?.positions?.totalLength
             ) || 0;
 
-        const displayLength = 11.5;
+        const displayLength = 8.5;
 
         const lengthScale =
             totalLength > 0
@@ -169,7 +174,10 @@ const EngineeringString3D = ({ engModel }) => {
                     );
 
                 const radius = Math.max(
-                    Math.min(od * 0.035, 0.35),
+                    Math.min(
+                        od * 0.035,
+                        0.35
+                    ),
                     0.08
                 );
 
@@ -400,6 +408,13 @@ const EngineeringString3D = ({ engModel }) => {
             const newHeight =
                 mount.clientHeight;
 
+            if (
+                !newWidth ||
+                !newHeight
+            ) {
+                return;
+            }
+
             const newAspect =
                 newWidth /
                 newHeight;
@@ -422,13 +437,27 @@ const EngineeringString3D = ({ engModel }) => {
 
             renderer.setSize(
                 newWidth,
-                newHeight
+                newHeight,
+                false
             );
         };
 
-        window.addEventListener(
-            'resize',
-            onResize
+        let resizeFrame;
+
+        const resizeObserver =
+            new ResizeObserver(() => {
+                cancelAnimationFrame(
+                    resizeFrame
+                );
+
+                resizeFrame =
+                    requestAnimationFrame(() => {
+                        onResize();
+                    });
+            });
+
+        resizeObserver.observe(
+            mount
         );
 
         /*
@@ -440,10 +469,11 @@ const EngineeringString3D = ({ engModel }) => {
                 animationFrameId
             );
 
-            window.removeEventListener(
-                'resize',
-                onResize
+            cancelAnimationFrame(
+                resizeFrame
             );
+
+            resizeObserver.disconnect();
 
             window.removeEventListener(
                 'mouseup',

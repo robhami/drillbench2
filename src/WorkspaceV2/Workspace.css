@@ -188,7 +188,12 @@
 }
 
 .wb2WidgetBody {
+    height: calc(100% - 34px);
+    min-height: 0;
+
     padding: 8px 10px 10px;
+
+    overflow: hidden;
 }
 
 .wb2Widget:has(.wb2WidgetBody) {
