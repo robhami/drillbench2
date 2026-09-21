@@ -144,6 +144,11 @@ const SortableRow = ({
                         type="text"
                         inputMode="decimal"
                         value={value}
+                        placeholder={
+                            field === 'length'
+                                ? 'Enter ft'
+                                : ''
+                        }
                         onChange={(event) =>
                             updateRow(row.rowId, {
                                 [field]: event.target.value

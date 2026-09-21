@@ -4,15 +4,27 @@ import * as THREE from 'three';
 const EngineeringString3D = ({ engModel }) => {
     const mountRef = useRef(null);
 
+    const components =
+        engModel?.axialLoads?.components || [];
+
+    const validComponents = components.filter(
+        (component) =>
+            Number(component.length) > 0 &&
+            (
+                component.selectedToolId ||
+                component.toolName ||
+                component.category
+            )
+    );
+
+    const hasValidComponents =
+        validComponents.length > 0;
+
     useEffect(() => {
         const mount = mountRef.current;
 
         if (!mount) return;
-
-        const components =
-            engModel?.axialLoads?.components || [];
-
-        if (components.length === 0) return;
+        if (!hasValidComponents) return;
 
         const scene = new THREE.Scene();
 
@@ -109,9 +121,12 @@ const EngineeringString3D = ({ engModel }) => {
         );
 
         const totalLength =
-            Number(
-                engModel?.positions?.totalLength
-            ) || 0;
+            validComponents.reduce(
+                (sum, component) =>
+                    sum +
+                    (Number(component.length) || 0),
+                0
+            );
 
         const displayLength = 8.5;
 
@@ -150,7 +165,9 @@ const EngineeringString3D = ({ engModel }) => {
             return 0xc6b66b;
         };
 
-        components.forEach(
+        let cumulativeLength = 0;
+
+        validComponents.forEach(
             (component) => {
                 const length =
                     Number(
@@ -163,9 +180,8 @@ const EngineeringString3D = ({ engModel }) => {
                     ) || 5;
 
                 const centreFromBit =
-                    Number(
-                        component.centreFromBit
-                    ) || 0;
+                    cumulativeLength +
+                    length / 2;
 
                 const displayComponentLength =
                     Math.max(
@@ -173,13 +189,14 @@ const EngineeringString3D = ({ engModel }) => {
                         0.05
                     );
 
-                const radius = Math.max(
-                    Math.min(
-                        od * 0.035,
-                        0.35
-                    ),
-                    0.08
-                );
+                const radius =
+                    Math.max(
+                        Math.min(
+                            od * 0.035,
+                            0.35
+                        ),
+                        0.08
+                    );
 
                 const geometry =
                     new THREE.CylinderGeometry(
@@ -231,12 +248,10 @@ const EngineeringString3D = ({ engModel }) => {
                 stringGroup.add(
                     mesh
                 );
+
+                cumulativeLength += length;
             }
         );
-
-        /*
-         * Simple bit
-         */
 
         const bitGeometry =
             new THREE.CylinderGeometry(
@@ -267,19 +282,10 @@ const EngineeringString3D = ({ engModel }) => {
             bitMesh
         );
 
-        /*
-         * Slight 3D angle
-         */
-
         stringGroup.rotation.x = 0;
         stringGroup.rotation.y = -0.35;
 
-        /*
-         * Drag controls
-         */
-
         let isDragging = false;
-
         let previousX = 0;
         let previousY = 0;
 
@@ -324,10 +330,6 @@ const EngineeringString3D = ({ engModel }) => {
         const onMouseUp = () => {
             isDragging = false;
         };
-
-        /*
-         * Zoom
-         */
 
         let zoom = 1;
 
@@ -377,10 +379,6 @@ const EngineeringString3D = ({ engModel }) => {
             onMouseUp
         );
 
-        /*
-         * Animation
-         */
-
         let animationFrameId;
 
         const animate = () => {
@@ -396,10 +394,6 @@ const EngineeringString3D = ({ engModel }) => {
         };
 
         animate();
-
-        /*
-         * Resize
-         */
 
         const onResize = () => {
             const newWidth =
@@ -451,18 +445,14 @@ const EngineeringString3D = ({ engModel }) => {
                 );
 
                 resizeFrame =
-                    requestAnimationFrame(() => {
-                        onResize();
-                    });
+                    requestAnimationFrame(
+                        onResize
+                    );
             });
 
         resizeObserver.observe(
             mount
         );
-
-        /*
-         * Cleanup
-         */
 
         return () => {
             cancelAnimationFrame(
@@ -523,7 +513,18 @@ const EngineeringString3D = ({ engModel }) => {
                 );
             }
         };
-    }, [engModel]);
+    }, [
+        engModel,
+        hasValidComponents
+    ]);
+
+    if (!hasValidComponents) {
+        return (
+            <div className="engineeringStringEmpty">
+                Add BHA components to view the engineering string.
+            </div>
+        );
+    }
 
     return (
         <div
