@@ -73,3 +73,6 @@ To be documented from the workbook and supporting references.
 9 Jar Analysis
 
 10 Reports
+
+## Current implementation note (2026-10-04)
+The sections above describe a wider **planned** model. The current shipped module is **vertical static screening only**; it does not yet consume survey trajectories, friction, or manufacturer operating limits. For the actual equations, positive-compression sign convention and tested examples, see `VerticalAxialModel.md` and `Validation.md`.

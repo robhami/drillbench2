@@ -131,3 +131,6 @@ Potential first-version limitations may include:
 ## 10. References
 
 To be added.
+
+## Implemented baseline (2026-10-04)
+The earlier sections include planning notes. The current vertical static implementation uses **positive compression / negative tension**, with `BF = 1 − mudWeight/65.5` and neutral point at the cumulative buoyed-weight/WOB balance. See `VerticalAxialModel.md` for the implemented equations and exclusions; see `Validation.md` for regression cases.
