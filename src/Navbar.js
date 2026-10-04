@@ -9,6 +9,8 @@ const AppNavbar = ({
   currentBha,
   savedBhas = [],
   saveBha,
+  saveBhaAs,
+  renameBha,
   loadBha,
   newBha,
   deleteBha,
@@ -59,6 +61,18 @@ const AppNavbar = ({
           >
             <i className="bi bi-floppy" aria-hidden="true" />
             <span>Save</span>
+          </Button>
+
+          <Button type="button" variant="link" className="dbActionButton"
+            onClick={saveBhaAs} title="Save a separate copy with a new name">
+            <i className="bi bi-save2" aria-hidden="true" />
+            <span>Save As</span>
+          </Button>
+
+          <Button type="button" variant="link" className="dbActionButton"
+            onClick={renameBha} title="Rename current BHA">
+            <i className="bi bi-pencil-square" aria-hidden="true" />
+            <span>Rename</span>
           </Button>
 
           <Button

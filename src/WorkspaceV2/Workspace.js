@@ -79,6 +79,9 @@ const Workspace = ({
         }
     ];
 
+    const jarWidget = { id: 'jarPlacement1', type: 'jarPlacement', x: 330, y: 150, width: 580, height: 430, visible: false, minimized: false, z: 6 };
+    defaultWidgets.push(jarWidget);
+
     const [widgets, setWidgets] = React.useState(() => {
         const savedWorkspace =
             localStorage.getItem(WORKSPACE_STORAGE_KEY);
@@ -88,7 +91,8 @@ const Workspace = ({
         }
 
         try {
-            return JSON.parse(savedWorkspace);
+            const parsed = JSON.parse(savedWorkspace);
+            return parsed.some(w => w.type === 'jarPlacement') ? parsed : [...parsed, jarWidget];
         } catch {
             return defaultWidgets;
         }
@@ -259,7 +263,15 @@ const Workspace = ({
                 >
                     Analysis
                 </button>
-
+                <button
+                    type="button"
+                    className={getWidgetState('bhaSummary')}
+                    onClick={() =>
+                        openWidget('bhaSummary')
+                    }
+                >
+                    Summary
+                </button>
                 <button
                     type="button"
                     className={getWidgetState('engineeringResults')}
@@ -279,6 +291,8 @@ const Workspace = ({
                 >
                     String
                 </button>
+
+                <button type="button" className={getWidgetState('jarPlacement')} onClick={() => openWidget('jarPlacement')}>Jars</button>
 
                 <button
                     type="button"

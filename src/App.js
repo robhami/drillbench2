@@ -246,6 +246,41 @@ class App extends Component {
     });
   };
 
+  saveBhaAs = () => {
+    const current = this.state.well.currentBha;
+    const entered = window.prompt('Save BHA as:', current.name ? `${current.name} Copy` : 'New BHA');
+    if (entered === null) return;
+    const name = entered.trim();
+    if (!name) { window.alert('Enter a BHA name.'); return; }
+    this.setState((state) => {
+      const copy = {
+        ...state.well.currentBha,
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+        name,
+        rows: state.well.currentBha.rows.map(row => ({ ...row }))
+      };
+      return { well: { ...state.well, currentBha: copy, savedBhas: [...state.well.savedBhas, copy] } };
+    });
+  };
+
+  renameBha = () => {
+    const current = this.state.well.currentBha;
+    const entered = window.prompt('Rename current BHA:', current.name || '');
+    if (entered === null) return;
+    const name = entered.trim();
+    if (!name) { window.alert('Enter a BHA name.'); return; }
+    // Rename the working BHA and its saved record if one exists.
+    this.setState((state) => ({
+      well: {
+        ...state.well,
+        currentBha: { ...state.well.currentBha, name },
+        savedBhas: state.well.savedBhas.map(bha =>
+          bha.id === state.well.currentBha.id ? { ...bha, name } : bha
+        )
+      }
+    }));
+  };
+
   loadBha = (bhaId) => {
     this.setState((currentState) => {
       const bhaToLoad =
@@ -354,6 +389,8 @@ class App extends Component {
               currentBha={bha}
               savedBhas={well.savedBhas}
               saveBha={this.saveBha}
+              saveBhaAs={this.saveBhaAs}
+              renameBha={this.renameBha}
               loadBha={this.loadBha}
               newBha={this.newBha}
               duplicateBha={this.duplicateBha}
@@ -364,6 +401,8 @@ class App extends Component {
               bha={bha}
               savedBhas={well.savedBhas}
               saveBha={this.saveBha}
+              saveBhaAs={this.saveBhaAs}
+              renameBha={this.renameBha}
               loadBha={this.loadBha}
               newBha={this.newBha}
               duplicateBha={this.duplicateBha}
@@ -381,6 +420,8 @@ class App extends Component {
               currentBha={bha}
               savedBhas={well.savedBhas}
               saveBha={this.saveBha}
+              saveBhaAs={this.saveBhaAs}
+              renameBha={this.renameBha}
               loadBha={this.loadBha}
               newBha={this.newBha}
               duplicateBha={this.duplicateBha}

@@ -43,7 +43,8 @@ const SortableRow = ({
             od: '',
             idSize: '',
             weight: '',
-            length: ''
+            length: '',
+            toolName: ''
         });
     };
 
@@ -71,7 +72,8 @@ const SortableRow = ({
             od: selectedTool.od ?? '',
             idSize: selectedTool.idSize ?? '',
             weight: selectedTool.weight ?? '',
-            length: selectedTool.length ?? ''
+            length: selectedTool.length ?? '',
+            toolName: selectedTool.name ?? ''
         });
     };
 

@@ -4,7 +4,15 @@ import {
 } from '../forces/calcBuoyancy.js';
 
 export const calcComponentPositions = (bha) => {
-  const rows = bha?.rows || [];
+  const rows = (bha?.rows || []).filter(
+    (row) =>
+      Number(row.length) > 0 &&
+      (
+        row.selectedToolId ||
+        row.toolName ||
+        row.category
+      )
+  );
 
   let cumulativeLength = 0;
 
