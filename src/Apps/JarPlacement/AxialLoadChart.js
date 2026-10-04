@@ -17,7 +17,7 @@ export default function AxialLoadChart({bha, neutralPointFt}) {
   const ticks=[-limit,-limit/2,0,limit/2,limit];
   const path=points.map((p,i)=>`${i?'L':'M'} ${x(p.load)} ${y(p.depth)}`).join(' ');
   return <div style={{margin:'12px 0'}}>
-    <strong>Axial load profile — vertical static screening</strong>
+    <strong>Axial load profile — straight-hole static screening</strong>
     <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label="Axial load in thousands of pounds against distance above bit, with jar intervals and neutral point" style={{display:'block',width:'100%',maxWidth:820,marginTop:8,background:'#fff',border:'1px solid #d5dce4'}}>
       {jars.map((j,i)=><rect key={i} x={left} y={y(j.endFromBit)} width={W-left-right} height={Math.max(2,y(j.startFromBit)-y(j.endFromBit))} fill="#e0c67b" opacity="0.45"/>)}
       {ticks.map((t,i)=><g key={i}><line x1={x(t)} x2={x(t)} y1={top} y2={H-bottom} stroke={t===0?'#475569':'#e2e8f0'} strokeDasharray={t===0?'5 4':'2 3'}/><text x={x(t)} y={H-bottom+17} fontSize="11" fill="#334155" textAnchor="middle">{fmt(t)}</text></g>)}

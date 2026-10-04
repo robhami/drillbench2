@@ -13,13 +13,22 @@ export const calcNeutralPoint = (engModel) => {
         };
     }
 
+    const inclination = Number(engModel.bha.inclination ?? 0);
+    if (!Number.isFinite(inclination) || inclination < 0 || inclination > 90) {
+        return { neutralPointFound: false, neutralPointFromBit: null, componentIndex: null };
+    }
+    const gravityProjection = Math.cos(inclination * Math.PI / 180);
+    // Horizontal limit: axial gravity vanishes, so positive WOB cannot cross zero.
+    if (gravityProjection < 1e-12) {
+        return { neutralPointFound: false, neutralPointFromBit: null, componentIndex: null };
+    }
     let cumulativeBuoyedWeight = 0;
 
     for (let i = 0; i < components.length; i += 1) {
         const component = components[i];
 
         const buoyedWeight =
-            Number(component.buoyedWeight) || 0;
+            (Number(component.buoyedWeight) || 0) * gravityProjection;
 
         const length =
             Number(component.length) || 0;

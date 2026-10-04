@@ -51,6 +51,7 @@ class App extends Component {
         holeSize: '',
         mudWeight: '',
         wob: '',
+        inclination: 0,
         rows: [createEmptyRow()]
       },
       savedBhas: []
@@ -77,6 +78,7 @@ class App extends Component {
           holeSize: '',
           mudWeight: '',
           wob: '',
+        inclination: 0,
           rows: [createEmptyRow()],
           ...parsedWell.currentBha
         },
@@ -325,6 +327,7 @@ class App extends Component {
           holeSize: '',
           mudWeight: '',
           wob: '',
+        inclination: 0,
           rows: [createEmptyRow()]
         }
       }

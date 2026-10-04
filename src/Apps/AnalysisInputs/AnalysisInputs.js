@@ -66,6 +66,15 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
             </Form.Group>
 
             <Form.Group>
+              <Form.Label>Inclination (straight hole, from vertical)</Form.Label>
+              <div className="bhaInputWithUnit">
+                <Form.Control type="number" min="0" max="90" step="0.1"
+                  value={bha.inclination ?? 0}
+                  onChange={(event) => updateBha({ inclination: event.target.value })} />
+                <span>deg</span>
+              </div>
+            </Form.Group>
+            <Form.Group>
               <Form.Label>WOB</Form.Label>
 
               <div className="bhaInputWithUnit">

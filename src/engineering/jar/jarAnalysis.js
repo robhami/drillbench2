@@ -8,6 +8,8 @@ export function analyzeJarPlacement(bha) {
   const components = model.positions.components;
   const jars = components.filter(c => String(c.category || '').toUpperCase() === 'JAR');
   const warnings = [];
+  const inclination = Number(bha?.inclination ?? 0);
+  if (!Number.isFinite(inclination) || inclination < 0 || inclination > 90) warnings.push('Inclination must be between 0° and 90° from vertical.');
   const holeSize = Number(bha?.holeSize);
   if (!Number.isFinite(holeSize) || holeSize <= 0) warnings.push('Enter a valid hole size.');
   if (!(Number(bha?.mudWeight) > 0)) warnings.push('Enter a valid mud weight.');
@@ -29,6 +31,6 @@ export function analyzeJarPlacement(bha) {
       return { name: jar.toolName || 'JAR', startFt: jar.startFromBit, centreFt: jar.centreFromBit, endFt: jar.endFromBit, distanceFromNeutralFt: distance, issues };
     }),
     warnings,
-    disclaimer: 'Screening only: vertical static buoyed-weight approximation. Inclination, drag, buckling, temperature, jar firing force, accelerator compatibility and manufacturer limits are NOT evaluated. Not for field placement decisions.'
+    disclaimer: 'Screening only: straight constant-inclination static axial-gravity projection (buoyed weight × cos inclination). Drag, contact forces, buckling, temperature, jar firing force, accelerator compatibility and manufacturer limits are NOT evaluated. Not for field placement decisions.'
   };
 }

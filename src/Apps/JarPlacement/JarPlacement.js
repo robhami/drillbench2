@@ -10,6 +10,7 @@ export default function JarPlacement({ bha }) {
       <strong>PRELIMINARY — NOT FOR OPERATIONAL USE</strong><br/>{result.disclaimer}
     </div>
     <h5>Jar placement screening</h5>
+    <p>Constant inclination: <strong>{bha.inclination ?? 0}° from vertical</strong> (no drag)</p>
     <p>Calculated neutral point: <strong>{fmt(result.neutralPointFt)} above bit</strong></p>
     <AxialLoadChart bha={bha} neutralPointFt={result.neutralPointFt} />
     {result.warnings.map((w,i)=><p key={i} style={{color:'#995000'}}>⚠ {w}</p>)}
@@ -20,6 +21,6 @@ export default function JarPlacement({ bha }) {
       <div>Centre relative to neutral point: {jar.distanceFromNeutralFt === null ? 'Not determined' : `${Math.abs(jar.distanceFromNeutralFt).toFixed(1)} ft ${jar.distanceFromNeutralFt >= 0 ? 'above' : 'below'}`}</div>
       {jar.issues.map((issue,j)=><div key={j} style={{color:'#9a3412'}}>⚠ {issue}</div>)}
     </div>)}
-    <p style={{fontSize:12,color:'#526477'}}>Next phase: add manufacturer jar operating envelope, inclination/drag model and verified firing-force calculations.</p>
+    <p style={{fontSize:12,color:'#526477'}}>Next phase: validate directional drag/contact-force modelling and manufacturer jar operating limits.</p>
   </section>;
 }
