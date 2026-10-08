@@ -1,5 +1,6 @@
 // Preliminary straight-hole jar-placement screening while drilling.
-// Slide mode includes WOB + simplified Coulomb drag. Rotate will be added later.
+// All modes retain WOB at the bit. Slide uses full axial Coulomb drag; Rotate
+// resolves Coulomb friction into its axial share using RPM, ROP and tool OD.
 import { buildEngModel } from '../models/buildEngModel.js';
 import { calcStraightDrag, calcNeutralPointFromLoadProfile } from '../forces/calcStraightDrag.js';
 
@@ -19,9 +20,17 @@ export function analyzeJarPlacement(bha, drillingMode = 'reference') {
   if (!Number.isFinite(holeSize) || holeSize <= 0) warnings.push('Enter a valid hole size.');
   if (!(Number(bha?.mudWeight) > 0)) warnings.push('Enter a valid mud weight.');
   if (!(Number(bha?.wob) > 0)) warnings.push('Enter a valid weight on bit.');
+  if (drillingMode === 'rotate' && !(Number(bha?.rop) > 0)) warnings.push('Enter ROP > 0 ft/hr for Rotate drilling.');
+  if (drillingMode === 'rotate' && !(Number(bha?.rpm) >= 0)) warnings.push('Enter RPM ≥ 0 for Rotate drilling.');
   if (!loadProfile.valid) warnings.push(loadProfile.error);
   if (!jars.length) warnings.push('Add a JAR to the BHA to analyse placement.');
   if (jars.length > 1) warnings.push('Multiple jars detected; evaluate each independently and verify manufacturer guidance.');
+
+  const descriptions = {
+    slide: 'Screening only: straight constant-inclination slide-drilling model using WOB at the bit, buoyed axial weight and Coulomb wall drag (μN). Curvature, buckling, tortuosity and dynamics are not evaluated. Not for field placement decisions.',
+    rotate: 'Screening only: straight constant-inclination rotary-drilling model using WOB at the bit. Axial drag is the axial component of Coulomb friction derived from ROP, RPM and component OD. Curvature, buckling, tortuosity, bit torque and dynamics are not evaluated. Not for field placement decisions.',
+    reference: 'Screening only: straight constant-inclination frictionless drilling reference using WOB at the bit and buoyed axial weight. Not for field placement decisions.'
+  };
 
   return {
     drillingMode,
@@ -40,8 +49,6 @@ export function analyzeJarPlacement(bha, drillingMode = 'reference') {
       return { name: jar.toolName || 'JAR', startFt: jar.startFromBit, centreFt: jar.centreFromBit, endFt: jar.endFromBit, distanceFromNeutralFt: distance, issues };
     }),
     warnings,
-    disclaimer: drillingMode === 'slide'
-      ? 'Screening only: straight constant-inclination slide-drilling model using WOB at the bit, buoyed axial weight and Coulomb wall drag (μN). Curvature, buckling, tortuosity, dynamics and rotational effects are not evaluated. Not for field placement decisions.'
-      : 'Screening only: straight constant-inclination frictionless drilling reference using WOB at the bit and buoyed axial weight. Not for field placement decisions.'
+    disclaimer: descriptions[drillingMode] || descriptions.reference
   };
 }

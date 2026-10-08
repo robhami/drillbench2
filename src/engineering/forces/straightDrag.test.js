@@ -61,7 +61,57 @@ test('slide drag moves neutral point farther from bit than frictionless case', (
   expect(slideNP.neutralPointFromBit).toBeGreaterThan(refNP.neutralPointFromBit);
 });
 
-test('invalid inputs and unsupported rotate mode are rejected', () => {
+test('invalid friction input is rejected', () => {
   expect(calcStraightDrag(make(30),'slide',-0.1).valid).toBe(false);
-  expect(calcStraightDrag(make(30),'rotate').valid).toBe(false);
+});
+
+test('rotate drilling starts at WOB and uses axial share of friction', () => {
+  const m = make(45, 15, 0.25, 100, 200);
+  m.bha.rpm = 120;
+  m.bha.rop = 60;
+  const r = calcStraightDrag(m, 'rotate');
+  const c = r.components[0];
+  const w = 20000 * BF;
+  const normal = w / Math.sqrt(2);
+  const tangential = Math.PI * 8 / 12 * 120 * 60;
+  const fraction = 60 / Math.hypot(60, tangential);
+  expect(r.bitAxialForce).toBeCloseTo(15000, 5);
+  expect(c.axialDragFraction).toBeCloseTo(fraction, 8);
+  expect(c.dragContribution).toBeCloseTo(0.25 * normal * fraction, 5);
+  expect(r.topOfBhaAxialForce).toBeCloseTo(15000 - w/Math.sqrt(2) + 0.25*normal*fraction, 5);
+});
+
+test('rotate with zero RPM reduces exactly to slide drilling', () => {
+  const m = make(60, 15, 0.25, 200, 200);
+  m.bha.rpm = 0;
+  m.bha.rop = 60;
+  expect(calcStraightDrag(m,'rotate').topOfBhaAxialForce)
+    .toBeCloseTo(calcStraightDrag(m,'slide').topOfBhaAxialForce, 5);
+});
+
+test('rotation reduces axial drag and places neutral point between reference and slide', () => {
+  const m = make(45, 15, 0.25, 200, 200);
+  m.bha.rpm = 120;
+  m.bha.rop = 60;
+  const ref = calcNeutralPointFromLoadProfile(calcStraightDrag(m,'reference')).neutralPointFromBit;
+  const rot = calcNeutralPointFromLoadProfile(calcStraightDrag(m,'rotate')).neutralPointFromBit;
+  const slide = calcNeutralPointFromLoadProfile(calcStraightDrag(m,'slide')).neutralPointFromBit;
+  expect(rot).toBeGreaterThan(ref);
+  expect(rot).toBeLessThan(slide);
+});
+
+test('higher RPM reduces rotary axial drag', () => {
+  const m1 = make(45, 15, 0.25, 100, 200); m1.bha.rpm=30; m1.bha.rop=60;
+  const m2 = make(45, 15, 0.25, 100, 200); m2.bha.rpm=120; m2.bha.rop=60;
+  expect(calcStraightDrag(m2,'rotate').components[0].dragContribution)
+    .toBeLessThan(calcStraightDrag(m1,'rotate').components[0].dragContribution);
+});
+
+test('rotate requires positive ROP, non-negative RPM and valid component OD', () => {
+  const m = make(45); m.bha.rpm=120; m.bha.rop=0;
+  expect(calcStraightDrag(m,'rotate').valid).toBe(false);
+  m.bha.rop=60; m.bha.rpm=-1;
+  expect(calcStraightDrag(m,'rotate').valid).toBe(false);
+  m.bha.rpm=120; m.positions.components[0].od='';
+  expect(calcStraightDrag(m,'rotate').valid).toBe(false);
 });

@@ -81,6 +81,26 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
                 onChange={(event) => updateBha({ frictionCoefficient: event.target.value })} />
             </Form.Group>
             <Form.Group>
+              <Form.Label>RPM</Form.Label>
+              <div className="bhaInputWithUnit">
+                <Form.Control type="number" min="0" step="1"
+                  value={bha.rpm ?? ''}
+                  placeholder="120"
+                  onChange={(event) => updateBha({ rpm: event.target.value })} />
+                <span>rpm</span>
+              </div>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>ROP</Form.Label>
+              <div className="bhaInputWithUnit">
+                <Form.Control type="number" min="0" step="1"
+                  value={bha.rop ?? ''}
+                  placeholder="60"
+                  onChange={(event) => updateBha({ rop: event.target.value })} />
+                <span>ft/hr</span>
+              </div>
+            </Form.Group>
+            <Form.Group>
               <Form.Label>WOB</Form.Label>
 
               <div className="bhaInputWithUnit">
