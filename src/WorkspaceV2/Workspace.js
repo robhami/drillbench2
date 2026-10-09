@@ -20,7 +20,7 @@ const Workspace = ({
     reorderRows
 }) => {
     const canvasRef = React.useRef(null);
-
+    const [drillingMode, setDrillingMode] = React.useState('slide');
     const defaultWidgets = [
         {
             id: 'bhaSummary1',
@@ -314,6 +314,8 @@ const Workspace = ({
                             key={widget.id}
                             widget={widget}
                             bha={bha}
+                            drillingMode={drillingMode}
+                            setDrillingMode={setDrillingMode}
                             updateBha={updateBha}
                             updateRow={updateRow}
                             addRow={addRow}

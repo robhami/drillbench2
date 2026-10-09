@@ -2,17 +2,22 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 
 import { buildEngModel } from '../../engineering/models/buildEngModel.js';
+import { calcStraightDrag } from '../../engineering/forces/calcStraightDrag.js';
+
+
+
+
 const formatNumber = (value, decimals = 1) =>
   Number(value).toLocaleString(undefined, {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals
   });
 
-const EngineeringResults = ({ bha }) => {
+const EngineeringResults = ({ bha, drillingMode }) => {
   const engModel = buildEngModel(bha);
 
-  const results = engModel.positions;
-  const axialResults = engModel.axialLoads;
+  const mode = drillingMode || 'slide';
+  const axialResults = calcStraightDrag(engModel, mode);
 
   return (
     <div id="engineeringResults">

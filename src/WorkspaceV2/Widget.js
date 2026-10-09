@@ -7,6 +7,8 @@ import { buildEngModel } from '../engineering/models/buildEngModel.js';
 const Widget = ({
     widget,
     bha,
+    drillingMode,
+    setDrillingMode,
     updateBha,
     updateRow,
     addRow,
@@ -166,6 +168,8 @@ const Widget = ({
                         <Component
                             bha={bha}
                             engModel={engModel}
+                            drillingMode={drillingMode}
+                            setDrillingMode={setDrillingMode}
                             updateBha={updateBha}
                             updateRow={updateRow}
                             addRow={addRow}
