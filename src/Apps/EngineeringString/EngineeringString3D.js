@@ -1,13 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { getStringDisplayExtent } from './stringDisplayExtent';
 
-const EngineeringString3D = ({ engModel }) => {
+const EngineeringString3D = ({ components = [], neutralPointFt = null, jars = [] }) => {
     const mountRef = useRef(null);
 
-    const components =
-        engModel?.axialLoads?.components || [];
-
-    const validComponents = components.filter(
+    const validComponents = useMemo(() => components.filter(
         (component) =>
             Number(component.length) > 0 &&
             (
@@ -15,7 +13,7 @@ const EngineeringString3D = ({ engModel }) => {
                 component.toolName ||
                 component.category
             )
-    );
+    ), [components]);
 
     const hasValidComponents =
         validComponents.length > 0;
@@ -120,20 +118,40 @@ const EngineeringString3D = ({ engModel }) => {
             stringGroup
         );
 
-        const totalLength =
-            validComponents.reduce(
-                (sum, component) =>
-                    sum +
-                    (Number(component.length) || 0),
-                0
-            );
+        const totalLength = Math.max(...validComponents.map(component => component.endFromBit));
+        // Extend only as necessary to show the requested zone; preserve BHA focus.
+        const zoneEndFt = Math.max(0, ...jars.map(jar => jar.avoidanceZone?.upperFt || 0));
+        const visibleEndFt = Math.min(totalLength, Math.max(getStringDisplayExtent(validComponents, neutralPointFt), zoneEndFt));
 
         const displayLength = 8.5;
 
         const lengthScale =
-            totalLength > 0
-                ? displayLength / totalLength
+            visibleEndFt > 0
+                ? displayLength / visibleEndFt
                 : 1;
+
+        jars.forEach(jar => {
+            const zone = jar.avoidanceZone;
+            if (!zone) return;
+            const topFt = Math.min(zone.upperFt, visibleEndFt);
+            const bottomFt = Math.max(0, zone.lowerFt);
+            if (!(topFt > bottomFt)) return;
+            const zoneMesh = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.62, 0.62, (topFt - bottomFt) * lengthScale, 32, 1, true),
+                new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.3, side: THREE.DoubleSide, depthWrite: false })
+            );
+            zoneMesh.position.y = -displayLength / 2 + (bottomFt + topFt) / 2 * lengthScale;
+            stringGroup.add(zoneMesh);
+            [bottomFt, topFt].forEach(positionFt => {
+                const edge = new THREE.Mesh(
+                    new THREE.TorusGeometry(0.62, 0.025, 8, 48),
+                    new THREE.MeshBasicMaterial({ color: 0xb45309 })
+                );
+                edge.rotation.x = Math.PI / 2;
+                edge.position.y = -displayLength / 2 + positionFt * lengthScale;
+                stringGroup.add(edge);
+            });
+        });
 
         const getComponentColor = (
             component
@@ -165,10 +183,31 @@ const EngineeringString3D = ({ engModel }) => {
             return 0xc6b66b;
         };
 
-        let cumulativeLength = 0;
+        // Put jars left and NP right; label offsets do not move physical markers.
+        const addLabel = (text, y, color, side, dimension = false) => {
+            const canvas = document.createElement('canvas');
+            canvas.width = dimension ? 256 : 128;
+            canvas.height = 64;
+            const context = canvas.getContext('2d');
+            context.fillStyle = 'rgba(245,247,250,0.95)';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.font = 'bold 36px sans-serif';
+            context.fillStyle = color;
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            context.fillText(text, canvas.width / 2, canvas.height / 2);
+            const texture = new THREE.CanvasTexture(canvas);
+            const label = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, depthTest: false }));
+            label.scale.set(dimension ? 1.6 : 0.8, 0.4, 1);
+            label.position.set(side * (dimension ? 2.0 : text === 'NP' ? 1.2 : 0.95), y, 0);
+            stringGroup.add(label);
+        };
 
         validComponents.forEach(
             (component) => {
+                const visibleTopFt = Math.min(component.endFromBit, visibleEndFt);
+                const visibleLengthFt = visibleTopFt - component.startFromBit;
+                if (!(visibleLengthFt > 0)) return;
                 const length =
                     Number(
                         component.length
@@ -179,15 +218,10 @@ const EngineeringString3D = ({ engModel }) => {
                         component.od
                     ) || 5;
 
-                const centreFromBit =
-                    cumulativeLength +
-                    length / 2;
+                const isJar = String(component.category || '').toUpperCase() === 'JAR';
 
                 const displayComponentLength =
-                    Math.max(
-                        length * lengthScale,
-                        0.05
-                    );
+                    visibleLengthFt * lengthScale;
 
                 const radius =
                     Math.max(
@@ -209,7 +243,7 @@ const EngineeringString3D = ({ engModel }) => {
                 const material =
                     new THREE.MeshStandardMaterial({
                         color:
-                            getComponentColor(
+                            isJar ? 0x00897b : getComponentColor(
                                 component
                             ),
                         metalness: 0.55,
@@ -224,7 +258,7 @@ const EngineeringString3D = ({ engModel }) => {
 
                 mesh.position.y =
                     -displayLength / 2 +
-                    centreFromBit *
+                    (component.startFromBit + visibleLengthFt / 2) *
                     lengthScale;
 
                 mesh.userData = {
@@ -249,9 +283,45 @@ const EngineeringString3D = ({ engModel }) => {
                     mesh
                 );
 
-                cumulativeLength += length;
+                if (isJar) {
+                    addLabel('JAR', mesh.position.y, '#00695c', -1);
+                }
             }
         );
+
+        if (visibleEndFt < totalLength) {
+            addLabel('//', displayLength / 2 + 0.1, '#1f2937', 0);
+        }
+
+        if (neutralPointFt !== null && Number.isFinite(neutralPointFt)) {
+            const marker = new THREE.Mesh(
+                new THREE.TorusGeometry(0.48, 0.055, 12, 48),
+                new THREE.MeshBasicMaterial({ color: 0x7c3aed })
+            );
+            marker.rotation.x = Math.PI / 2;
+            marker.position.y = -displayLength / 2 + neutralPointFt * lengthScale;
+            stringGroup.add(marker);
+            addLabel('NP', marker.position.y, '#5b21b6', 1);
+            jars.forEach(jar => {
+                if (jar.distanceFromNeutralFt === null || jar.centreFt > visibleEndFt) return;
+                const jarY = -displayLength / 2 + jar.centreFt * lengthScale;
+                // Clear the NP sprite background, including the endpoint tick.
+                const dimensionX = 2.15;
+                const points = [
+                    new THREE.Vector3(dimensionX - 0.1, marker.position.y, 0),
+                    new THREE.Vector3(dimensionX + 0.1, marker.position.y, 0),
+                    new THREE.Vector3(dimensionX, marker.position.y, 0),
+                    new THREE.Vector3(dimensionX, jarY, 0),
+                    new THREE.Vector3(dimensionX - 0.1, jarY, 0),
+                    new THREE.Vector3(dimensionX + 0.1, jarY, 0)
+                ];
+                stringGroup.add(new THREE.Line(
+                    new THREE.BufferGeometry().setFromPoints(points),
+                    new THREE.LineBasicMaterial({ color: 0x334155 })
+                ));
+                addLabel(`${Math.abs(jar.distanceFromNeutralFt).toFixed(1)} ft`, (marker.position.y + jarY) / 2, '#1f2937', 1, true);
+            });
+        }
 
         const bitGeometry =
             new THREE.CylinderGeometry(
@@ -496,6 +566,7 @@ const EngineeringString3D = ({ engModel }) => {
                     if (
                         object.material
                     ) {
+                        object.material.map?.dispose();
                         object.material.dispose();
                     }
                 }
@@ -514,7 +585,9 @@ const EngineeringString3D = ({ engModel }) => {
             }
         };
     }, [
-        engModel,
+        validComponents,
+        neutralPointFt,
+        jars,
         hasValidComponents
     ]);
 
@@ -530,6 +603,7 @@ const EngineeringString3D = ({ engModel }) => {
         <div
             ref={mountRef}
             className="engineeringString3D"
+            style={{ flex: '1 1 0' }}
         />
     );
 };

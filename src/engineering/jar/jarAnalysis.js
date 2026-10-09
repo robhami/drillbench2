@@ -3,11 +3,13 @@
 // resolves Coulomb friction into its axial share using RPM, ROP and tool OD.
 import { buildEngModel } from '../models/buildEngModel.js';
 import { calcStraightDrag, calcNeutralPointFromLoadProfile } from '../forces/calcStraightDrag.js';
+import { calcJarAvoidanceZone } from './neutralPointAvoidance.js';
 
 export function analyzeJarPlacement(bha, drillingMode = 'reference') {
   const model = buildEngModel(bha);
   const loadProfile = calcStraightDrag(model, drillingMode);
   const neutral = calcNeutralPointFromLoadProfile(loadProfile);
+  const zeroProfile = calcStraightDrag({ ...model, bha: { ...model.bha, wob: 0 } }, drillingMode);
   const components = model.positions.components;
   const jars = components.filter(c => String(c.category || '').toUpperCase() === 'JAR');
   const warnings = [];
@@ -46,7 +48,8 @@ export function analyzeJarPlacement(bha, drillingMode = 'reference') {
       if (distance !== null && jar.startFromBit <= neutral.neutralPointFromBit && jar.endFromBit >= neutral.neutralPointFromBit) {
         issues.push(`Calculated ${drillingMode} drilling neutral point falls inside jar length.`);
       }
-      return { name: jar.toolName || 'JAR', startFt: jar.startFromBit, centreFt: jar.centreFromBit, endFt: jar.endFromBit, distanceFromNeutralFt: distance, issues };
+      const avoidanceZone = calcJarAvoidanceZone(model, drillingMode, jar, neutral.neutralPointFound ? neutral.neutralPointFromBit : null, zeroProfile);
+      return { name: jar.toolName || 'JAR', startFt: jar.startFromBit, centreFt: jar.centreFromBit, endFt: jar.endFromBit, distanceFromNeutralFt: distance, issues, avoidanceZone };
     }),
     warnings,
     disclaimer: descriptions[drillingMode] || descriptions.reference
