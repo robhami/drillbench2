@@ -81,6 +81,7 @@ const Workspace = ({
 
     const jarWidget = { id: 'jarPlacement1', type: 'jarPlacement', x: 330, y: 150, width: 580, height: 430, visible: false, minimized: false, z: 6 };
     defaultWidgets.push(jarWidget);
+    defaultWidgets.push({ id: 'jarConfiguration1', type: 'jarConfiguration', x: 140, y: 90, width: 820, height: 700, visible: false, minimized: false, z: 7 });
 
     const [widgets, setWidgets] = React.useState(() => {
         const savedWorkspace =
@@ -95,7 +96,7 @@ const Workspace = ({
             if (!Array.isArray(parsed)) return defaultWidgets;
             // Older saved layouts may predate these independently opened windows.
             const missing = defaultWidgets.filter(w =>
-                ['engineeringString', 'jarPlacement'].includes(w.type) &&
+                ['engineeringString', 'jarPlacement', 'jarConfiguration'].includes(w.type) &&
                 !parsed.some(saved => saved.type === w.type)
             );
             return [...parsed, ...missing];
@@ -156,7 +157,7 @@ const Workspace = ({
                 widget.type === type
                     ? {
                         ...widget,
-                        ...(type === 'engineeringString' ? {
+                        ...(['engineeringString', 'jarConfiguration'].includes(type) ? {
                             x: Math.min(Math.max(0, Number.isFinite(widget.x) ? widget.x : 40), Math.max(0, canvasWidth - (widget.width || 520))),
                             y: Math.min(Math.max(0, Number.isFinite(widget.y) ? widget.y : 40), Math.max(0, canvasHeight - (widget.height || 620)))
                         } : {}),
@@ -307,6 +308,7 @@ const Workspace = ({
                 </button>
 
                 <button type="button" className={getWidgetState('jarPlacement')} onClick={() => openWidget('jarPlacement')}>Jars</button>
+                <button type="button" title="Jar Configuration Analysis" className={getWidgetState('jarConfiguration')} onClick={() => openWidget('jarConfiguration')}>Config</button>
 
                 <button
                     type="button"

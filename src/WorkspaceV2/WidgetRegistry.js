@@ -1,10 +1,12 @@
 import JarPlacement from '../Apps/JarPlacement/JarPlacement';
+import JarConfiguration from '../Apps/JarConfiguration/JarConfiguration';
 import BHAEntry from '../Apps/BHAEntry/BHAEntry';
 import AnalysisInputs from '../Apps/AnalysisInputs/AnalysisInputs';
 import BHASummary from '../Apps/BHASummary/BHASummary';
 import EngineeringResults from '../Apps/EngineeringResults/EngineeringResults';
 import EngineeringStringCard from '../Apps/EngineeringString/EngineeringStringCard';
 const WidgetRegistry = {
+    jarConfiguration: { title: 'Jar Configuration Analysis', component: JarConfiguration },
     jarPlacement: { title: 'Jar Placement', component: JarPlacement },
     bhaEntry: {
         title: 'BHA Data Entry',

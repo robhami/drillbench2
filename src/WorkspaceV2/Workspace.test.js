@@ -50,6 +50,19 @@ test('String registry still renders the separate Engineering String component', 
   expect(WidgetRegistry.engineeringString.title).toBe('Engineering String');
 });
 
+test('Configuration window registers and opens independently without resetting saved layout', () => {
+  localStorage.setItem(key, JSON.stringify([other]));
+  render(<Workspace />);
+  expect(WidgetRegistry.jarConfiguration.title).toBe('Jar Configuration Analysis');
+  expect(saved().find(w => w.id === other.id)).toEqual(other);
+  expect(screen.queryByTestId('jarConfiguration')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Config' }));
+  expect(screen.getByTestId('jarConfiguration')).toBeInTheDocument();
+  expect(screen.getByTestId('jarPlacement')).toBeInTheDocument();
+  expect(saved().find(w => w.id === other.id)).toEqual(other);
+  expect(saved().filter(w => w.type === 'jarConfiguration')).toHaveLength(1);
+});
+
 test('adds missing String to an older layout without resetting existing windows', () => {
   localStorage.setItem(key, JSON.stringify([other]));
   render(<Workspace />);

@@ -1,0 +1,29 @@
+.jarConfiguration {
+  height: 100%;
+  overflow: auto;
+  padding: 8px;
+  font-size: 13px;
+}
+.jarConfiguration h5 { margin: 0 0 8px; }
+.jarConfiguration p { margin: 6px 0; }
+.jarConfigurationNotice { background: #fff3cd; padding: 4px 8px; }
+.jarConfigurationFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 6px 12px;
+  margin: 8px 0;
+}
+.jarConfigurationFields label { display: flex; flex-direction: column; min-width: 0; }
+.jarConfigurationFields input { width: 110px; max-width: 100%; padding: 3px 5px; }
+.jarConfigurationFields select { max-width: 100%; padding: 3px; }
+.jarConfigurationMaxima {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 4px 12px;
+  margin: 4px 0;
+}
+.jarConfigurationMaxima dd { margin: 0; }
+.jarConfigurationMaxima dt { font-size: 12px; }
+.jarConfigurationMaxima strong { font-size: 14px; }
+.jarConfigurationMaxima span { display: block; font-size: 12px; }
+.jarConfiguration details { margin-top: 8px; }
