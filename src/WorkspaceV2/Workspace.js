@@ -60,7 +60,7 @@ const Workspace = ({
             type: 'analysisInputs',
             x: 180,
             y: 90,
-            width: 520,
+            width: 470,
             height: 420,
             visible: false,
             minimized: false,
@@ -92,7 +92,13 @@ const Workspace = ({
 
         try {
             const parsed = JSON.parse(savedWorkspace);
-            return parsed.some(w => w.type === 'jarPlacement') ? parsed : [...parsed, jarWidget];
+            if (!Array.isArray(parsed)) return defaultWidgets;
+            // Older saved layouts may predate these independently opened windows.
+            const missing = defaultWidgets.filter(w =>
+                ['engineeringString', 'jarPlacement'].includes(w.type) &&
+                !parsed.some(saved => saved.type === w.type)
+            );
+            return [...parsed, ...missing];
         } catch {
             return defaultWidgets;
         }
@@ -142,10 +148,18 @@ const Workspace = ({
                 )
             );
 
+            // Rnd's parent bounds constrain dragging, not saved coordinates.
+            // Recover String on explicit navigation without resetting the layout.
+            const canvasWidth = canvasRef.current?.clientWidth || Math.max(1, window.innerWidth - 72);
+            const canvasHeight = canvasRef.current?.clientHeight || Math.max(1, window.innerHeight - 62);
             return currentWidgets.map((widget) =>
                 widget.type === type
                     ? {
                         ...widget,
+                        ...(type === 'engineeringString' ? {
+                            x: Math.min(Math.max(0, Number.isFinite(widget.x) ? widget.x : 40), Math.max(0, canvasWidth - (widget.width || 520))),
+                            y: Math.min(Math.max(0, Number.isFinite(widget.y) ? widget.y : 40), Math.max(0, canvasHeight - (widget.height || 620)))
+                        } : {}),
                         visible: true,
                         minimized: false,
                         z: highestZ + 1

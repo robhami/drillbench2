@@ -1,8 +1,9 @@
-# Skeem jar dynamics — Stage 1
+# Skeem jar dynamics - Stages 1 and 2
 
 **PRELIMINARY — NOT FOR OPERATIONAL USE.** This standalone calculation has no
-UI integration and does not predict impact force, impulse, fish movement or
-an optimum placement. It implements pre-impact Equations 1–3 only.
+UI integration. Stage 1 implements pre-impact Equations 1-3; Stage 2 adds
+primary impact force and impulse. Fish movement and optimum placement are
+not calculated.
 
 ## Source read and equation provenance
 
@@ -112,8 +113,9 @@ feet/seconds. No g conversion is used in the wave equations.
   finite jar compliance, tool joints, upsets, accelerators and stabilizers do
   not form separate dynamic sections. Zero ID is allowed as a solid circular
   section of the idealized elastic model; real tool qualification is external.
-- No friction, damping, borehole curvature, gravity acceleration during the
-  flight, dispersion, or post-impact Equations 4 onward. F0 is supplied after
+- Stage 1 has no friction, damping, borehole curvature, gravity acceleration
+  during the flight, dispersion, or post-impact Equations 4 onward. F0 is
+  supplied after
   establishing static load at the jar; it is not inferred here.
 - Members must be sufficiently slender for the paper's longitudinal-wave
   approximation, and stress must stay in the elastic regime. Yield strength,
@@ -216,3 +218,170 @@ not reproduced or interpreted as validated predictions in Stage 1.
 
 Run `npm test -- --watch=false --runInBand` for all regression tests, or append
 `src/engineering/jar/skeemDynamics.test.js` for the focused suite.
+
+
+## Stage 2: primary post-impact calculation
+
+Pages 3-5 were extracted and visually read before implementing Stage 2.
+Equation 4 is on PDF page 3 / printed p. 1383; Equation 5, wave paths,
+weight correction and primary interval are on page 4 / p. 1384. Figures 4
+and 5 are on page 5 / p. 1385. The Stage 1 solver remains unchanged.
+
+### API, units and force convention
+
+`calcSkeemPostImpact(input, options)` calls `calcSkeemPreImpact` and retains
+its complete result as `preImpact`. It adds three required inputs:
+
+| Input | Definition |
+|---|---|
+| `lowerCollarLengthFt` | L1, distance from jar to assumed-rigid stuck point, ft |
+| `lowerCollarWeightLbf` | W, lower-collar weight **force**, lbf, not mass |
+| `freePipeLengthFt` | L3, free uniform drillpipe length, ft |
+
+The paper's tensile impact-wave magnitudes are positive. They are not the
+compression-positive axial loads used elsewhere in WellBench. Each history
+interval includes `compressionPositiveForceLbf = -tensileForceLbf`; no
+static load calculation or UI consumes or changes these results.
+
+W is supplied explicitly, not inferred from geometry or converted using g.
+The paper describes the wave picking up the released lower collars and
+subtracts W from the incident impact contribution. It does not give a
+buoyancy convention or weight density for its plotted examples. The caller
+must establish a consistent effective weight; this module does not silently
+choose air or buoyed weight.
+
+### Equation 4 and post-impact wave events
+
+```text
+FI = Ac*E*v_N/(2*va) = 0.5*(v_N/vc)*F0                  (4)
+T = 2*L2/va
+ t1 = t_impact + L1/va
+ t2 = (N+1)*T + L1/va
+ t3 = t_impact + T + L1/va = t1 + T
+R = lambda^(N+1)*F0
+```
+
+Both Equation 4 forms are computed independently and checked within
+`128*Number.EPSILON*max(FI_forms)`. Ac in square inches and E in psi give
+lbf, while v_N/va is dimensionless. `impactForceLbf` and
+`impactForceKlbf` describe the incident jar impact, not the stuck-point force.
+
+The paper gives the residual amplitude R and describes its arrival at t2,
+but does **not print a closed-form t2 equation**. The expression above is a
+WellBench derivation from its wave path and the existing reflection schedule:
+at impact, the remaining upper-collar front either travels toward the pipe
+interface and returns, or is already travelling back toward the jar. In
+both cases its next passage at the jar is the next Stage 1 hammer-return
+time, `(N+1)*T`. Once the jar engages, the equal-area upper/lower collars
+transmit that front without an additional area-interface reflection. Adding
+L1/va gives its stuck-point arrival. This uses the published idealized
+instantaneous engagement and common collar section; it is not an empirical
+delay or a lumped-mass relationship.
+
+At t1 the rigid stuck point doubles the incident tensile impact wave. The
+paper's lower-weight correction changes its contribution to `2*(FI-W)`.
+At t2 the rigid reflection adds `2*R`, giving Equation 5's uncorrected
+`2*(FI+R)`, with the same `-2*W` correction retained. The impact wave reaches
+the collar/pipe interface at `t_impact+L2/va`; its compressive reflection
+arrives at the stuck point at t3 and contributes `-2*lambda*FI`.
+
+With u measured from t1, the primary history is:
+
+```text
+d = t2-t1
+F(u) = 2*(FI-W)            for 0 <= u < d
+F(u) = 2*(FI-W) + 2*R      for d <= u < T
+J = 2*(FI-W)*T + 2*R*(T-d)
+F_average = J/T
+```
+
+These are exactly integrated constant-force intervals, with no numerical
+time step. `forceTimeEvents` records each arrival, its force increment and
+both relative and absolute time. `forceHistory` records interval endpoints,
+separate impact/weight/residual contributions, signed force and interval
+impulse. Coincident arrivals merge into one nonzero interval. The t3 relief
+event is audited but contributes zero area to the primary integral; **no
+post-t3 history or secondary-pulse prediction is provided**.
+
+Other outputs include `t1S`, `t2S`, `t3S`, `primaryPulseDurationS`,
+`interfaceImpactReflectionTimeS`, `initialStuckPointForceLbf`,
+`residualIncidentForceLbf`, `residualStuckPointIncrementLbf`,
+`interfaceReliefIncrementLbf`, `impulseLbfS`, and average force in lbf/klbf.
+Invalid cases return an error and the Stage 1 audit, without fabricated
+forces or impulse.
+
+### Stage 2 domain and numerical restrictions
+
+- Same uniform collar area above and below the jar; common E and va; rigid
+  stuck point, instantaneous engagement and linear wave superposition.
+- W must be finite and nonnegative. WellBench restricts W < FI so the
+  corrected initial wave remains tensile. This is a **supported-domain
+  restriction**, not a new published equation: no contact/clipping law is
+  invented when the weight exhausts the incident wave.
+- Page 4 specifies free pipe exceeding 750 ft for short collar strings and
+  1300 ft for long strings, without classifying the transition. WellBench
+  conservatively requires L3 > 1300 ft for all Stage 2 cases. This deliberate
+  restriction excludes some potentially valid short-string configurations.
+- The earliest surface-reflected release wave can return to the jar at
+  `T+2*L3/va`, then to the stuck point at `T+2*L3/va+L1/va`.
+  Stage 2 additionally requires this to exceed t3, including floating-point
+  roundoff tolerance; the fixed length guard alone is insufficient for an
+  unusually long pre-impact flight. Returned times expose this check.
+- Positive finite L1/L3 and representable event times/forces are required.
+  Near-coincident residual arrivals are snapped only within
+  `64*Number.EPSILON*max(t_impact,T)`, without a physical time-step tolerance.
+  Stage 1's existing reflection limit remains in force.
+- Slender-member, elastic-stress and sufficiently-small jar-length assumptions
+  remain external qualifications. No friction, damping, curvature, accelerators,
+  detailed internals, downward jarring, slip force Fs or stuck-pipe movement
+  is calculated. Primary wave results remain preliminary engineering analysis.
+
+### Independent Stage 2 validation and Figures 4-5
+
+Use the published collar geometry, alpha=5, 165,000-lbf overpull and 4-in
+stroke, with the explicit Stage 1 assumptions E=30,000,000 psi and
+va=16,000 ft/s. Set L3=3000 ft. For this example only, assume **air weight**
+density 0.283 lbf/in^3, giving collar weight 84.017183131279 lbf/ft and
+W equal to that value times L1. These material, weight and pipe-length inputs
+are WellBench validation assumptions, not values extracted from the graphs.
+
+Independent expected results were calculated using Python Decimal at
+50-digit precision, the Stage 1 closed-form geometric sum, Equation 4 and
+the two analytic force rectangles above. Automated tests compare unrounded
+forces/impulses/averages with absolute error below 1e-8 in their respective
+units, and separately verify arrival times.
+
+| Total collars ft | L1 ft | L2 ft | FI klbf | Average stuck-point force klbf | Impulse lbf*s |
+|---:|---:|---:|---:|---:|---:|
+| 240 | 60 | 180 | 265.833333 | 546.821091 | 12303.474542 |
+| 240 | 120 | 120 | 265.833333 | 599.931984 | 8998.979767 |
+| 240 | 180 | 60 | 347.314815 | 686.314803 | 5147.361021 |
+| 420 | 105 | 315 | 192.500000 | 454.098899 | 17880.144142 |
+| 420 | 210 | 210 | 265.833333 | 503.560806 | 13218.471148 |
+| 420 | 315 | 105 | 314.722222 | 586.499957 | 7697.811939 |
+| 600 | 150 | 450 | 192.500000 | 401.657457 | 22593.231974 |
+| 600 | 300 | 300 | 192.500000 | 428.812180 | 16080.456748 |
+| 600 | 450 | 150 | 265.833333 | 506.564870 | 9498.091316 |
+
+For example, the 240-ft string with L1=60 ft has t1=0.054557259577 s,
+t2=0.071250000000 s and t3=0.077057259577 s, with T=0.0225 s.
+Its initial corrected stuck-point force is 521,584.604691 lbf; the residual
+wave adds 97,777.777778 lbf. The average therefore differs from both FI and
+2*FI.
+
+Moving the jar upward (increasing L1, decreasing L2) increases average force
+and decreases primary impulse in all three sampled strings. This agrees
+**qualitatively** with Figure 4's rising average-force curves and Figure 5's
+falling impulse curves. No plotted values have been independently digitized,
+and no quantitative agreement with those figures is claimed. Their material
+and weight assumptions are not fully tabulated; the table establishes
+independent arithmetic validation under the declared inputs, not a measured
+impact benchmark. Weight sensitivity is separately verified: holding all
+other inputs fixed, changing W changes average force by -2*W and impulse
+by -2*W*T, while leaving FI and wave times unchanged.
+
+Tests additionally cover impact before the first return, residual fronts on
+both sides of the interface, exact and adjacent reflection events, initial
+rigid reflection, interface relief, sign conversion, coincident events,
+invalid weights/geometry and finite-pipe validity failures. Stage 1 public
+results and its existing tests are preserved.

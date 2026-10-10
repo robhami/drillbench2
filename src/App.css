@@ -406,8 +406,13 @@ dt {
 
 .analysisInputGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 12px;
+  grid-template-columns: repeat(auto-fit, 120px);
+  justify-content: start;
+  gap: 6px 8px;
+}
+
+.analysisNameField {
+  grid-column: 1 / -1;
 }
 
 .analysisInputGrid .form-label {
@@ -420,11 +425,36 @@ dt {
 .analysisInputGrid .form-control {
   float: none;
 
-  width: 100%;
-  height: 32px;
+  width: 60px;
+  flex: 0 0 auto;
+  height: 28px;
 
-  padding: 4px 7px;
+  padding: 3px 4px;
 
+  font-size: 0.84rem;
+}
+
+.analysisInputGrid .analysisNameField .form-control {
+  width: 200px;
+  max-width: 100%;
+}
+
+.analysisInputGrid .analysisWideNumber .form-control {
+  width: 70px;
+}
+
+.analysisInputGrid .bhaInputWithUnit {
+  width: max-content;
+}
+
+.analysisInputGrid .bhaInputWithUnit>span {
+  padding: 0 4px;
+}
+
+.analysisInputGrid .form-select {
+  width: 110px;
+  height: 28px;
+  padding: 3px 24px 3px 4px;
   font-size: 0.84rem;
 }
 
@@ -569,12 +599,6 @@ dt {
   .bhaSummaryColumns>div+div {
     padding-left: 0;
     border-left: 0;
-  }
-}
-
-@media (max-width: 600px) {
-  .analysisInputGrid {
-    grid-template-columns: 1fr;
   }
 }
 

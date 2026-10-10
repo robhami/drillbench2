@@ -7,7 +7,6 @@ import { buildEngModel } from '../../engineering/models/buildEngModel';
 import { analyzeJarPlacement } from '../../engineering/jar/jarAnalysis';
 
 jest.mock('./EngineeringString3D', () => jest.fn(() => null));
-jest.mock('../JarPlacement/AxialLoadChart', () => () => null);
 
 const row = (category, length, weight) => ({ category, toolName: category, length, weight, od: 8 });
 // Validation Test 3: user-confirmed bottom DC geometry and drilling conditions.
@@ -44,8 +43,8 @@ test('all selected modes share Jar Placement loads and neutral point; jar geomet
         expect(screen.getByText(`JAR · 175.0 ft · +${(175 - expected).toFixed(1)} ft above NP`)).toBeInTheDocument();
         expect(screen.queryByText(/Purple ring|Teal JAR/)).not.toBeInTheDocument();
         const placement = render(<JarPlacement bha={bha} drillingMode={mode} />);
-        const digits = mode === 'rotate' ? 2 : 1;
-        expect(placement.getByText(`Neutral point: ${expected.toFixed(digits)} ft above bit`)).toBeInTheDocument();
+        expect(placement.getByRole('heading', { name: 'Jar Performance' })).toBeInTheDocument();
+        expect(placement.queryByText(/^Neutral point:/)).not.toBeInTheDocument();
         placement.unmount();
     }
     expect(values.reference).toBeLessThan(values.rotate);

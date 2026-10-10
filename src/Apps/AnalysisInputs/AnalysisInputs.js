@@ -3,15 +3,15 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 
-const JarAnalysisInputs = ({ bha, updateBha }) => {
+const JarAnalysisInputs = ({ bha, updateBha, drillingMode = 'slide', setDrillingMode }) => {
   return (
-    <Container>
+    <Container fluid className="px-0">
       <Card className="analysisInputsCard">
 
 
         <Card.Body>
           <div className="analysisInputGrid">
-            <Form.Group>
+            <Form.Group controlId="analysisBhaName" className="analysisNameField">
               <Form.Label>BHA Name</Form.Label>
               <Form.Control
                 type="text"
@@ -25,7 +25,7 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
               />
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="analysisHoleSize">
               <Form.Label>Hole Size</Form.Label>
 
               <div className="bhaInputWithUnit">
@@ -45,7 +45,7 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
               </div>
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="analysisMudWeight">
               <Form.Label>Mud Weight</Form.Label>
 
               <div className="bhaInputWithUnit">
@@ -65,22 +65,25 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
               </div>
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group controlId="analysisInclination">
               <Form.Label>Inclination (°)</Form.Label>
               <div className="bhaInputWithUnit">
                 <Form.Control type="number" min="0" max="90" step="0.1"
                   value={bha.inclination ?? 0}
                   onChange={(event) => updateBha({ inclination: event.target.value })} />
-                
+                <span>°</span>
               </div>
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Friction coefficient (μ)</Form.Label>
-              <Form.Control type="number" min="0" max="1" step="0.05"
-                value={bha.frictionCoefficient ?? 0.25}
-                onChange={(event) => updateBha({ frictionCoefficient: event.target.value })} />
+            <Form.Group controlId="analysisFriction">
+              <Form.Label>Friction coefficient</Form.Label>
+              <div className="bhaInputWithUnit">
+                <Form.Control type="number" min="0" max="1" step="0.05"
+                  value={bha.frictionCoefficient ?? 0.25}
+                  onChange={(event) => updateBha({ frictionCoefficient: event.target.value })} />
+                <span>μ</span>
+              </div>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="analysisRpm">
               <Form.Label>RPM</Form.Label>
               <div className="bhaInputWithUnit">
                 <Form.Control type="number" min="0" step="1"
@@ -90,7 +93,7 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
                 <span>rpm</span>
               </div>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="analysisRop" className="analysisWideNumber">
               <Form.Label>ROP</Form.Label>
               <div className="bhaInputWithUnit">
                 <Form.Control type="number" min="0" step="1"
@@ -100,7 +103,7 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
                 <span>ft/hr</span>
               </div>
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="analysisWob" className="analysisWideNumber">
               <Form.Label>WOB</Form.Label>
 
               <div className="bhaInputWithUnit">
@@ -118,6 +121,15 @@ const JarAnalysisInputs = ({ bha, updateBha }) => {
 
                 <span>klbf</span>
               </div>
+            </Form.Group>
+            <Form.Group controlId="analysisDrillingMode">
+              <Form.Label>Drilling Mode</Form.Label>
+              <Form.Select value={drillingMode} disabled={!setDrillingMode}
+                onChange={event => setDrillingMode(event.target.value)}>
+                <option value="slide">Slide</option>
+                <option value="rotate">Rotate</option>
+                <option value="reference">Reference</option>
+              </Form.Select>
             </Form.Group>
           </div>
         </Card.Body>

@@ -1,0 +1,45 @@
+.jarPerformance {
+  container-type: inline-size;
+}
+
+.jarPerformance p {
+  margin: 6px 0;
+}
+
+.jarPerformanceInputs,
+.jarPerformanceResults {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+}
+
+.jarPerformanceInputs label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.jarPerformanceInputs input {
+  width: 140px;
+  max-width: 100%;
+  padding: 3px 5px;
+}
+
+.jarPerformanceStuckPoint {
+  grid-column: 1 / -1;
+}
+
+.jarPerformanceResults {
+  margin: 8px 0;
+}
+
+.jarPerformanceResults dd {
+  margin: 0;
+}
+
+@container (max-width: 320px) {
+  .jarPerformanceInputs,
+  .jarPerformanceResults {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
