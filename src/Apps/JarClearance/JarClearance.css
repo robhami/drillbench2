@@ -1,0 +1,18 @@
+.jarClearance { height: 100%; overflow: auto; padding: 8px; font-size: 13px; }
+.jarClearance h5 { margin: 0 0 8px; }
+.jarClearance p { margin: 6px 0; }
+.jarClearanceNotice { background: #fff3cd; padding: 5px 8px; color: #534108; }
+.jarClearanceFields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px 12px; margin: 8px 0; }
+.jarClearanceFields label { display: flex; flex-direction: column; min-width: 0; }
+.jarClearanceFields input { width: 125px; max-width: 100%; padding: 3px 5px; }
+.jarClearanceFields select { max-width: 100%; padding: 3px; }
+.jarClearanceSummary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 12px; margin: 10px 0; }
+.jarClearanceSummary dd { margin: 0; font-weight: 600; }
+.jarClearance [role="alert"] { color: #9a241d; }
+.jarClearanceTable { overflow: auto; }
+.jarClearanceTable table { border-collapse: collapse; white-space: nowrap; width: 100%; }
+.jarClearanceTable th, .jarClearanceTable td { padding: 5px 8px; border-bottom: 1px solid #d6dee5; }
+.jarClearance h6, .jarClearance details { margin-top: 10px; }
+
+.jarClearanceTable table[aria-label="Scenario comparison"] { white-space: normal; min-width: 650px; table-layout: fixed; }
+.jarClearanceTable table[aria-label="Scenario comparison"] td { vertical-align: top; overflow-wrap: anywhere; }

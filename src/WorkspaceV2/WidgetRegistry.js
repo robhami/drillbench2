@@ -5,7 +5,11 @@ import AnalysisInputs from '../Apps/AnalysisInputs/AnalysisInputs';
 import BHASummary from '../Apps/BHASummary/BHASummary';
 import EngineeringResults from '../Apps/EngineeringResults/EngineeringResults';
 import EngineeringStringCard from '../Apps/EngineeringString/EngineeringStringCard';
+import Survey from '../Apps/Survey/Survey';
+import JarClearance from '../Apps/JarClearance/JarClearance';
 const WidgetRegistry = {
+    jarClearance: { title: 'Jar Clearance Across Run', component: JarClearance },
+    survey: { title: 'Survey', component: Survey },
     jarConfiguration: { title: 'Jar Configuration Analysis', component: JarConfiguration },
     jarPlacement: { title: 'Jar Placement', component: JarPlacement },
     bhaEntry: {

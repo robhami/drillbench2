@@ -18,15 +18,19 @@ import {
 } from '@dnd-kit/sortable';
 
 import SortableRow from './SortableRow.js';
+import { deployDrillstring } from '../../engineering/bha/deployDrillstring';
 
 const BHABuilder = ({
   bha,
+  updateBha,
   updateRow,
   addRow,
   removeRow,
   reorderRows
 }) => {
   const rows = bha?.rows || [];
+  const hasPipe = rows.some(r => r.category === 'DP');
+  const autoDeployment = hasPipe ? deployDrillstring(bha, bha?.drillpipeReferenceBitMdFt) : null;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -49,6 +53,10 @@ const BHABuilder = ({
 
   return (
     <div className="bhaWorkspace">
+      {hasPipe && <div style={{ marginBottom: 8 }}>
+        <label>Auto DP reference bit MD (ft) <input type="number" min="0" step="any" style={{ width: 120 }} value={bha.drillpipeReferenceBitMdFt ?? ''} onChange={e => updateBha?.({ drillpipeReferenceBitMdFt: e.target.value })} /></label>
+        <small style={{ display: 'block' }}>Enter an explicit reference depth for Auto. Stored manual lengths remain available to existing drilling/Skeem analyses; run analysis deploys pipe at each sampled depth.</small>
+      </div>}
       <div className="bhaTableSection">
         <DndContext
           sensors={sensors}
@@ -97,6 +105,7 @@ const BHABuilder = ({
                     <SortableRow
                       key={row.rowId}
                       row={row}
+                      autoDeployment={autoDeployment}
                       index={index}
                       rowsLength={rows.length}
                       updateRow={updateRow}

@@ -63,6 +63,34 @@ test('Configuration window registers and opens independently without resetting s
   expect(saved().filter(w => w.type === 'jarConfiguration')).toHaveLength(1);
 });
 
+test('Survey registers independently and adds only its missing window to an existing layout', () => {
+  localStorage.setItem(key, JSON.stringify([other, savedString]));
+  render(<Workspace />);
+  expect(WidgetRegistry.survey.title).toBe('Survey');
+  expect(saved().find(w => w.id === other.id)).toEqual(other);
+  expect(saved().find(w => w.id === savedString.id)).toEqual(savedString);
+  expect(screen.queryByTestId('survey')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Survey' }));
+  expect(screen.getByTestId('survey')).toBeInTheDocument();
+  expect(saved().filter(w => w.type === 'survey')).toHaveLength(1);
+  expect(saved().find(w => w.id === savedString.id)).toEqual(savedString);
+  expect(saved().find(w => w.id === other.id)).toEqual(other);
+});
+
+test('Jar Clearance registers and opens without resetting saved windows or replacing Jar Placement', () => {
+  localStorage.setItem(key, JSON.stringify([other, savedString]));
+  render(<Workspace />);
+  expect(WidgetRegistry.jarClearance.title).toBe('Jar Clearance Across Run');
+  expect(saved().find(w => w.id === other.id)).toEqual(other);
+  expect(screen.queryByTestId('jarClearance')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Run' }));
+  expect(screen.getByTestId('jarClearance')).toBeInTheDocument();
+  expect(screen.getByTestId('jarPlacement')).toBeInTheDocument();
+  expect(saved().find(w => w.id === other.id)).toEqual(other);
+  expect(saved().find(w => w.id === savedString.id)).toEqual(savedString);
+  expect(saved().filter(w => w.type === 'jarClearance')).toHaveLength(1);
+});
+
 test('adds missing String to an older layout without resetting existing windows', () => {
   localStorage.setItem(key, JSON.stringify([other]));
   render(<Workspace />);

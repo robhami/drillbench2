@@ -7,6 +7,7 @@ import BHABuilder from '../../Components/BHABuilder/BHABuilder.js';
 
 const BHAEntry = ({
   bha,
+  updateBha,
   updateRow,
   addRow,
   removeRow,
@@ -20,6 +21,7 @@ const BHAEntry = ({
         <Card.Body>
           <BHABuilder
             bha={bha}
+            updateBha={updateBha}
             updateRow={updateRow}
             addRow={addRow}
             removeRow={removeRow}

@@ -9,6 +9,7 @@ import { toolType } from '../../Apps/BHAEntry/toolType.js';
 const componentLibrary = componentLibraryData.components;
 const SortableRow = ({
     row,
+    autoDeployment,
     index,
     rowsLength,
     updateRow,
@@ -141,7 +142,15 @@ const SortableRow = ({
                 ['length', row.length]
             ].map(([field, value]) => (
                 <td key={field}>
+                    {field === 'length' && row.category === 'DP' && <Form.Select size="sm" aria-label={`Drillpipe length mode ${index + 1}`} value={row.lengthMode || 'manual'} onChange={e => updateRow(row.rowId, { lengthMode: e.target.value })}>
+                        <option value="auto">Auto — based on bit MD</option><option value="manual">Manual — user-entered length</option>
+                    </Form.Select>}
+                    {field === 'length' && row.category === 'DP' && row.lengthMode === 'auto' ? <div>
+                        {autoDeployment?.valid ? <output aria-label={`Calculated drillpipe length ${index + 1}`}>{autoDeployment.metadata.deployedDpLengthFt.toLocaleString()} ft</output> : <small role="status">{autoDeployment?.errors.join(' ') || 'Select a reference bit MD.'}</small>}
+                        <small style={{ display: 'block' }}>Stored manual: {row.length || 'not entered'} ft</small>
+                    </div> :
                     <input
+                        aria-label={`Component ${index + 1} ${field}`}
                         className="numInput"
                         type="text"
                         inputMode="decimal"
@@ -156,7 +165,7 @@ const SortableRow = ({
                                 [field]: event.target.value
                             })
                         }
-                    />
+                    />}
                 </td>
             ))}
 

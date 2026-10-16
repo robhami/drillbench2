@@ -1,0 +1,17 @@
+.surveyPanel { height: 100%; overflow: auto; padding: 8px; font-size: 13px; }
+.surveyPanel h5 { margin: 0 0 8px; }
+.surveyPanel p { margin: 6px 0; }
+.surveyNotice { background: #fff3cd; color: #534108; padding: 4px 8px; }
+.surveyUnits { display: flex; align-items: flex-start; gap: 6px; margin: 8px 0; }
+.surveyUnits input { margin-top: 3px; flex-shrink: 0; }
+.surveyUpload { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.surveyUpload input { max-width: 100%; }
+.surveySummary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px 12px; margin: 8px 0; }
+.surveySummary dd { margin: 0; font-weight: 600; }
+.surveyTable { max-height: 350px; overflow: auto; }
+.surveyTable table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+.surveyTable th, .surveyTable td { padding: 4px 8px; border-bottom: 1px solid #d6dee5; text-align: right; }
+.surveyTable th { position: sticky; top: 0; background: #eef2f5; color: #253647; }
+.surveyTable caption { caption-side: top; color: #253647; }
+.surveyPanel [role="alert"] { color: #8a1924; }
+.surveyPanel details { margin-top: 8px; }
