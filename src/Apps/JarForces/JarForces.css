@@ -1,0 +1,45 @@
+.jarForces { height: 100%; min-width: 0; overflow-y: auto; padding: 8px; font-size: 13px; overflow-wrap: anywhere; box-sizing: border-box; }
+.jarForces h5 { margin: 0 0 8px; }
+.jarForces h6 { margin: 12px 0 6px; font-size: 13px; font-weight: 600; }
+.jarForces p { margin: 6px 0; }
+.jarForcesNotice { background: #fff3cd; color: #534108; padding: 6px; }
+.jarForcesFields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr)); gap: 6px 10px; margin: 8px 0; }
+.jarForcesFields label { display: flex; flex-direction: column; min-width: 0; }
+.jarForcesFields input, .jarForcesFields select { width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; padding: 3px; }
+.jarForces [role="alert"] { color: #9a241d; }
+.jarForcesWeights { margin: 8px 0; }
+.jarForcesWeights p { font-size: 12px; }
+.jarForcesTable { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 8px 0 12px; }
+.jarForcesTable caption { caption-side: top; text-align: left; color: inherit; padding: 5px 0; font-weight: 600; }
+.jarForcesTable th, .jarForcesTable td { padding: 5px 6px; border-bottom: 1px solid #d6dee5; vertical-align: top; overflow-wrap: anywhere; }
+.jarForcesTable th { text-align: left; width: 58%; font-weight: 400; }
+.jarForcesTable td, .jarForcesTable thead th:last-child { text-align: right; width: 42%; font-variant-numeric: tabular-nums; }
+.jarForcesTable td { font-weight: 600; }
+.jarForcesTable thead th { color: #52616d; font-size: 11px; font-weight: 600; }
+.jarForcesInfo { display: inline-block; width: 13px; line-height: 13px; border: 1px solid #71818d; border-radius: 50%; text-align: center; font-size: 10px; color: #52616d; cursor: help; vertical-align: middle; }
+.jarForcesInfo:focus { outline: 2px solid #276a91; outline-offset: 2px; }
+.jarForcesTable .jarForcesPrimaryLoad { background: #eaf3f8; color: #173e57; }
+.jarForcesTable .jarForcesPrimaryLoad th { font-weight: 700; }
+.jarForcesTable .jarForcesPrimaryLoad td { font-size: 16px; font-weight: 700; }
+.jarForcesUnavailable { display: block; color: #6c4c35; font-size: 11px; font-weight: 400; }
+.jarForces details { border-top: 1px solid #d6dee5; margin-top: 10px; padding-top: 8px; }
+.jarForces summary { cursor: pointer; font-weight: 600; }
+.jarForcesWarnings { color: #6c4c35; }
+
+/* Compact BHA Data Entry palette and row density; no minimum table width. */
+.jarForcesTable th, .jarForcesTable td { padding: 3px 4px; border-bottom-color: #dce2e7; vertical-align: middle; }
+.jarForcesTable thead { background: #d5dde5; }
+.jarForcesTable thead th { color: #364550; font-size: 0.78rem; font-weight: 600; border-bottom-color: #bfc9d2; }
+.jarForcesTable thead small { display: block; color: #6c757d; font-size: 0.66rem; }
+.jarForcesTable tbody tr:nth-child(even) { background: #f5f7f9; }
+.jarForcesTable tbody tr:hover { background: #eaf1f5; }
+.jarForcesFourColumns th, .jarForcesFourColumns td { width: 23%; }
+.jarForcesFourColumns th:first-child, .jarForcesFourColumns td:first-child { width: 31%; text-align: left; }
+.jarForcesFourColumns td, .jarForcesFourColumns thead th:not(:first-child) { text-align: right; }
+.jarForcesFourColumns thead th:last-child { width: 23%; }
+.jarForcesTable tbody .jarForcesPrimaryLoad { background: #eaf3f8; }
+.jarForcesSharedStatus { font-size: 11px; color: #52616d; }
+.jarForcesDepthStatus { font-weight: 600; }
+
+.jarForcesJarSelect { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+.jarForcesJarSelect select { min-width: 0; max-width: 100%; }

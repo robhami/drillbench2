@@ -3,7 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 
-const JarAnalysisInputs = ({ bha, updateBha, drillingMode = 'slide', setDrillingMode }) => {
+const JarAnalysisInputs = ({ bha, updateBha, drillingMode = 'slide', setDrillingMode, analysisBitMdFt = '', setAnalysisBitMdFt }) => {
   return (
     <Container fluid className="px-0">
       <Card className="analysisInputsCard">
@@ -23,6 +23,14 @@ const JarAnalysisInputs = ({ bha, updateBha, drillingMode = 'slide', setDrilling
                   })
                 }
               />
+            </Form.Group>
+
+            <Form.Group controlId="analysisBitMd">
+              <Form.Label>Bit Depth (ft MD)</Form.Label>
+              <Form.Control type="number" min="0" step="any" value={analysisBitMdFt}
+                disabled={!setAnalysisBitMdFt} onChange={event => setAnalysisBitMdFt(event.target.value)}
+                aria-describedby="analysisBitMdHelp" />
+              <small id="analysisBitMdHelp">Jar Forces analysis depth; separate from Auto DP reference MD.</small>
             </Form.Group>
 
             <Form.Group controlId="analysisHoleSize">

@@ -34,3 +34,14 @@ test('drilling mode uses existing shared state without writing BHA data', () => 
   rerender(<AnalysisInputs bha={bha} updateBha={updateBha} drillingMode="reference" setDrillingMode={setDrillingMode} />);
   expect(screen.getByLabelText('Drilling Mode')).toHaveValue('reference');
 });
+
+test('analysis depth updates shared workspace state only and never uses Auto DP reference depth', () => {
+  const setAnalysisBitMdFt = jest.fn(), updateBha = jest.fn();
+  const { rerender } = render(<AnalysisInputs bha={{ ...bha, drillpipeReferenceBitMdFt: 12000 }} updateBha={updateBha} analysisBitMdFt="" setAnalysisBitMdFt={setAnalysisBitMdFt} />);
+  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(null);
+  fireEvent.change(screen.getByLabelText('Bit Depth (ft MD)'), { target: { value: '5000' } });
+  expect(setAnalysisBitMdFt).toHaveBeenCalledWith('5000');
+  expect(updateBha).not.toHaveBeenCalled();
+  rerender(<AnalysisInputs bha={bha} analysisBitMdFt="5000" setAnalysisBitMdFt={setAnalysisBitMdFt} />);
+  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(5000);
+});

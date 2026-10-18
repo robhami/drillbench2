@@ -8,7 +8,8 @@ const finite = v => (typeof v === 'number' || typeof v === 'string') && String(v
 const failure = message => ({ valid: false, status: 'invalid-analysis', errors: [message], scenarios: [], crossingEvents: [] });
 const loadState = force => Math.abs(force) <= FORCE_TOL ? 'neutral' : force > 0 ? 'compression' : 'tension';
 
-function jarResult(jar, index, load, avoidanceDistance) {
+// Shared all-NP clearance classification for run samples and WOB screening.
+export function jarResult(jar, index, load, avoidanceDistance) {
   const centre = jar.centreFromBitFt;
   const lower = avoidanceDistance === undefined ? 0.8 * centre : Math.max(0, centre - avoidanceDistance);
   const upper = avoidanceDistance === undefined ? 1.2 * centre : centre + avoidanceDistance;

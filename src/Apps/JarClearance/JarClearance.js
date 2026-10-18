@@ -3,6 +3,7 @@ import { SURVEY_STORAGE_KEY, SURVEY_CHANGED_EVENT } from '../Survey/Survey';
 import { calcJarClearanceAcrossRun } from '../../engineering/jar/jarClearanceAcrossRun';
 import { importedGeometry, clearanceBounds, clearanceRequest, clearanceSummary, clearancePlot, selectedClearance, crossingDepthDescription, avoidanceDepthIntervals, comparisonClearances, comparisonPlot, sampledExposure, compressionDepthIntervals } from './clearanceData';
 import './JarClearance.css';
+import WobOperatingRanges from './WobOperatingRanges';
 
 const Plot = lazy(() => import('../JarConfiguration/ConfigurationPlot'));
 const readSource = () => { try { return JSON.parse(localStorage.getItem(SURVEY_STORAGE_KEY)); } catch { return null; } };
@@ -77,6 +78,7 @@ export default function JarClearance({ bha }) {
         <label>Displayed jar<select value={jarIndex} onChange={e => setJarIndex(e.target.value)}>{jars.map(j => <option value={j.jarIndex} key={j.jarIndex}>{j.name} ({j.jarIndex + 1})</option>)}</select></label>
       </div>
       <Suspense fallback={<p>Loading clearance graph...</p>}><Plot {...mainPlot} /></Suspense>
+      <WobOperatingRanges request={execution.request} depthsFt={execution.result.depthsFt} frictionCoefficient={compare ? Number(friction) : selected?.frictionCoefficient} jarIndex={Number(jarIndex)} revision={execution.revision} />
       {compare && <>
         {execution.request.minWobLbf === execution.request.maxWobLbf && <p>Minimum and maximum WOB are equal; two distinct mode traces replace four duplicate traces.</p>}
         <div className="jarClearanceTable"><table aria-label="Scenario comparison"><thead><tr>{['WOB and mode', 'NP/jar coincidence / load sign-change bracket (bit MD)', 'Danger-zone entry/exit MD', 'Estimated danger-zone footage', 'Jar compression intervals'].map(h => <th key={h}>{h}</th>)}</tr></thead><tbody>{comparison.map(s => {

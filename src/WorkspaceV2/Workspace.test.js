@@ -6,9 +6,11 @@ import EngineeringStringCard from '../Apps/EngineeringString/EngineeringStringCa
 
 jest.mock('./Widget', () => {
   const AnalysisInputs = require('../Apps/AnalysisInputs/AnalysisInputs').default;
+  const JarForces = require('../Apps/JarForces/JarForces').default;
   return props => <div data-testid={props.widget.type}>
   <span data-testid={`${props.widget.type}-mode`}>{props.drillingMode}</span>
-  {props.widget.type === 'analysisInputs' && <AnalysisInputs bha={{ name: '', holeSize: '', mudWeight: '', wob: '' }} updateBha={() => {}} drillingMode={props.drillingMode} setDrillingMode={props.setDrillingMode} />}
+  {props.widget.type === 'analysisInputs' && <AnalysisInputs bha={{ name: '', holeSize: '', mudWeight: '', wob: '' }} updateBha={() => {}} drillingMode={props.drillingMode} setDrillingMode={props.setDrillingMode} analysisBitMdFt={props.analysisBitMdFt} setAnalysisBitMdFt={props.setAnalysisBitMdFt} />}
+  {props.widget.type === 'jarForces' && props.bha && <JarForces bha={props.bha} analysisBitMdFt={props.analysisBitMdFt} />}
   <button onClick={() => props.onClose(props.widget.id)}>Close {props.widget.type}</button>
 </div>;
 });
@@ -91,6 +93,19 @@ test('Jar Clearance registers and opens without resetting saved windows or repla
   expect(saved().filter(w => w.type === 'jarClearance')).toHaveLength(1);
 });
 
+test('Jar Forces opens independently and preserves existing layout and jar performance window', () => {
+  localStorage.setItem(key, JSON.stringify([other, savedString]));
+  render(<Workspace />);
+  expect(WidgetRegistry.jarForces.title).toBe('Jar Forces');
+  expect(screen.queryByTestId('jarForces')).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Forces' }));
+  expect(screen.getByTestId('jarForces')).toBeInTheDocument();
+  expect(screen.getByTestId('jarPlacement')).toBeInTheDocument();
+  expect(saved().filter(w => w.type === 'jarForces')).toHaveLength(1);
+  expect(saved().find(w => w.id === other.id)).toEqual(other);
+  expect(saved().find(w => w.id === savedString.id)).toEqual(savedString);
+});
+
 test('adds missing String to an older layout without resetting existing windows', () => {
   localStorage.setItem(key, JSON.stringify([other]));
   render(<Workspace />);
@@ -143,4 +158,25 @@ test('default String is recovered on a small canvas without shrinking its saved 
   Object.defineProperty(canvas, 'clientHeight', { value: 500 });
   open();
   expect(saved().find(w => w.type === 'engineeringString')).toMatchObject({ x: 0, y: 0, width: 520, height: 620, visible: true, minimized: false });
+});
+
+test('Analysis Inputs shares depth with Jar Forces across closing/reopening without changing saved BHA', () => {
+  const { SURVEY_STORAGE_KEY } = require('../Apps/Survey/Survey');
+  localStorage.setItem(SURVEY_STORAGE_KEY, JSON.stringify({ confirmed: true, filename: 'vertical.csv', originalCsv: 'MD,Inclination,Azimuth\n0,0,90\n20000,0,90' }));
+  const bha = { mudWeight: 10, frictionCoefficient: 0.25, rpm: 150, drillpipeReferenceBitMdFt: 12000,
+    rows: [{ category: 'JAR', length: 20, weight: 100, od: 6.75 }, { category: 'DP', length: 10000, weight: 20, od: 5.5 }] };
+  const before = JSON.stringify(bha), updateBha = jest.fn();
+  render(<Workspace bha={bha} updateBha={updateBha} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Analysis' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Forces' }));
+  expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('Required');
+  fireEvent.change(screen.getByLabelText('Bit Depth (ft MD)'), { target: { value: '1000' } });
+  expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('1,000.0 ft');
+  expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('Deployed string ready');
+  fireEvent.click(screen.getByRole('button', { name: 'Close jarForces' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Forces' }));
+  expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('1,000.0 ft');
+  fireEvent.change(screen.getByLabelText('Bit Depth (ft MD)'), { target: { value: '2000' } });
+  expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('2,000.0 ft');
+  expect(JSON.stringify(bha)).toBe(before); expect(updateBha).not.toHaveBeenCalled();
 });

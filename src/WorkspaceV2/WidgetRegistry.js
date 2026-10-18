@@ -7,7 +7,9 @@ import EngineeringResults from '../Apps/EngineeringResults/EngineeringResults';
 import EngineeringStringCard from '../Apps/EngineeringString/EngineeringStringCard';
 import Survey from '../Apps/Survey/Survey';
 import JarClearance from '../Apps/JarClearance/JarClearance';
+import JarForces from '../Apps/JarForces/JarForces';
 const WidgetRegistry = {
+    jarForces: { title: 'Jar Forces', component: JarForces },
     jarClearance: { title: 'Jar Clearance Across Run', component: JarClearance },
     survey: { title: 'Survey', component: Survey },
     jarConfiguration: { title: 'Jar Configuration Analysis', component: JarConfiguration },

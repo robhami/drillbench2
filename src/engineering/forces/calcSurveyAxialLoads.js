@@ -9,7 +9,8 @@ const populated = row => row && ['category', 'toolName', 'selectedToolId', 'leng
 const MAX_ELEMENTS = 100000;
 const ZERO_FORCE = 1e-8;
 
-function localGeometry(survey, mdFt) {
+// Shared by off-bottom pickup prediction; existing drilling paths are unchanged.
+export function localGeometry(survey, mdFt) {
   const point = evaluateSurveyAtMd(survey, mdFt);
   const segment = survey.segments.find(s => mdFt >= s.fromMdFt && mdFt <= s.toMdFt);
   const angle = segment.doglegRad * (mdFt - segment.fromMdFt) / segment.lengthFt;
@@ -19,7 +20,7 @@ function localGeometry(survey, mdFt) {
 }
 
 // Implicit midpoint normal contact, with exact gravity integration on each arc.
-function integrateElement(bottomForce, gravity, weightPerFt, local, length, axialMu) {
+export function integrateElement(bottomForce, gravity, weightPerFt, local, length, axialMu) {
   const contact = meanForce => {
     const resultant = local.tangent.map((t, i) => weightPerFt * ((i === 2 ? 1 : 0) - local.tangent[2] * t) - meanForce * local.curvature[i]);
     return { normal: Math.hypot(...resultant) * length, wallReaction: resultant.map(v => -v * length) };

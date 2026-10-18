@@ -21,6 +21,7 @@ const Workspace = ({
 }) => {
     const canvasRef = React.useRef(null);
     const [drillingMode, setDrillingMode] = React.useState('slide');
+    const [analysisBitMdFt, setAnalysisBitMdFt] = React.useState('');
     const defaultWidgets = [
         {
             id: 'bhaSummary1',
@@ -84,6 +85,7 @@ const Workspace = ({
     defaultWidgets.push({ id: 'jarConfiguration1', type: 'jarConfiguration', x: 140, y: 90, width: 820, height: 700, visible: false, minimized: false, z: 7 });
     defaultWidgets.push({ id: 'survey1', type: 'survey', x: 100, y: 70, width: 720, height: 600, visible: false, minimized: false, z: 8 });
     defaultWidgets.push({ id: 'jarClearance1', type: 'jarClearance', x: 100, y: 50, width: 880, height: 740, visible: false, minimized: false, z: 1 });
+    defaultWidgets.push({ id: 'jarForces1', type: 'jarForces', x: 120, y: 70, width: 620, height: 620, visible: false, minimized: false, z: 1 });
 
     const [widgets, setWidgets] = React.useState(() => {
         const savedWorkspace =
@@ -98,7 +100,7 @@ const Workspace = ({
             if (!Array.isArray(parsed)) return defaultWidgets;
             // Older saved layouts may predate these independently opened windows.
             const missing = defaultWidgets.filter(w =>
-                ['engineeringString', 'jarPlacement', 'jarConfiguration', 'survey', 'jarClearance'].includes(w.type) &&
+                ['engineeringString', 'jarPlacement', 'jarConfiguration', 'survey', 'jarClearance', 'jarForces'].includes(w.type) &&
                 !parsed.some(saved => saved.type === w.type)
             );
             return [...parsed, ...missing];
@@ -159,7 +161,7 @@ const Workspace = ({
                 widget.type === type
                     ? {
                         ...widget,
-                        ...(['engineeringString', 'jarConfiguration', 'survey', 'jarClearance'].includes(type) ? {
+                        ...(['engineeringString', 'jarConfiguration', 'survey', 'jarClearance', 'jarForces'].includes(type) ? {
                             x: Math.min(Math.max(0, Number.isFinite(widget.x) ? widget.x : 40), Math.max(0, canvasWidth - (widget.width || 520))),
                             y: Math.min(Math.max(0, Number.isFinite(widget.y) ? widget.y : 40), Math.max(0, canvasHeight - (widget.height || 620)))
                         } : {}),
@@ -313,6 +315,7 @@ const Workspace = ({
                 <button type="button" title="Jar Configuration Analysis" className={getWidgetState('jarConfiguration')} onClick={() => openWidget('jarConfiguration')}>Config</button>
                 <button type="button" className={getWidgetState('survey')} onClick={() => openWidget('survey')}>Survey</button>
                 <button type="button" title="Jar Clearance Across Run" className={getWidgetState('jarClearance')} onClick={() => openWidget('jarClearance')}>Run</button>
+                <button type="button" title="Static Jar Forces" className={getWidgetState('jarForces')} onClick={() => openWidget('jarForces')}>Forces</button>
 
                 <button
                     type="button"
@@ -334,6 +337,8 @@ const Workspace = ({
                             key={widget.id}
                             widget={widget}
                             bha={bha}
+                            analysisBitMdFt={analysisBitMdFt}
+                            setAnalysisBitMdFt={setAnalysisBitMdFt}
                             drillingMode={drillingMode}
                             setDrillingMode={setDrillingMode}
                             updateBha={updateBha}
