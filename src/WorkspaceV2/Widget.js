@@ -7,6 +7,8 @@ import { buildEngModel } from '../engineering/models/buildEngModel.js';
 const Widget = ({
     widget,
     bha,
+    rigLimits,
+    updateRigLimits,
     analysisBitMdFt,
     setAnalysisBitMdFt,
     drillingMode,
@@ -169,6 +171,8 @@ const Widget = ({
                     <div className="wb2WidgetBody">
                         <Component
                             bha={bha}
+                            rigLimits={rigLimits}
+                            updateRigLimits={updateRigLimits}
                             analysisBitMdFt={analysisBitMdFt}
                             setAnalysisBitMdFt={setAnalysisBitMdFt}
                             engModel={engModel}

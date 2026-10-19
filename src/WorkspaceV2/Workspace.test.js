@@ -10,7 +10,7 @@ jest.mock('./Widget', () => {
   return props => <div data-testid={props.widget.type}>
   <span data-testid={`${props.widget.type}-mode`}>{props.drillingMode}</span>
   {props.widget.type === 'analysisInputs' && <AnalysisInputs bha={{ name: '', holeSize: '', mudWeight: '', wob: '' }} updateBha={() => {}} drillingMode={props.drillingMode} setDrillingMode={props.setDrillingMode} analysisBitMdFt={props.analysisBitMdFt} setAnalysisBitMdFt={props.setAnalysisBitMdFt} />}
-  {props.widget.type === 'jarForces' && props.bha && <JarForces bha={props.bha} analysisBitMdFt={props.analysisBitMdFt} />}
+  {props.widget.type === 'jarForces' && props.bha && <JarForces bha={props.bha} analysisBitMdFt={props.analysisBitMdFt} rigLimits={props.rigLimits} updateRigLimits={props.updateRigLimits} />}
   <button onClick={() => props.onClose(props.widget.id)}>Close {props.widget.type}</button>
 </div>;
 });
@@ -179,4 +179,17 @@ test('Analysis Inputs shares depth with Jar Forces across closing/reopening with
   fireEvent.change(screen.getByLabelText('Bit Depth (ft MD)'), { target: { value: '2000' } });
   expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('2,000.0 ft');
   expect(JSON.stringify(bha)).toBe(before); expect(updateBha).not.toHaveBeenCalled();
+});
+
+test('Workspace passes rig-level limits to Forces without writing BHA or layout metadata', () => {
+  const bha = { mudWeight: 10, frictionCoefficient: 0.25, rpm: 150, rows: [] };
+  const updateRigLimits = jest.fn();
+  render(<Workspace bha={bha} rigLimits={{ maximumAllowableHookloadKlbf: '300' }} updateRigLimits={updateRigLimits} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Forces' }));
+  fireEvent.click(screen.getByText('Rig Limits'));
+  expect(screen.getByLabelText('Maximum Allowable Hookload (klbf)')).toHaveValue(300);
+  fireEvent.change(screen.getByLabelText('Maximum Allowable Hookload (klbf)'), { target: { value: '310' } });
+  expect(updateRigLimits).toHaveBeenCalledWith({ maximumAllowableHookloadKlbf: '310' });
+  expect(bha).not.toHaveProperty('rigLimits');
+  expect(JSON.parse(localStorage.getItem('wellbenchWorkspaceV2')).every(w => !Object.prototype.hasOwnProperty.call(w, 'rigLimits'))).toBe(true);
 });

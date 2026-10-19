@@ -17,3 +17,12 @@ test('real Widget forwards shared depth and its setter to Analysis, and read-onl
   expect(screen.queryByLabelText('Bit Depth (ft MD)')).not.toBeInTheDocument();
   expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('2,000.0 ft');
 });
+
+test('real Widget forwards the shared rig limit and update callback to Jar Forces', () => {
+  const updateRigLimits = jest.fn();
+  render(<Widget bha={bha} analysisBitMdFt="1000" rigLimits={{ maximumAllowableHookloadKlbf: '350' }} updateRigLimits={updateRigLimits} widget={{ id: 'forces', type: 'jarForces' }} />);
+  fireEvent.click(screen.getByText('Rig Limits'));
+  expect(screen.getByLabelText('Maximum Allowable Hookload (klbf)')).toHaveValue(350);
+  fireEvent.change(screen.getByLabelText('Maximum Allowable Hookload (klbf)'), { target: { value: '360' } });
+  expect(updateRigLimits).toHaveBeenCalledWith({ maximumAllowableHookloadKlbf: '360' });
+});

@@ -7,6 +7,8 @@ const WORKSPACE_STORAGE_KEY = 'wellbenchWorkspaceV2';
 
 const Workspace = ({
     bha,
+    rigLimits,
+    updateRigLimits,
     savedBhas,
     saveBha,
     loadBha,
@@ -337,6 +339,8 @@ const Workspace = ({
                             key={widget.id}
                             widget={widget}
                             bha={bha}
+                            rigLimits={rigLimits}
+                            updateRigLimits={updateRigLimits}
                             analysisBitMdFt={analysisBitMdFt}
                             setAnalysisBitMdFt={setAnalysisBitMdFt}
                             drillingMode={drillingMode}

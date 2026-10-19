@@ -6,6 +6,7 @@ import { solveStaticJarHookload } from '../../engineering/jar/inverseStaticJarLo
 import { calcStaticJarLoads } from '../../engineering/jar/staticJarLoads';
 import { calcOffBottomRotatingSummary } from '../../engineering/forces/calcOffBottomHookloads';
 import { directionSettings, operatingAvailability } from './directionalJarConfig';
+import { calcHookloadLimits, readMaximumHookload } from '../../engineering/jar/hookloadLimits';
 import './JarForces.css';
 
 const readSurvey = () => { try { return JSON.parse(localStorage.getItem(SURVEY_STORAGE_KEY)); } catch { return null; } };
@@ -45,7 +46,7 @@ function ResultsTable({ title, children, columns = ['Parameter', 'Value (klbf)']
   </table>;
 }
 
-export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha }) {
+export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha, rigLimits, updateRigLimits }) {
   const [source, setSource] = useState(readSurvey);
   useEffect(() => {
     const changed = e => setSource(e.detail);
@@ -77,6 +78,11 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha }
     rpm: bha?.rpm }),
   [bha, survey, analysisBitMdFt, fields.surface, fields.jar]);
   const weightSummary = dragSummary.weights;
+  const maximumHookload = readMaximumHookload(rigLimits?.maximumAllowableHookloadKlbf);
+  const limitCheck = calcHookloadLimits({ jarDirection: fields.jarDirection,
+    maximumHookloadKlbf: rigLimits?.maximumAllowableHookloadKlbf,
+    pickupHookloadLbf: dragSummary.pickupHookload.valid ? dragSummary.pickupHookload.valueLbf : null,
+    requiredHookloadLbf: loadingResult?.requiredSurfaceHookloadLbf });
   useEffect(() => { setResult(null); setError(''); setLoadingResult(null); setLoadingError(''); }, [bha, survey, analysisBitMdFt]);
   useEffect(() => { if (jars.length === 1 || Number(fields.jar) >= jars.length) setFields(f => ({ ...f, jar: '0' })); }, [jars, fields.jar]);
   const update = (key, value) => { setFields(f => ({ ...f, [key]: value })); setResult(null); setError(''); setLoadingResult(null); setLoadingError(''); };
@@ -127,6 +133,15 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha }
     {!jars.length && <p role="alert">No jar exists in the BHA. Add a jar before calculating jar loads.</p>}
     {jars.length === 1 && <p className="jarForcesSharedStatus">Selected jar: {jars[0].toolName || 'JAR'} (only jar in BHA).</p>}
     {jars.length > 1 && <label className="jarForcesJarSelect">Selected jar<select value={fields.jar} onChange={e => update('jar', e.target.value)}>{jars.map((jar, i) => <option key={i} value={i}>{jar.toolName || 'JAR'} {i + 1}</option>)}</select></label>}
+    <details><summary>Rig Limits</summary>
+      <div className="jarForcesFields"><label>Maximum Allowable Hookload (klbf)<input type="number" min="0" step="any"
+        value={rigLimits?.maximumAllowableHookloadKlbf ?? ''} disabled={!updateRigLimits}
+        onChange={e => updateRigLimits({ maximumAllowableHookloadKlbf: e.target.value })} /></label></div>
+      <p>User-defined rig-level surface limit; no rig rating is inferred.</p>
+    </details>
+    {!maximumHookload.valid && <p role="alert">{maximumHookload.reason}</p>}
+    {limitCheck.insufficientPickupCapacity && <p role="alert">Insufficient pickup capacity: Maximum Allowable Hookload is below calculated Pickup Hookload.</p>}
+    {fields.jarDirection === 'up' && maximumHookload.valid && !maximumHookload.configured && <p className="jarForcesSharedStatus">Rig hookload limit: Not Configured.</p>}
     <section aria-label="Jar Configuration">
       <h6>Jar Configuration</h6>
       <div className="jarForcesFields">
@@ -160,6 +175,13 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha }
         <tr><Parameter label="Desired jar force" definition="User-requested positive static force magnitude and direction, not a manufacturer firing threshold." /><td>{klbf(Math.abs(loadingResult.targetJarAxialLoadLbf))} klbf {loadingResult.jarDirection === 'up' ? 'Jar Up (tension)' : 'Jar Down (compression)'}</td></tr>
         <tr className="jarForcesPrimaryLoad"><Parameter label="Required surface hookload" definition="Nonnegative surface support verified through the forward static model; not a firing or equipment limit." /><td>{klbf(loadingResult.requiredSurfaceHookloadLbf)} klbf</td></tr>
       </ResultsTable>}
+      {loadingResult && fields.jarDirection === 'up' && <ResultsTable title="Overpull & Hookload Limit" columns={['Parameter', 'Value']}>
+        <tr><Parameter label="Required overpull" definition="Required surface hookload minus calculated pickup hookload; negative values are retained." /><td>{limitCheck.requiredOverpullLbf === null ? 'Unavailable' : klbf(limitCheck.requiredOverpullLbf) + ' klbf'}</td></tr>
+        <tr><Parameter label="Available overpull" definition="Maximum Allowable Hookload minus calculated pickup hookload." /><td>{limitCheck.availableOverpullLbf === null ? 'Unavailable' : klbf(limitCheck.availableOverpullLbf) + ' klbf'}</td></tr>
+        <tr><Parameter label="Remaining margin" definition="Maximum Allowable Hookload minus required surface hookload; negative means the surface limit is exceeded." /><td>{limitCheck.remainingMarginLbf === null ? 'Unavailable' : klbf(limitCheck.remainingMarginLbf) + ' klbf'}</td></tr>
+        <tr><Parameter label="Surface limit status" definition="Comparison to the user-defined surface hookload limit only, not drillstring tensile safety or jar firing success." /><td>{limitCheck.status || 'Unavailable'}{limitCheck.reason && <small className="jarForcesUnavailable">{limitCheck.reason}</small>}</td></tr>
+      </ResultsTable>}
+      {fields.jarDirection === 'down' && <p className="jarForcesSharedStatus">Jar Down: compression and buckling limits are not yet evaluated. No minimum hookload limit is applied.</p>}
       {loadingResult && <ul className="jarForcesWarnings">{loadingResult.warnings.map(w => <li key={w}>{w}</li>)}</ul>}
     </section>
     <details><summary>Advanced - forward static calculator</summary>
@@ -196,6 +218,7 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha }
     {error && <p role="alert">{error}</p>}
     {result && <ul className="jarForcesWarnings">{result.warnings.map(w => <li key={w}>{w}</li>)}</ul>}
     <details><summary>Engineering Assumptions</summary>
+      <p>The rig limit check compares calculated surface hookload with a user-defined maximum only. Within Limit or At Limit does not establish drillstring tensile safety, component capacity, buckling stability, a safe operating envelope or jar firing success. Overpull is referenced to calculated pickup hookload, never rotating hookload. Negative overpull and margin are retained. Jar Down has no lower surface-load check.</p>
       <p>Directional mechanisms and mechanical trip settings are user-supplied manufacturer data. Meeting a static mechanical setting does not guarantee release. Hydraulic targets are applied loads, not fixed activation thresholds.</p>
       <p>Stage 4A does not predict hydraulic delay, impact force or energy, guaranteed release, rig maximum overpull, component tensile yield, sinusoidal or helical buckling limits, or a safe operating envelope.</p>
       <p>Off-bottom assumptions: zero bit/end load; friction coefficient μ = {finite(bha?.frictionCoefficient) ? text(bha.frictionCoefficient) : 'Unavailable'}. Pickup/slack-off use fully mobilised nonrotating axial friction. Rotation: {finite(bha?.rpm) ? text(bha.rpm) : 'Unavailable'} RPM, zero axial motion (0 ft/hr), fixed bit depth; ROP is not used. Pure rotation has zero axial friction; torque is not predicted. At an inclined surface reference, hookloads are local axial support.</p>

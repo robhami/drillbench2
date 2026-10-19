@@ -42,6 +42,7 @@ class App extends Component {
 
     ],
     well: {
+      rigLimits: { maximumAllowableHookloadKlbf: '' },
       name: '',
       field: '',
       operator: '',
@@ -82,6 +83,7 @@ class App extends Component {
           rows: [createEmptyRow()],
           ...parsedWell.currentBha
         },
+        rigLimits: parsedWell.rigLimits || { maximumAllowableHookloadKlbf: '' },
         savedBhas: parsedWell.savedBhas || []
       };
     }
@@ -109,6 +111,10 @@ class App extends Component {
       );
     }
   }
+
+  updateRigLimits = changes => {
+    this.setState(state => ({ well: { ...state.well, rigLimits: { ...state.well.rigLimits, ...changes } } }));
+  };
 
   updateBha = (changes) => {
     this.setState((currentState) => ({
@@ -402,6 +408,8 @@ class App extends Component {
 
             <Workspace
               bha={bha}
+              rigLimits={well.rigLimits}
+              updateRigLimits={this.updateRigLimits}
               savedBhas={well.savedBhas}
               saveBha={this.saveBha}
               saveBhaAs={this.saveBhaAs}
