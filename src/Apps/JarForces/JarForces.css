@@ -43,3 +43,5 @@
 
 .jarForcesJarSelect { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
 .jarForcesJarSelect select { min-width: 0; max-width: 100%; }
+
+.jarForcesDirectionConfig { display: grid; gap: 6px; min-width: 0; }

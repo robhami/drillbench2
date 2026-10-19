@@ -5,6 +5,7 @@ import { calcComponentPositions } from '../../engineering/bha/calcComponentPosit
 import { solveStaticJarHookload } from '../../engineering/jar/inverseStaticJarLoads';
 import { calcStaticJarLoads } from '../../engineering/jar/staticJarLoads';
 import { calcOffBottomRotatingSummary } from '../../engineering/forces/calcOffBottomHookloads';
+import { directionSettings, operatingAvailability } from './directionalJarConfig';
 import './JarForces.css';
 
 const readSurvey = () => { try { return JSON.parse(localStorage.getItem(SURVEY_STORAGE_KEY)); } catch { return null; } };
@@ -44,7 +45,7 @@ function ResultsTable({ title, children, columns = ['Parameter', 'Value (klbf)']
   </table>;
 }
 
-export default function JarForces({ bha, analysisBitMdFt }) {
+export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha }) {
   const [source, setSource] = useState(readSurvey);
   useEffect(() => {
     const changed = e => setSource(e.detail);
@@ -55,7 +56,20 @@ export default function JarForces({ bha, analysisBitMdFt }) {
   const survey = useMemo(() => importedGeometry(source), [source]);
   const jars = useMemo(() => calcComponentPositions(bha).components.filter(c => String(c.category).toUpperCase() === 'JAR'), [bha]);
   const [fields, setFields] = useState(() => ({ surface: '0', jar: '0',
-    direction: 'pickup', loadMode: 'absolute', hookload: '', reference: '', applied: '', desired: '', jarDirection: 'up' }));
+    direction: 'pickup', loadMode: 'absolute', hookload: '', reference: '', applied: '', jarDirection: 'up' }));
+  const jarRows = (bha?.rows || []).map((row, index) => ({ row, index })).filter(({ row }) => String(row.category).toUpperCase() === 'JAR' && Number(row.length) > 0);
+  const selectedRow = jarRows[Number(fields.jar)];
+  const settings = directionSettings(selectedRow?.row, fields.jarDirection);
+  const availability = operatingAvailability(settings);
+  const editable = Boolean(selectedRow && ((selectedRow.row.rowId != null && updateRow) || updateBha));
+  const changeConfiguration = (direction, changes) => {
+    if (!editable) return;
+    const row = selectedRow.row;
+    const jarDirections = { ...row.jarDirections, [direction]: { ...row.jarDirections?.[direction], ...changes } };
+    if (row.rowId != null && updateRow) updateRow(row.rowId, { jarDirections });
+    else updateBha({ rows: bha.rows.map((r, index) => index === selectedRow.index ? { ...r, jarDirections } : r) });
+    setLoadingResult(null); setLoadingError(''); setResult(null); setError('');
+  };
   const [result, setResult] = useState(null), [error, setError] = useState('');
   const [loadingResult, setLoadingResult] = useState(null), [loadingError, setLoadingError] = useState('');
   const dragSummary = useMemo(() => calcOffBottomRotatingSummary({ bha, survey, bitMdFt: analysisBitMdFt, surfaceMdFt: fields.surface,
@@ -81,9 +95,10 @@ export default function JarForces({ bha, analysisBitMdFt }) {
   };
   const calculateLoading = e => {
     e.preventDefault();
+    if (!availability.enabled) { setLoadingResult(null); setLoadingError(availability.message); return; }
     const solved = solveStaticJarHookload({ bha, survey, bitMdFt: analysisBitMdFt, surfaceMdFt: fields.surface,
       mudWeightPpg: bha?.mudWeight, frictionCoefficient: bha?.frictionCoefficient, jarIndex: Number(fields.jar),
-      jarDirection: fields.jarDirection, desiredJarForceLbf: finite(fields.desired) ? Number(fields.desired) * 1000 : fields.desired,
+      jarDirection: fields.jarDirection, desiredJarForceLbf: finite(settings.targetForceKlbf) ? Number(settings.targetForceKlbf) * 1000 : settings.targetForceKlbf,
       rotatingHookloadLbf: dragSummary.rotatingHookload.valid ? dragSummary.rotatingHookload.valueLbf : null });
     if (!solved.valid) { setLoadingResult(null); setLoadingError(solved.errors.join(' ')); return; }
     setLoadingResult(solved); setLoadingError('');
@@ -112,15 +127,34 @@ export default function JarForces({ bha, analysisBitMdFt }) {
     {!jars.length && <p role="alert">No jar exists in the BHA. Add a jar before calculating jar loads.</p>}
     {jars.length === 1 && <p className="jarForcesSharedStatus">Selected jar: {jars[0].toolName || 'JAR'} (only jar in BHA).</p>}
     {jars.length > 1 && <label className="jarForcesJarSelect">Selected jar<select value={fields.jar} onChange={e => update('jar', e.target.value)}>{jars.map((jar, i) => <option key={i} value={i}>{jar.toolName || 'JAR'} {i + 1}</option>)}</select></label>}
+    <section aria-label="Jar Configuration">
+      <h6>Jar Configuration</h6>
+      <div className="jarForcesFields">
+        {['up', 'down'].map(direction => {
+          const config = directionSettings(selectedRow?.row, direction), label = direction === 'up' ? 'Jar Up' : 'Jar Down';
+          return <div className="jarForcesDirectionConfig" key={direction}>
+            <label>{label} mechanism<select value={config.mechanism} disabled={!editable} onChange={e => changeConfiguration(direction, { mechanism: e.target.value })}>
+              <option value="">Unconfigured</option><option value="hydraulic">Hydraulic</option><option value="mechanical">Mechanical</option><option value="unavailable">Not Available</option>
+            </select></label>
+            {config.mechanism === 'mechanical' && <label>{label} mechanical trip force (klbf)<input type="number" min="0" step="any" value={config.tripForceKlbf} disabled={!editable}
+              title="Manufacturer-defined release setting for this direction; not a guaranteed firing force."
+              onChange={e => changeConfiguration(direction, { tripForceKlbf: e.target.value })} /></label>}
+          </div>;
+        })}
+      </div>
+      {selectedRow && !editable && <p role="status">Configuration is read-only: BHA update controls are unavailable.</p>}
+    </section>
     <section aria-label="Jar Loading">
-      <h6>Jar Loading</h6>
+      <h6>Jar Operation</h6>
       <form onSubmit={calculateLoading} noValidate>
         <div className="jarForcesFields">
-          {numeric('desired', 'Desired axial force at jar (klbf)')}
+          <label>Target Force at Jar (klbf)<input type="number" min="0" step="any" value={settings.targetForceKlbf} disabled={!editable || settings.mechanism === 'unavailable'}
+            onChange={e => changeConfiguration(fields.jarDirection, { targetForceKlbf: e.target.value })} /></label>
           <label>Jar direction<select value={fields.jarDirection} onChange={e => update('jarDirection', e.target.value)}><option value="up">Jar Up (tension)</option><option value="down">Jar Down (compression)</option></select></label>
         </div>
-        <button type="submit" disabled={!finite(analysisBitMdFt) || !jars.length}>Calculate required hookload</button>
+        <button type="submit" disabled={!finite(analysisBitMdFt) || !jars.length || !availability.enabled}>Calculate required hookload</button>
       </form>
+      <p className="jarForcesSharedStatus" aria-live="polite">{availability.message}</p>
       {loadingError && <p role="alert">{loadingError}</p>}
       {loadingResult && <ResultsTable title="Jar Loading Results" columns={['Parameter', 'Value']}>
         <tr><Parameter label="Desired jar force" definition="User-requested positive static force magnitude and direction, not a manufacturer firing threshold." /><td>{klbf(Math.abs(loadingResult.targetJarAxialLoadLbf))} klbf {loadingResult.jarDirection === 'up' ? 'Jar Up (tension)' : 'Jar Down (compression)'}</td></tr>
@@ -162,6 +196,8 @@ export default function JarForces({ bha, analysisBitMdFt }) {
     {error && <p role="alert">{error}</p>}
     {result && <ul className="jarForcesWarnings">{result.warnings.map(w => <li key={w}>{w}</li>)}</ul>}
     <details><summary>Engineering Assumptions</summary>
+      <p>Directional mechanisms and mechanical trip settings are user-supplied manufacturer data. Meeting a static mechanical setting does not guarantee release. Hydraulic targets are applied loads, not fixed activation thresholds.</p>
+      <p>Stage 4A does not predict hydraulic delay, impact force or energy, guaranteed release, rig maximum overpull, component tensile yield, sinusoidal or helical buckling limits, or a safe operating envelope.</p>
       <p>Off-bottom assumptions: zero bit/end load; friction coefficient μ = {finite(bha?.frictionCoefficient) ? text(bha.frictionCoefficient) : 'Unavailable'}. Pickup/slack-off use fully mobilised nonrotating axial friction. Rotation: {finite(bha?.rpm) ? text(bha.rpm) : 'Unavailable'} RPM, zero axial motion (0 ft/hr), fixed bit depth; ROP is not used. Pure rotation has zero axial friction; torque is not predicted. At an inclined surface reference, hookloads are local axial support.</p>
       <p>Soft-string predictions follow the imposed survey centreline and exclude bending/buckling, hydraulic pressure-end forces and non-string suspended equipment.</p>
       <p>The lower assembly is assumed to provide the necessary reaction.</p>

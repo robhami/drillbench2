@@ -21,3 +21,25 @@ test.each([undefined, 'auto', 'manual'])('legacy and %s drillpipe metadata survi
   expect(second.current.state.well.currentBha).toEqual(bha);
   expect(JSON.parse(localStorage.getItem('drillbenchWell')).currentBha).toEqual(bha);
 });
+
+
+test('directional jar mechanisms, independent trip settings and overridden targets persist through existing save/load', () => {
+  localStorage.clear();
+  const row = { rowId: 'jar', category: 'JAR', length: 30, weight: 150 };
+  const bha = { id: 'directional', name: 'Directional Jar', rows: [row] };
+  localStorage.setItem('drillbenchWell', JSON.stringify({ currentBha: bha, savedBhas: [] }));
+  const ref = React.createRef();
+  const first = render(<App ref={ref} />);
+  const jarDirections = { up: { mechanism: 'mechanical', tripForceKlbf: '30', targetForceKlbf: '25' }, down: { mechanism: 'hydraulic', targetForceKlbf: '8' } };
+  act(() => ref.current.updateRow('jar', { jarDirections }));
+  act(() => ref.current.saveBha());
+  act(() => ref.current.duplicateBha());
+  expect(ref.current.state.well.currentBha.rows[0].jarDirections).toEqual(jarDirections);
+  first.unmount();
+  const second = React.createRef();
+  render(<App ref={second} />);
+  act(() => second.current.loadBha('directional'));
+  expect(second.current.state.well.currentBha.rows[0].jarDirections).toEqual(jarDirections);
+  expect(JSON.parse(localStorage.getItem('drillbenchWell')).currentBha.rows[0].jarDirections).toEqual(jarDirections);
+  expect(row).not.toHaveProperty('jarDirections');
+});
