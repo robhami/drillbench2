@@ -5,6 +5,24 @@ import Workspace from './WorkspaceV2/Workspace';
 
 jest.mock('./WorkspaceV2/Workspace', () => jest.fn(() => <div>Workspace</div>));
 
+test('Bit Size persists through save, duplicate, reload and loading a legacy BHA', () => {
+  localStorage.clear();
+  const legacy = { id: 'legacy', name: 'Legacy BHA', rows: [] };
+  localStorage.setItem('drillbenchWell', JSON.stringify({ currentBha: legacy, savedBhas: [legacy] }));
+  const first = React.createRef(); const view = render(<App ref={first} />);
+  expect(first.current.state.well.currentBha.holeSize).toBe('');
+  act(() => first.current.updateBha({ holeSize: '12.25' }));
+  act(() => first.current.saveBha());
+  act(() => first.current.duplicateBha());
+  expect(first.current.state.well.currentBha.holeSize).toBe('12.25');
+  view.unmount();
+  const second = React.createRef(); render(<App ref={second} />);
+  expect(second.current.state.well.currentBha.holeSize).toBe('12.25');
+  act(() => second.current.loadBha('legacy'));
+  expect(second.current.state.well.currentBha.holeSize).toBe('12.25');
+  expect(JSON.parse(localStorage.getItem('drillbenchWell')).savedBhas.find(b => b.id === 'legacy').holeSize).toBe('12.25');
+});
+
 test.each([undefined, 'auto', 'manual'])('legacy and %s drillpipe metadata survives save, duplicate, reload and load', lengthMode => {
   localStorage.clear();
   const bha = { id: 'original', name: 'DP persistence', holeSize: '', inclination: 0, mudWeight: '', wob: '', drillpipeReferenceBitMdFt: '3320', rows: [{ rowId: 'dp', category: 'DP', length: '11035', weight: '20', ...(lengthMode ? { lengthMode } : {}) }] };

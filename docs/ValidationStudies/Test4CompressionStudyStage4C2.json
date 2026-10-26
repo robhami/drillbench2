@@ -1,0 +1,6294 @@
+{
+  "configuration": {
+    "surveyPath": "docs/ValidationStudies/SyntheticDirectionalWell.csv",
+    "bitMdFt": 12000,
+    "jarMdFt": 11680,
+    "surfaceMdFt": 0,
+    "mudWeightPpg": 10,
+    "frictionCoefficient": 0.25,
+    "rpm": 150,
+    "bha": {
+      "rows": [
+        {
+          "rowId": "stabiliser",
+          "category": "STAB",
+          "toolName": "stabiliser",
+          "length": 5,
+          "weight": 111.25,
+          "od": 6.75,
+          "idSize": 2
+        },
+        {
+          "rowId": "lowerDC",
+          "category": "DC",
+          "toolName": "lowerDC",
+          "length": 300,
+          "weight": 116,
+          "od": 6.75,
+          "idSize": 1.5
+        },
+        {
+          "rowId": "jar",
+          "category": "JAR",
+          "toolName": "jar",
+          "length": 30,
+          "weight": 150,
+          "od": 9.5,
+          "idSize": 3
+        },
+        {
+          "rowId": "upperDC",
+          "category": "DC",
+          "toolName": "upperDC",
+          "length": 180,
+          "weight": 116,
+          "od": 6.75,
+          "idSize": 1.5
+        },
+        {
+          "rowId": "DP",
+          "category": "DP",
+          "toolName": "DP",
+          "length": 0,
+          "weight": 27.76,
+          "od": 5.5,
+          "idSize": 4.67
+        }
+      ]
+    },
+    "forceSign": "compression-positive",
+    "modulusSupplied": false,
+    "wellboreDiameterSupplied": false
+  },
+  "solverControls": {
+    "defaultMaxStepFt": 5,
+    "defaultConvergenceToleranceLbf": 0.1,
+    "inverseResidualToleranceLbf": 0.01,
+    "nonnegativeSurfaceHookload": true
+  },
+  "zeroSurfaceHookload": {
+    "valid": true,
+    "jarAxialLoadLbf": 131738.71312718155,
+    "convergence": {
+      "required": true,
+      "checked": true,
+      "maxStepFt": 2.5,
+      "toleranceLbf": 0.1,
+      "refinements": 1,
+      "differenceLbf": 0.002276753366459161,
+      "jarDifferenceLbf": 0.002276753366459161,
+      "sharedProfileNodesChecked": 2337,
+      "coarseJarAxialLoadLbf": 131738.7154039349
+    }
+  },
+  "scenarios": [
+    {
+      "targetKlbf": 0,
+      "maxStepFt": 5,
+      "valid": false,
+      "status": "invalid-input",
+      "errors": [
+        "Desired jar force must be an explicit positive magnitude in lbf."
+      ]
+    },
+    {
+      "targetKlbf": 10,
+      "maxStepFt": 5,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 139854.2308807373,
+      "jarAxialLoadLbf": 9999.997760468783,
+      "residualLbf": -0.0022395312171283877,
+      "inverseResidualLbf": -0.0022395312171283877,
+      "inverseEvaluations": 31,
+      "inverseIterations": 24,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.0008965343513409607,
+        "jarDifferenceLbf": 0.0008335139536939096,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 9999.998593982737
+      },
+      "profileSampleCount": 4673,
+      "totalCompressedLengthFt": 861.4212458143884,
+      "maximumCompression": {
+        "maximumCompressionLbf": 9999.997760468783,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 10818.578754185612,
+          "bottomMdFt": 11680,
+          "lengthFt": 861.4212458143884,
+          "maximumCompressionLbf": 9999.997760468783,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [],
+          "geometryTypes": [
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "build": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 861.4212458143884,
+          "maximumCompressionLbf": 9999.997760468783,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 1.8189894035458565e-12,
+        "upperDcTopForceDifferenceLbf": 1.1823431123048067e-11,
+        "independentOnsetMdFt": 10818.578754185615,
+        "onsetDifferenceFt": -3.637978807091713e-12
+      },
+      "parts": [
+        {
+          "topMdFt": 10818.578754185612,
+          "bottomMdFt": 11000,
+          "lengthFt": 181.42124581438839,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 1209.7694798730256,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 4443.890131534217,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 4861.859317627868,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 9459.520364658028,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 9999.997760468783,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 10818.578754185612,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 10817.5,
+            "bottomMdFt": 10820
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10818.578754185612,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    },
+    {
+      "targetKlbf": 25,
+      "maxStepFt": 5,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 127401.54266357422,
+      "jarAxialLoadLbf": 24999.99884445809,
+      "residualLbf": -0.0011555419114301912,
+      "inverseResidualLbf": -0.0011555419114301912,
+      "inverseEvaluations": 29,
+      "inverseIterations": 22,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.010945780102701974,
+        "jarDifferenceLbf": 0.010945779769826913,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 25000.00979023786
+      },
+      "profileSampleCount": 4673,
+      "totalCompressedLengthFt": 3110.873665592908,
+      "maximumCompression": {
+        "maximumCompressionLbf": 24999.99884445809,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 8569.126334407092,
+          "bottomMdFt": 11680,
+          "lengthFt": 3110.873665592908,
+          "maximumCompressionLbf": 24999.99884445809,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [],
+          "geometryTypes": [
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "build": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 3110.873665592908,
+          "maximumCompressionLbf": 24999.99884445809,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 3.637978807091713e-12,
+        "upperDcTopForceDifferenceLbf": 1.4551915228366852e-11,
+        "independentOnsetMdFt": 8569.126334407145,
+        "onsetDifferenceFt": -5.275069270282984e-11
+      },
+      "parts": [
+        {
+          "topMdFt": 8569.126334407092,
+          "bottomMdFt": 9000,
+          "lengthFt": 430.87366559290786,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 2873.1905570123376,
+          "maximumCompressionMdFt": 9000
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 6207.335558724906,
+          "maximumCompressionMdFt": 9500
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 9541.480560437401,
+          "maximumCompressionMdFt": 10000
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 12875.625562149788,
+          "maximumCompressionMdFt": 10500
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 16209.770563862174,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 19443.891215523523,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 19861.860401617174,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 24459.521448647334,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 24999.99884445809,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 8569.126334407092,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 8567.5,
+            "bottomMdFt": 8570
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8569.126334407092,
+          "bottomMdFt": 9000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    },
+    {
+      "targetKlbf": 50,
+      "maxStepFt": 5,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 102949.37133789062,
+      "jarAxialLoadLbf": 49999.99086907854,
+      "residualLbf": -0.009130921462201513,
+      "inverseResidualLbf": -0.009130921462201513,
+      "inverseEvaluations": 27,
+      "inverseIterations": 20,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.002548864276832319,
+        "jarDifferenceLbf": 0.0025488596875220537,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 49999.993417938225
+      },
+      "profileSampleCount": 4673,
+      "totalCompressedLengthFt": 6838.981691829952,
+      "maximumCompression": {
+        "maximumCompressionLbf": 49999.99086907854,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 4841.018308170048,
+          "bottomMdFt": 11680,
+          "lengthFt": 6838.981691829952,
+          "maximumCompressionLbf": 49999.99086907854,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ],
+          "geometryTypes": [
+            "build",
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "build": {
+          "compressedLengthFt": 158.98169182995207,
+          "maximumCompressionLbf": 1200.022567928073,
+          "maximumCompressionMdFt": 5000
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680,
+          "maximumCompressionLbf": 49999.99086907854,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 0,
+        "upperDcTopForceDifferenceLbf": -2.546585164964199e-10
+      },
+      "parts": [
+        {
+          "topMdFt": 4841.018308170048,
+          "bottomMdFt": 4900,
+          "lengthFt": 58.98169182995207,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 483.64665673632544,
+          "maximumCompressionMdFt": 4900
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 1200.022567928073,
+          "maximumCompressionMdFt": 5000
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 4534.167569640641,
+          "maximumCompressionMdFt": 5500
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 7868.312571353209,
+          "maximumCompressionMdFt": 6000
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 11202.457573065614,
+          "maximumCompressionMdFt": 6500
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 14536.602574778,
+          "maximumCompressionMdFt": 7000
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 17870.74757649055,
+          "maximumCompressionMdFt": 7500
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 21204.8925782033,
+          "maximumCompressionMdFt": 8000
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 24539.03757991605,
+          "maximumCompressionMdFt": 8500
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 27873.1825816288,
+          "maximumCompressionMdFt": 9000
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 31207.32758334155,
+          "maximumCompressionMdFt": 9500
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 34541.47258505468,
+          "maximumCompressionMdFt": 10000
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 37875.61758676816,
+          "maximumCompressionMdFt": 10500
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 41209.76258848164,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 44443.88324014371,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 44861.85242623738,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49459.51347326778,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49999.99086907854,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 4841.018308170048,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 4840,
+            "bottomMdFt": 4842.5
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4841.018308170048,
+          "bottomMdFt": 4900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    },
+    {
+      "targetKlbf": 75,
+      "maxStepFt": 5,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 73691.25366210938,
+      "jarAxialLoadLbf": 74999.99680667096,
+      "residualLbf": -0.003193329044734128,
+      "inverseResidualLbf": -0.003193329044734128,
+      "inverseEvaluations": 25,
+      "inverseIterations": 19,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.01540006162372265,
+        "jarDifferenceLbf": 0.014566733254469,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 75000.01137340421
+      },
+      "profileSampleCount": 4673,
+      "totalCompressedLengthFt": 8545.82812923763,
+      "maximumCompression": {
+        "maximumCompressionLbf": 74999.99680667096,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 3134.17187076237,
+          "bottomMdFt": 11680,
+          "lengthFt": 8545.82812923763,
+          "maximumCompressionLbf": 74999.99680667096,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ],
+          "geometryTypes": [
+            "build",
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "build": {
+          "compressedLengthFt": 1865.82812923763,
+          "maximumCompressionLbf": 26200.02850551604,
+          "maximumCompressionMdFt": 5000
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680,
+          "maximumCompressionLbf": 74999.99680667096,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 4.3655745685100555e-11,
+        "upperDcTopForceDifferenceLbf": 3.2014213502407074e-10
+      },
+      "parts": [
+        {
+          "topMdFt": 3134.17187076237,
+          "bottomMdFt": 3200,
+          "lengthFt": 65.82812923763004,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 1502.0901014038513,
+          "maximumCompressionMdFt": 3200
+        },
+        {
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 3722.8573585923664,
+          "maximumCompressionMdFt": 3300
+        },
+        {
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 5865.395243082935,
+          "maximumCompressionMdFt": 3400
+        },
+        {
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 7924.715853666156,
+          "maximumCompressionMdFt": 3500
+        },
+        {
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 9896.047877365429,
+          "maximumCompressionMdFt": 3600
+        },
+        {
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 11774.849816886783,
+          "maximumCompressionMdFt": 3700
+        },
+        {
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 13556.822586214206,
+          "maximumCompressionMdFt": 3800
+        },
+        {
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 15237.92143985224,
+          "maximumCompressionMdFt": 3900
+        },
+        {
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 16814.36720304336,
+          "maximumCompressionMdFt": 4000
+        },
+        {
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 18282.656772203827,
+          "maximumCompressionMdFt": 4100
+        },
+        {
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 19639.572856821087,
+          "maximumCompressionMdFt": 4200
+        },
+        {
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 20882.192936135172,
+          "maximumCompressionMdFt": 4300
+        },
+        {
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 22007.89740607785,
+          "maximumCompressionMdFt": 4400
+        },
+        {
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 23014.376894162993,
+          "maximumCompressionMdFt": 4500
+        },
+        {
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 23899.638722301443,
+          "maximumCompressionMdFt": 4600
+        },
+        {
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 24662.012499849163,
+          "maximumCompressionMdFt": 4700
+        },
+        {
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 25300.15483158095,
+          "maximumCompressionMdFt": 4800
+        },
+        {
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 25813.053127707703,
+          "maximumCompressionMdFt": 4900
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 26200.02850551604,
+          "maximumCompressionMdFt": 5000
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 29534.17350722879,
+          "maximumCompressionMdFt": 5500
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 32868.318508941564,
+          "maximumCompressionMdFt": 6000
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 36202.46351065504,
+          "maximumCompressionMdFt": 6500
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 39536.60851236852,
+          "maximumCompressionMdFt": 7000
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 42870.753514082,
+          "maximumCompressionMdFt": 7500
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 46204.898515795474,
+          "maximumCompressionMdFt": 8000
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49539.04351750895,
+          "maximumCompressionMdFt": 8500
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 52873.18851922243,
+          "maximumCompressionMdFt": 9000
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 56207.33352093591,
+          "maximumCompressionMdFt": 9500
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 59541.478522649384,
+          "maximumCompressionMdFt": 10000
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 62875.62352436286,
+          "maximumCompressionMdFt": 10500
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 66209.76852607603,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 69443.8891777367,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 69861.85836383032,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 74459.51941086024,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 74999.99680667096,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 3134.17187076237,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 3132.5,
+            "bottomMdFt": 3135
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3134.17187076237,
+          "bottomMdFt": 3200,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    },
+    {
+      "targetKlbf": 100,
+      "maxStepFt": 5,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 41237.030029296875,
+      "jarAxialLoadLbf": 99999.9974738454,
+      "residualLbf": -0.002526154596125707,
+      "inverseResidualLbf": -0.002526154596125707,
+      "inverseEvaluations": 25,
+      "inverseIterations": 19,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.0024992068647406995,
+        "jarDifferenceLbf": 0.0024992068647406995,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 99999.99997305227
+      },
+      "profileSampleCount": 4673,
+      "totalCompressedLengthFt": 9926.8614722597,
+      "maximumCompression": {
+        "maximumCompressionLbf": 99999.9974738454,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 1753.1385277402999,
+          "bottomMdFt": 11680,
+          "lengthFt": 9926.8614722597,
+          "maximumCompressionLbf": 99999.9974738454,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 3000,
+              "from": "vertical",
+              "to": "build"
+            },
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ],
+          "geometryTypes": [
+            "vertical",
+            "build",
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 1246.8614722597001,
+          "maximumCompressionLbf": 29328.466153909398,
+          "maximumCompressionMdFt": 3000
+        },
+        "build": {
+          "compressedLengthFt": 2000,
+          "maximumCompressionLbf": 51200.07548921281,
+          "maximumCompressionMdFt": 4997.5
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680,
+          "maximumCompressionLbf": 99999.9974738454,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 4.3655745685100555e-11,
+        "upperDcTopForceDifferenceLbf": 3.2014213502407074e-10,
+        "independentOnsetMdFt": 1753.1385277403128,
+        "onsetDifferenceFt": -1.2960299500264227e-11
+      },
+      "parts": [
+        {
+          "topMdFt": 1753.1385277402999,
+          "bottomMdFt": 2000,
+          "lengthFt": 246.86147225970012,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 5806.634092840833,
+          "maximumCompressionMdFt": 2000
+        },
+        {
+          "topMdFt": 2000,
+          "bottomMdFt": 2500,
+          "lengthFt": 500,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 17567.550123375117,
+          "maximumCompressionMdFt": 2500
+        },
+        {
+          "topMdFt": 2500,
+          "bottomMdFt": 3000,
+          "lengthFt": 500,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 29328.466153909398,
+          "maximumCompressionMdFt": 3000
+        },
+        {
+          "topMdFt": 3000,
+          "bottomMdFt": 3100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 31267.518714615897,
+          "maximumCompressionMdFt": 3100
+        },
+        {
+          "topMdFt": 3100,
+          "bottomMdFt": 3200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 33144.40496145892,
+          "maximumCompressionMdFt": 3200
+        },
+        {
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 34953.674404660625,
+          "maximumCompressionMdFt": 3300
+        },
+        {
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 36690.06586780632,
+          "maximumCompressionMdFt": 3400
+        },
+        {
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 38348.52185659952,
+          "maximumCompressionMdFt": 3500
+        },
+        {
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 39924.20237001156,
+          "maximumCompressionMdFt": 3600
+        },
+        {
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 41412.498115961695,
+          "maximumCompressionMdFt": 3700
+        },
+        {
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 42809.04309529596,
+          "maximumCompressionMdFt": 3800
+        },
+        {
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 44109.726519564065,
+          "maximumCompressionMdFt": 3900
+        },
+        {
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 45310.70402992039,
+          "maximumCompressionMdFt": 4000
+        },
+        {
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 46408.40818639049,
+          "maximumCompressionMdFt": 4100
+        },
+        {
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 47399.55819874465,
+          "maximumCompressionMdFt": 4200
+        },
+        {
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 48281.168872298476,
+          "maximumCompressionMdFt": 4300
+        },
+        {
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49050.558744112874,
+          "maximumCompressionMdFt": 4400
+        },
+        {
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49705.35738728504,
+          "maximumCompressionMdFt": 4500
+        },
+        {
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 50243.51186330151,
+          "maximumCompressionMdFt": 4600
+        },
+        {
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 50663.29230476077,
+          "maximumCompressionMdFt": 4700
+        },
+        {
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 50963.29661315578,
+          "maximumCompressionMdFt": 4800
+        },
+        {
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 51142.45425883212,
+          "maximumCompressionMdFt": 4900
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 51200.07548921281,
+          "maximumCompressionMdFt": 4997.5
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 54534.17417441345,
+          "maximumCompressionMdFt": 5500
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 57868.319176126926,
+          "maximumCompressionMdFt": 6000
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 61202.464177840404,
+          "maximumCompressionMdFt": 6500
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 64536.60917955388,
+          "maximumCompressionMdFt": 7000
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 67870.75418126633,
+          "maximumCompressionMdFt": 7500
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 71204.89918297835,
+          "maximumCompressionMdFt": 8000
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 74539.04418469037,
+          "maximumCompressionMdFt": 8500
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 77873.1891864024,
+          "maximumCompressionMdFt": 9000
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 81207.33418811442,
+          "maximumCompressionMdFt": 9500
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 84541.47918982644,
+          "maximumCompressionMdFt": 10000
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 87875.62419153846,
+          "maximumCompressionMdFt": 10500
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 91209.76919325048,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 94443.88984491114,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 94861.85903100477,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 99459.5200780347,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 99999.9974738454,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 1753.1385277402999,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 1752.5,
+            "bottomMdFt": 1755
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 1753.1385277402999,
+          "bottomMdFt": 2000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 2000,
+          "bottomMdFt": 2500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 2500,
+          "bottomMdFt": 3000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3000,
+          "bottomMdFt": 3100,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3100,
+          "bottomMdFt": 3200,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    }
+  ],
+  "sensitivity": [
+    {
+      "targetKlbf": 10,
+      "maxStepFt": 2.5,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 139854.22134399414,
+      "jarAxialLoadLbf": 10000.00992665168,
+      "residualLbf": 0.009926651680871146,
+      "inverseResidualLbf": 0.009926651680871146,
+      "inverseEvaluations": 30,
+      "inverseIterations": 23,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 1.25,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.00022412948601413518,
+        "jarDifferenceLbf": 0.0002083734198095044,
+        "sharedProfileNodesChecked": 4673,
+        "coarseJarAxialLoadLbf": 10000.0101350251
+      },
+      "profileSampleCount": 9345,
+      "totalCompressedLengthFt": 861.4230702975638,
+      "maximumCompression": {
+        "maximumCompressionLbf": 10000.00992665168,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 10818.576929702436,
+          "bottomMdFt": 11680,
+          "lengthFt": 861.4230702975638,
+          "maximumCompressionLbf": 10000.00992665168,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [],
+          "geometryTypes": [
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "build": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 861.4230702975638,
+          "maximumCompressionLbf": 10000.00992665168,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 1.8189894035458565e-12,
+        "upperDcTopForceDifferenceLbf": 1.1823431123048067e-11,
+        "independentOnsetMdFt": 10818.576929702442,
+        "onsetDifferenceFt": -5.4569682106375694e-12
+      },
+      "parts": [
+        {
+          "topMdFt": 10818.576929702436,
+          "bottomMdFt": 11000,
+          "lengthFt": 181.42307029756375,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 1209.7816460559427,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 4443.902297717115,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 4861.871483810766,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 9459.532530840926,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 10000.00992665168,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 10818.576929702436,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 10817.5,
+            "bottomMdFt": 10818.75
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10818.576929702436,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    },
+    {
+      "targetKlbf": 10,
+      "maxStepFt": 1.25,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 139854.22134399414,
+      "jarAxialLoadLbf": 10000.008954735087,
+      "residualLbf": 0.008954735087172594,
+      "inverseResidualLbf": 0.008954735087172594,
+      "inverseEvaluations": 30,
+      "inverseIterations": 23,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 0.625,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.0009719853478600271,
+        "jarDifferenceLbf": 0.0009719165936985519,
+        "sharedProfileNodesChecked": 9345,
+        "coarseJarAxialLoadLbf": 10000.00992665168
+      },
+      "profileSampleCount": 18689,
+      "totalCompressedLengthFt": 861.4229245455663,
+      "maximumCompression": {
+        "maximumCompressionLbf": 10000.008954735087,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 10818.577075454434,
+          "bottomMdFt": 11680,
+          "lengthFt": 861.4229245455663,
+          "maximumCompressionLbf": 10000.008954735087,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [],
+          "geometryTypes": [
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "build": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 861.4229245455663,
+          "maximumCompressionLbf": 10000.008954735087,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 1.8189894035458565e-12,
+        "upperDcTopForceDifferenceLbf": -5.547917680814862e-11,
+        "independentOnsetMdFt": 10818.577075454441,
+        "onsetDifferenceFt": -7.275957614183426e-12
+      },
+      "parts": [
+        {
+          "topMdFt": 10818.577075454434,
+          "bottomMdFt": 11000,
+          "lengthFt": 181.42292454556627,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 1209.7806741393556,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 4443.901325800454,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 4861.870511894105,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 9459.531558924333,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 10000.008954735087,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 10818.577075454434,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 10818.125,
+            "bottomMdFt": 10818.75
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10818.577075454434,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    },
+    {
+      "targetKlbf": 50,
+      "maxStepFt": 2.5,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 102949.37133789062,
+      "jarAxialLoadLbf": 49999.990231861324,
+      "residualLbf": -0.009768138676008675,
+      "inverseResidualLbf": -0.009768138676008675,
+      "inverseEvaluations": 27,
+      "inverseIterations": 20,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 1.25,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.0006372172138071619,
+        "jarDifferenceLbf": 0.0006372172138071619,
+        "sharedProfileNodesChecked": 4673,
+        "coarseJarAxialLoadLbf": 49999.99086907854
+      },
+      "profileSampleCount": 9345,
+      "totalCompressedLengthFt": 6838.982586669575,
+      "maximumCompression": {
+        "maximumCompressionLbf": 49999.990231861324,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 4841.017413330425,
+          "bottomMdFt": 11680,
+          "lengthFt": 6838.982586669575,
+          "maximumCompressionLbf": 49999.990231861324,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ],
+          "geometryTypes": [
+            "build",
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "build": {
+          "compressedLengthFt": 158.98258666957463,
+          "maximumCompressionLbf": 1200.0219307122784,
+          "maximumCompressionMdFt": 5000
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680,
+          "maximumCompressionLbf": 49999.990231861324,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 4.3655745685100555e-11,
+        "upperDcTopForceDifferenceLbf": 3.128661774098873e-10
+      },
+      "parts": [
+        {
+          "topMdFt": 4841.017413330425,
+          "bottomMdFt": 4900,
+          "lengthFt": 58.98258666957463,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 483.64605125033086,
+          "maximumCompressionMdFt": 4900
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 1200.0219307122784,
+          "maximumCompressionMdFt": 5000
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 4534.166932424823,
+          "maximumCompressionMdFt": 5500
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 7868.311934137209,
+          "maximumCompressionMdFt": 6000
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 11202.456935849925,
+          "maximumCompressionMdFt": 6500
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 14536.601937562675,
+          "maximumCompressionMdFt": 7000
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 17870.74693927575,
+          "maximumCompressionMdFt": 7500
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 21204.891940989226,
+          "maximumCompressionMdFt": 8000
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 24539.036942702704,
+          "maximumCompressionMdFt": 8500
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 27873.18194441618,
+          "maximumCompressionMdFt": 9000
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 31207.32694612966,
+          "maximumCompressionMdFt": 9500
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 34541.47194784236,
+          "maximumCompressionMdFt": 10000
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 37875.61694955438,
+          "maximumCompressionMdFt": 10500
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 41209.7619512664,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 44443.882602927064,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 44861.85178902069,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49459.51283605061,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49999.990231861324,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 4841.017413330425,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 4840,
+            "bottomMdFt": 4841.25
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4841.017413330425,
+          "bottomMdFt": 4900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    },
+    {
+      "targetKlbf": 50,
+      "maxStepFt": 1.25,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 102949.37133789062,
+      "jarAxialLoadLbf": 49999.99007255061,
+      "residualLbf": -0.009927449391398113,
+      "inverseResidualLbf": -0.009927449391398113,
+      "inverseEvaluations": 27,
+      "inverseIterations": 20,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 0.625,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.00015931071538943797,
+        "jarDifferenceLbf": 0.00015931071538943797,
+        "sharedProfileNodesChecked": 9345,
+        "coarseJarAxialLoadLbf": 49999.990231861324
+      },
+      "profileSampleCount": 18689,
+      "totalCompressedLengthFt": 6838.982679633339,
+      "maximumCompression": {
+        "maximumCompressionLbf": 49999.99007255061,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 4841.017320366661,
+          "bottomMdFt": 11680,
+          "lengthFt": 6838.982679633339,
+          "maximumCompressionLbf": 49999.99007255061,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ],
+          "geometryTypes": [
+            "build",
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 0,
+          "maximumCompressionLbf": null,
+          "maximumCompressionMdFt": null
+        },
+        "build": {
+          "compressedLengthFt": 158.9826796333391,
+          "maximumCompressionLbf": 1200.0217714076439,
+          "maximumCompressionMdFt": 5000
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680,
+          "maximumCompressionLbf": 49999.99007255061,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 4.3655745685100555e-11,
+        "upperDcTopForceDifferenceLbf": 1.3606040738523006e-9
+      },
+      "parts": [
+        {
+          "topMdFt": 4841.017320366661,
+          "bottomMdFt": 4900,
+          "lengthFt": 58.9826796333391,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 483.64589987813594,
+          "maximumCompressionMdFt": 4900
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 1200.0217714076439,
+          "maximumCompressionMdFt": 5000
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 4534.166773120124,
+          "maximumCompressionMdFt": 5500
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 7868.311774832874,
+          "maximumCompressionMdFt": 6000
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 11202.45677654628,
+          "maximumCompressionMdFt": 6500
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 14536.601778259757,
+          "maximumCompressionMdFt": 7000
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 17870.746779972582,
+          "maximumCompressionMdFt": 7500
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 21204.891781684604,
+          "maximumCompressionMdFt": 8000
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 24539.036783396627,
+          "maximumCompressionMdFt": 8500
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 27873.18178510865,
+          "maximumCompressionMdFt": 9000
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 31207.32678682067,
+          "maximumCompressionMdFt": 9500
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 34541.47178853269,
+          "maximumCompressionMdFt": 10000
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 37875.61679024471,
+          "maximumCompressionMdFt": 10500
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 41209.761791956735,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 44443.882443617396,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 44861.85162971094,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49459.5126767399,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49999.99007255061,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 4841.017320366661,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 4840.625,
+            "bottomMdFt": 4841.25
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4841.017320366661,
+          "bottomMdFt": 4900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    },
+    {
+      "targetKlbf": 100,
+      "maxStepFt": 2.5,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 41237.030029296875,
+      "jarAxialLoadLbf": 99999.99684904046,
+      "residualLbf": -0.0031509595428360626,
+      "inverseResidualLbf": -0.0031509595428360626,
+      "inverseEvaluations": 25,
+      "inverseIterations": 19,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 1.25,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.0006248049467103556,
+        "jarDifferenceLbf": 0.0006248049467103556,
+        "sharedProfileNodesChecked": 4673,
+        "coarseJarAxialLoadLbf": 99999.9974738454
+      },
+      "profileSampleCount": 9345,
+      "totalCompressedLengthFt": 9926.861472259743,
+      "maximumCompression": {
+        "maximumCompressionLbf": 99999.99684904046,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 1753.1385277402574,
+          "bottomMdFt": 11680,
+          "lengthFt": 9926.861472259743,
+          "maximumCompressionLbf": 99999.99684904046,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 3000,
+              "from": "vertical",
+              "to": "build"
+            },
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ],
+          "geometryTypes": [
+            "vertical",
+            "build",
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 1246.8614722597426,
+          "maximumCompressionLbf": 29328.46615391118,
+          "maximumCompressionMdFt": 3000
+        },
+        "build": {
+          "compressedLengthFt": 2000,
+          "maximumCompressionLbf": 51200.07486508898,
+          "maximumCompressionMdFt": 4997.5
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680,
+          "maximumCompressionLbf": 99999.99684904046,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": 4.3655745685100555e-11,
+        "upperDcTopForceDifferenceLbf": 1.367880031466484e-9,
+        "independentOnsetMdFt": 1753.1385277403128,
+        "onsetDifferenceFt": -5.547917680814862e-11
+      },
+      "parts": [
+        {
+          "topMdFt": 1753.1385277402574,
+          "bottomMdFt": 2000,
+          "lengthFt": 246.86147225974264,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 5806.634092841817,
+          "maximumCompressionMdFt": 2000
+        },
+        {
+          "topMdFt": 2000,
+          "bottomMdFt": 2500,
+          "lengthFt": 500,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 17567.55012337617,
+          "maximumCompressionMdFt": 2500
+        },
+        {
+          "topMdFt": 2500,
+          "bottomMdFt": 3000,
+          "lengthFt": 500,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 29328.46615391118,
+          "maximumCompressionMdFt": 3000
+        },
+        {
+          "topMdFt": 3000,
+          "bottomMdFt": 3100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 31267.51868526954,
+          "maximumCompressionMdFt": 3100
+        },
+        {
+          "topMdFt": 3100,
+          "bottomMdFt": 3200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 33144.40490196708,
+          "maximumCompressionMdFt": 3200
+        },
+        {
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 34953.674314322074,
+          "maximumCompressionMdFt": 3300
+        },
+        {
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 36690.06574601762,
+          "maximumCompressionMdFt": 3400
+        },
+        {
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 38348.52170285645,
+          "maximumCompressionMdFt": 3500
+        },
+        {
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 39924.202183910296,
+          "maximumCompressionMdFt": 3600
+        },
+        {
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 41412.49789719987,
+          "maximumCompressionMdFt": 3700
+        },
+        {
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 42809.042843673145,
+          "maximumCompressionMdFt": 3800
+        },
+        {
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 44109.72623498221,
+          "maximumCompressionMdFt": 3900
+        },
+        {
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 45310.70371238385,
+          "maximumCompressionMdFt": 4000
+        },
+        {
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 46408.40783600591,
+          "maximumCompressionMdFt": 4100
+        },
+        {
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 47399.55781572046,
+          "maximumCompressionMdFt": 4200
+        },
+        {
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 48281.1684569441,
+          "maximumCompressionMdFt": 4300
+        },
+        {
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49050.55829683773,
+          "maximumCompressionMdFt": 4400
+        },
+        {
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49705.35690859725,
+          "maximumCompressionMdFt": 4500
+        },
+        {
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 50243.511353806374,
+          "maximumCompressionMdFt": 4600
+        },
+        {
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 50663.291765159,
+          "maximumCompressionMdFt": 4700
+        },
+        {
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 50963.29604424115,
+          "maximumCompressionMdFt": 4800
+        },
+        {
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 51142.453661489446,
+          "maximumCompressionMdFt": 4900
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 51200.07486508898,
+          "maximumCompressionMdFt": 4997.5
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 54534.173549614345,
+          "maximumCompressionMdFt": 5500
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 57868.31855132637,
+          "maximumCompressionMdFt": 6000
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 61202.46355303839,
+          "maximumCompressionMdFt": 6500
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 64536.60855475041,
+          "maximumCompressionMdFt": 7000
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 67870.75355646243,
+          "maximumCompressionMdFt": 7500
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 71204.89855817445,
+          "maximumCompressionMdFt": 8000
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 74539.04355988647,
+          "maximumCompressionMdFt": 8500
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 77873.1885615985,
+          "maximumCompressionMdFt": 9000
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 81207.33356331052,
+          "maximumCompressionMdFt": 9500
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 84541.47856502254,
+          "maximumCompressionMdFt": 10000
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 87875.62356673456,
+          "maximumCompressionMdFt": 10500
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 91209.76856844658,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 94443.88922010724,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 94861.85840620079,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 99459.51945322975,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 99999.99684904046,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 1753.1385277402574,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 1752.5,
+            "bottomMdFt": 1753.75
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 1753.1385277402574,
+          "bottomMdFt": 2000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 2000,
+          "bottomMdFt": 2500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 2500,
+          "bottomMdFt": 3000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3000,
+          "bottomMdFt": 3100,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3100,
+          "bottomMdFt": 3200,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    },
+    {
+      "targetKlbf": 100,
+      "maxStepFt": 1.25,
+      "valid": true,
+      "status": "calculated",
+      "requiredSurfaceHookloadLbf": 41237.030029296875,
+      "jarAxialLoadLbf": 99999.99669279403,
+      "residualLbf": -0.003307205974124372,
+      "inverseResidualLbf": -0.003307205974124372,
+      "inverseEvaluations": 25,
+      "inverseIterations": 19,
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 0.625,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.0001562507968628779,
+        "jarDifferenceLbf": 0.0001562464312883094,
+        "sharedProfileNodesChecked": 9345,
+        "coarseJarAxialLoadLbf": 99999.99684904046
+      },
+      "profileSampleCount": 18689,
+      "totalCompressedLengthFt": 9926.861472259763,
+      "maximumCompression": {
+        "maximumCompressionLbf": 99999.99669279403,
+        "mdFt": 11680
+      },
+      "compressedIntervals": [
+        {
+          "topMdFt": 1753.1385277402362,
+          "bottomMdFt": 11680,
+          "lengthFt": 9926.861472259763,
+          "maximumCompressionLbf": 99999.99669279403,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 3000,
+              "from": "vertical",
+              "to": "build"
+            },
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ],
+          "geometryTypes": [
+            "vertical",
+            "build",
+            "straight-inclined"
+          ]
+        }
+      ],
+      "geometrySummary": {
+        "vertical": {
+          "compressedLengthFt": 1246.8614722597638,
+          "maximumCompressionLbf": 29328.466153912177,
+          "maximumCompressionMdFt": 3000
+        },
+        "build": {
+          "compressedLengthFt": 2000,
+          "maximumCompressionLbf": 51200.07470905712,
+          "maximumCompressionMdFt": 4997.5
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680,
+          "maximumCompressionLbf": 99999.99669279403,
+          "maximumCompressionMdFt": 11680
+        }
+      },
+      "analyticalChecks": {
+        "jarTopForceDifferenceLbf": -1.3096723705530167e-10,
+        "upperDcTopForceDifferenceLbf": -2.9976945370435715e-9,
+        "independentOnsetMdFt": 1753.1385277403128,
+        "onsetDifferenceFt": -7.66249286243692e-11
+      },
+      "parts": [
+        {
+          "topMdFt": 1753.1385277402362,
+          "bottomMdFt": 2000,
+          "lengthFt": 246.8614722597638,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 5806.634092842309,
+          "maximumCompressionMdFt": 2000
+        },
+        {
+          "topMdFt": 2000,
+          "bottomMdFt": 2500,
+          "lengthFt": 500,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 17567.55012337717,
+          "maximumCompressionMdFt": 2500
+        },
+        {
+          "topMdFt": 2500,
+          "bottomMdFt": 3000,
+          "lengthFt": 500,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 29328.466153912177,
+          "maximumCompressionMdFt": 3000
+        },
+        {
+          "topMdFt": 3000,
+          "bottomMdFt": 3100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 31267.518677933465,
+          "maximumCompressionMdFt": 3100
+        },
+        {
+          "topMdFt": 3100,
+          "bottomMdFt": 3200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 33144.40488709456,
+          "maximumCompressionMdFt": 3200
+        },
+        {
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 34953.67429173781,
+          "maximumCompressionMdFt": 3300
+        },
+        {
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 36690.065715570745,
+          "maximumCompressionMdFt": 3400
+        },
+        {
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 38348.52166442095,
+          "maximumCompressionMdFt": 3500
+        },
+        {
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 39924.20213738523,
+          "maximumCompressionMdFt": 3600
+        },
+        {
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 41412.49784250955,
+          "maximumCompressionMdFt": 3700
+        },
+        {
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 42809.0427807675,
+          "maximumCompressionMdFt": 3800
+        },
+        {
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 44109.72616383671,
+          "maximumCompressionMdFt": 3900
+        },
+        {
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 45310.703632999655,
+          "maximumCompressionMdFt": 4000
+        },
+        {
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 46408.40774840962,
+          "maximumCompressionMdFt": 4100
+        },
+        {
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 47399.55771996419,
+          "maximumCompressionMdFt": 4200
+        },
+        {
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 48281.16835310513,
+          "maximumCompressionMdFt": 4300
+        },
+        {
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49050.558185018446,
+          "maximumCompressionMdFt": 4400
+        },
+        {
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 49705.356788924735,
+          "maximumCompressionMdFt": 4500
+        },
+        {
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 50243.51122643187,
+          "maximumCompressionMdFt": 4600
+        },
+        {
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 50663.29163025775,
+          "maximumCompressionMdFt": 4700
+        },
+        {
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 50963.29590201164,
+          "maximumCompressionMdFt": 4800
+        },
+        {
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 51142.45351215286,
+          "maximumCompressionMdFt": 4900
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 51200.07470905712,
+          "maximumCompressionMdFt": 4997.5
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 54534.173393414014,
+          "maximumCompressionMdFt": 5500
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 57868.318395126036,
+          "maximumCompressionMdFt": 6000
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 61202.46339683806,
+          "maximumCompressionMdFt": 6500
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 64536.60839855008,
+          "maximumCompressionMdFt": 7000
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 67870.75340025802,
+          "maximumCompressionMdFt": 7500
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 71204.89840196422,
+          "maximumCompressionMdFt": 8000
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 74539.04340367042,
+          "maximumCompressionMdFt": 8500
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 77873.18840537663,
+          "maximumCompressionMdFt": 9000
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 81207.33340708283,
+          "maximumCompressionMdFt": 9500
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 84541.47840878903,
+          "maximumCompressionMdFt": 10000
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 87875.62341049523,
+          "maximumCompressionMdFt": 10500
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 91209.76841220143,
+          "maximumCompressionMdFt": 11000
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 94443.88906385645,
+          "maximumCompressionMdFt": 11485
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 94861.85824995034,
+          "maximumCompressionMdFt": 11500
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 99459.51929698314,
+          "maximumCompressionMdFt": 11665
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "requiredInputsAvailable": false,
+          "fullyEvaluated": false,
+          "maximumCompressionLbf": 99999.99669279403,
+          "maximumCompressionMdFt": 11680
+        }
+      ],
+      "zeroForceCrossings": [
+        {
+          "type": "interpolated-crossing",
+          "mdFt": 1753.1385277402362,
+          "fromState": "tension",
+          "toState": "compression",
+          "bracket": {
+            "topMdFt": 1753.125,
+            "bottomMdFt": 1753.75
+          },
+          "interpolated": true
+        }
+      ],
+      "missingInputs": [
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 1753.1385277402362,
+          "bottomMdFt": 2000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 2000,
+          "bottomMdFt": 2500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 2500,
+          "bottomMdFt": 3000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3000,
+          "bottomMdFt": 3100,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3100,
+          "bottomMdFt": 3200,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 4,
+          "componentId": "DP",
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 3,
+          "componentId": "upperDC",
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        },
+        {
+          "componentIndex": 2,
+          "componentId": "jar",
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "inputs": [
+            "youngsModulusPsi",
+            "wellboreDiameterIn"
+          ]
+        }
+      ]
+    }
+  ]
+}

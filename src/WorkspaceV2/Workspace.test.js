@@ -9,7 +9,7 @@ jest.mock('./Widget', () => {
   const JarForces = require('../Apps/JarForces/JarForces').default;
   return props => <div data-testid={props.widget.type}>
   <span data-testid={`${props.widget.type}-mode`}>{props.drillingMode}</span>
-  {props.widget.type === 'analysisInputs' && <AnalysisInputs bha={{ name: '', holeSize: '', mudWeight: '', wob: '' }} updateBha={() => {}} drillingMode={props.drillingMode} setDrillingMode={props.setDrillingMode} analysisBitMdFt={props.analysisBitMdFt} setAnalysisBitMdFt={props.setAnalysisBitMdFt} />}
+  {props.widget.type === 'analysisInputs' && <AnalysisInputs bha={{ name: '', holeSize: '', mudWeight: '', wob: '', ...props.bha }} updateBha={() => {}} drillingMode={props.drillingMode} setDrillingMode={props.setDrillingMode} analysisBitMdFt={props.analysisBitMdFt} setAnalysisBitMdFt={props.setAnalysisBitMdFt} />}
   {props.widget.type === 'jarForces' && props.bha && <JarForces bha={props.bha} analysisBitMdFt={props.analysisBitMdFt} rigLimits={props.rigLimits} updateRigLimits={props.updateRigLimits} />}
   <button onClick={() => props.onClose(props.widget.id)}>Close {props.widget.type}</button>
 </div>;
@@ -22,6 +22,27 @@ const saved = () => JSON.parse(localStorage.getItem(key));
 const open = () => fireEvent.click(screen.getByRole('button', { name: 'String' }));
 
 beforeEach(() => localStorage.clear());
+
+test('Defined DP synchronizes analysis depth, rejects missing lengths and restores Auto analysis depth', () => {
+  const auto = { rows: [{ rowId: 'dc', category: 'DC', length: 300 }, { rowId: 'dp', category: 'DP', length: 9000, lengthMode: 'auto' }], drillpipeReferenceBitMdFt: 12000 };
+  const { rerender, unmount } = render(<Workspace bha={auto} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Analysis' }));
+  fireEvent.change(screen.getByLabelText('Bit Depth (ft MD)'), { target: { value: '7000' } });
+  const defined = { ...auto, rows: auto.rows.map(r => r.category === 'DP' ? { ...r, lengthMode: 'manual' } : r) };
+  rerender(<Workspace bha={defined} />);
+  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(9300);
+  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveAttribute('readonly');
+  rerender(<Workspace bha={{ ...defined, rows: [defined.rows[0], { ...defined.rows[1], length: 9500 }] }} />);
+  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(9800);
+  rerender(<Workspace bha={{ ...defined, rows: [defined.rows[0], { ...defined.rows[1], length: '' }] }} />);
+  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(null);
+  rerender(<Workspace bha={auto} />);
+  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(7000);
+  unmount();
+  render(<Workspace bha={JSON.parse(JSON.stringify(defined))} />);
+  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(9300);
+  expect(auto.drillpipeReferenceBitMdFt).toBe(12000);
+});
 
 test('only Analysis Inputs controls the shared mode for String and Results', () => {
   render(<Workspace />);
@@ -164,7 +185,7 @@ test('Analysis Inputs shares depth with Jar Forces across closing/reopening with
   const { SURVEY_STORAGE_KEY } = require('../Apps/Survey/Survey');
   localStorage.setItem(SURVEY_STORAGE_KEY, JSON.stringify({ confirmed: true, filename: 'vertical.csv', originalCsv: 'MD,Inclination,Azimuth\n0,0,90\n20000,0,90' }));
   const bha = { mudWeight: 10, frictionCoefficient: 0.25, rpm: 150, drillpipeReferenceBitMdFt: 12000,
-    rows: [{ category: 'JAR', length: 20, weight: 100, od: 6.75 }, { category: 'DP', length: 10000, weight: 20, od: 5.5 }] };
+    rows: [{ category: 'JAR', length: 20, weight: 100, od: 6.75 }, { category: 'DP', length: 10000, lengthMode: 'auto', weight: 20, od: 5.5 }] };
   const before = JSON.stringify(bha), updateBha = jest.fn();
   render(<Workspace bha={bha} updateBha={updateBha} />);
   fireEvent.click(screen.getByRole('button', { name: 'Analysis' }));

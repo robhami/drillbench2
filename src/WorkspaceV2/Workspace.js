@@ -2,6 +2,7 @@ import React from 'react';
 
 import './Workspace.css';
 import Widget from './Widget';
+import { definedStringDepth } from '../engineering/bha/definedStringDepth';
 
 const WORKSPACE_STORAGE_KEY = 'wellbenchWorkspaceV2';
 
@@ -24,6 +25,8 @@ const Workspace = ({
     const canvasRef = React.useRef(null);
     const [drillingMode, setDrillingMode] = React.useState('slide');
     const [analysisBitMdFt, setAnalysisBitMdFt] = React.useState('');
+    const definedDepth = definedStringDepth(bha);
+    const effectiveAnalysisBitMdFt = definedDepth.active ? (definedDepth.valid ? String(definedDepth.bitMdFt) : '') : analysisBitMdFt;
     const defaultWidgets = [
         {
             id: 'bhaSummary1',
@@ -341,7 +344,7 @@ const Workspace = ({
                             bha={bha}
                             rigLimits={rigLimits}
                             updateRigLimits={updateRigLimits}
-                            analysisBitMdFt={analysisBitMdFt}
+                            analysisBitMdFt={effectiveAnalysisBitMdFt}
                             setAnalysisBitMdFt={setAnalysisBitMdFt}
                             drillingMode={drillingMode}
                             setDrillingMode={setDrillingMode}

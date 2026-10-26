@@ -18,7 +18,11 @@ import {
 } from '@dnd-kit/sortable';
 
 import SortableRow from './SortableRow.js';
+import MeasuredDepthInput from './MeasuredDepthInput';
 import { deployDrillstring } from '../../engineering/bha/deployDrillstring';
+import { nominalHoleDiameter, componentNominalClearance } from '../../engineering/bha/nominalHoleClearance';
+import './BHABuilder.css';
+import { definedStringDepth } from '../../engineering/bha/definedStringDepth';
 
 const BHABuilder = ({
   bha,
@@ -29,7 +33,9 @@ const BHABuilder = ({
   reorderRows
 }) => {
   const rows = bha?.rows || [];
+  const nominalHole = nominalHoleDiameter(bha);
   const hasPipe = rows.some(r => r.category === 'DP');
+  const definedDepth = definedStringDepth(bha);
   const autoDeployment = hasPipe ? deployDrillstring(bha, bha?.drillpipeReferenceBitMdFt) : null;
 
   const sensors = useSensors(
@@ -53,10 +59,29 @@ const BHABuilder = ({
 
   return (
     <div className="bhaWorkspace">
-      {hasPipe && <div style={{ marginBottom: 8 }}>
-        <label>Auto DP reference bit MD (ft) <input type="number" min="0" step="any" style={{ width: 120 }} value={bha.drillpipeReferenceBitMdFt ?? ''} onChange={e => updateBha?.({ drillpipeReferenceBitMdFt: e.target.value })} /></label>
-        <small style={{ display: 'block' }}>Enter an explicit reference depth for Auto. Stored manual lengths remain available to existing drilling/Skeem analyses; run analysis deploys pipe at each sampled depth.</small>
+      <div className="bhaTopInputs">
+      <div>
+        <label>Bit Size (in) <input className="bhaBitSizeInput" type="text" inputMode="decimal"
+          value={bha?.holeSize ?? ''} aria-invalid={nominalHole.status === 'invalid-input'}
+          onChange={e => updateBha?.({ holeSize: e.target.value })} /></label>
+        {!nominalHole.valid && <small role={nominalHole.status === 'invalid-input' ? 'alert' : 'status'}>{nominalHole.message}</small>}
+      </div>
+      {hasPipe && <div className="bhaDepthMode">
+        <label>MD (ft) <MeasuredDepthInput readOnly={definedDepth.active} value={bha.drillpipeReferenceBitMdFt ?? ''} onChange={value => updateBha?.({ drillpipeReferenceBitMdFt: value })} /></label>
+        {rows.filter(row => row.category === 'DP').map(row => <div className="bhaDpControl" key={row.rowId}>
+          <span>DP</span>
+          <div className="bhaDpSwitch" role="group" aria-label={`Drillpipe length mode ${rows.indexOf(row) + 1}`}>
+            {['auto', 'manual'].map(mode => <button type="button" key={mode}
+              aria-pressed={(row.lengthMode || 'manual') === mode}
+              onClick={() => updateRow(row.rowId, { lengthMode: mode })}>
+              {mode === 'auto' ? 'Auto' : 'Defined'}
+            </button>)}
+          </div>
+        </div>)}
       </div>}
+      </div>
+      {definedDepth.active && !definedDepth.valid && <small role="alert">{definedDepth.error}</small>}
+      {rows.some(row => row.category === 'DP' && row.lengthMode === 'auto') && !autoDeployment?.valid && <small role="alert">{autoDeployment?.errors.join(' ')}</small>}
       <div className="bhaTableSection">
         <DndContext
           sensors={sensors}
@@ -65,6 +90,8 @@ const BHABuilder = ({
         >
           <div className="bhaTableWrapper">
             <Table className="bhaComponentTable">
+              <colgroup><col className="bhaDragCol" /><col className="bhaNumberCol" /><col className="bhaTypeCol" /><col className="bhaToolCol" />
+                <col className="bhaDimensionCol" /><col className="bhaDimensionCol" /><col className="bhaWeightCol" /><col className="bhaLengthCol" /><col className="bhaDeleteCol" /></colgroup>
               <thead>
                 <tr>
                   <th aria-label="Move component"></th>
@@ -105,6 +132,7 @@ const BHABuilder = ({
                     <SortableRow
                       key={row.rowId}
                       row={row}
+                      nominalClearance={componentNominalClearance(bha, row)}
                       autoDeployment={autoDeployment}
                       index={index}
                       rowsLength={rows.length}

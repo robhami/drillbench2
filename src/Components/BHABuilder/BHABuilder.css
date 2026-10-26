@@ -1,0 +1,43 @@
+﻿.bhaWorkspace .bhaTopInputs { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 14px; margin-bottom: 6px; }
+.bhaWorkspace .bhaTopInputs > div { min-width: 0; max-width: 100%; }
+.bhaWorkspace .bhaTopInputs label { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; font-size: .8rem; }
+.bhaWorkspace .bhaTopInputs input { width: 100px; max-width: 100%; min-width: 80px; height: 28px; padding: 2px 4px; text-align: center; box-sizing: border-box; }
+.bhaWorkspace .bhaTopInputs .bhaBitSizeInput { width: 65px; min-width: 65px; flex: none; }
+.bhaWorkspace .bhaTopInputs .bhaMdInput { width: 85px; min-width: 85px; flex: none; }
+.bhaWorkspace .bhaTopInputs small { display: block; white-space: normal; }
+.bhaWorkspace .bhaDepthMode, .bhaWorkspace .bhaDpControl { display: flex; align-items: center; gap: 6px; }
+.bhaWorkspace .bhaDepthMode { flex-wrap: wrap; }
+.bhaWorkspace .bhaDpControl { font-size: .8rem; }
+.bhaWorkspace .bhaTopInputs input[readonly] { background: #e9edf1; color: #35404b; border: 1px solid #c5cbd1; cursor: default; }
+.bhaWorkspace .bhaToolControls { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.bhaWorkspace .bhaToolControls select { flex: 1; min-width: 0; }
+.bhaWorkspace .bhaDpSwitch { display: inline-flex; flex: none; height: 28px; border: 1px solid #aeb8c2; border-radius: 4px; overflow: hidden; }
+.bhaWorkspace .bhaDpSwitch button { border: 0; border-radius: 0; background: #f4f6f8; color: #465260; font-size: .7rem; padding: 0 5px; white-space: nowrap; }
+.bhaWorkspace .bhaDpSwitch button + button { border-left: 1px solid #aeb8c2; }
+.bhaWorkspace .bhaDpSwitch button[aria-pressed="true"] { background: #dce8f4; color: #1d466b; font-weight: 600; }
+.bhaWorkspace .bhaDpSwitch button:focus-visible { outline-offset: -2px; }
+.bhaWorkspace .bhaTableWrapper { overflow-x: auto; max-width: 100%; }
+#bhaCard .bhaWorkspace .bhaComponentTable { width: 670px; min-width: 670px; max-width: 670px; table-layout: fixed; }
+#bhaCard .bhaWorkspace .bhaComponentTable tr > th,
+#bhaCard .bhaWorkspace .bhaComponentTable tr > td { width: auto; white-space: normal; overflow-wrap: anywhere; vertical-align: middle; padding: 2px !important; }
+.bhaWorkspace .bhaDragCol { width: 24px; }
+.bhaWorkspace .bhaNumberCol { width: 28px; }
+.bhaWorkspace .bhaTypeCol { width: 65px; }
+.bhaWorkspace .bhaToolCol { width: 245px; }
+.bhaWorkspace .bhaDimensionCol { width: 60px; }
+.bhaWorkspace .bhaWeightCol { width: 70px; }
+.bhaWorkspace .bhaLengthCol { width: 90px; }
+.bhaWorkspace .bhaDeleteCol { width: 28px; }
+#bhaCard .bhaWorkspace .bhaComponentTable select,
+#bhaCard .bhaWorkspace .bhaComponentTable .numInput { width: 100%; max-width: 100%; min-width: 0; height: 28px; box-sizing: border-box; padding: 2px 3px; }
+#bhaCard .bhaWorkspace .bhaComponentTable .numInput { text-align: center; }
+#bhaCard .bhaWorkspace .bhaComponentTable .numInput[readonly] { background: #e9edf1; color: #35404b; border: 1px solid #c5cbd1; cursor: default; }
+#bhaCard .bhaWorkspace .bhaComponentTable td:nth-child(4) select { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#bhaCard .bhaWorkspace .bhaComponentTable td:nth-child(8) select { display: block; margin-bottom: 3px; }
+#bhaCard .bhaWorkspace .bhaComponentTable td:nth-child(8) output { display: block; width: 100%; text-align: center; font-variant-numeric: tabular-nums; }
+#bhaCard .bhaWorkspace .bhaComponentTable td:nth-child(8) small,
+.bhaWorkspace .bhaRowError { display: block; white-space: normal; line-height: 1.2; }
+.bhaWorkspace .bhaRowError { color: #a43715; font-size: .7rem; }
+#bhaCard .bhaWorkspace .bhaDragHandle,
+#bhaCard .bhaWorkspace .bhaDeleteButton { width: 20px; min-width: 20px; height: 28px; padding: 0; }
+.bhaWorkspace button:focus-visible { outline: 2px solid #276ac3; outline-offset: 1px; }

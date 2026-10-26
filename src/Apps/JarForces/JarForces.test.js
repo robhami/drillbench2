@@ -128,7 +128,7 @@ test('four-column tables group weights and operating predictions, with two-colum
   expect(row('Jar Force Results', 'Jar-centre axial load')).toHaveClass('jarForcesPrimaryLoad');
   expect(values('Jar Force Results', 'Jar-centre axial load')[0]).toContain('tension');
   for (const table of screen.getAllByRole('table')) {
-    const columns = table.getAttribute('aria-label') === 'Jar Force Results' ? 2 : 4;
+    const columns = ['Jar Force Results', 'Buckling summary'].includes(table.getAttribute('aria-label')) ? 2 : 4;
     for (const tr of within(table).getAllByRole('row')) expect(tr.children).toHaveLength(columns);
     for (const info of table.querySelectorAll('.jarForcesInfo')) {
       expect(info).toHaveAttribute('tabindex', '0'); expect(info.getAttribute('title')).toBeTruthy();

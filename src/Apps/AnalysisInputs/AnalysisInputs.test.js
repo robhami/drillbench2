@@ -7,12 +7,14 @@ const bha = { name: 'Test BHA', holeSize: '8.5', mudWeight: '10', inclination: 4
 test('compact fields retain values, units, validation and BHA updates', () => {
   const updateBha = jest.fn();
   render(<AnalysisInputs bha={bha} updateBha={updateBha} />);
-  const fields = [['BHA Name', 'name', 'Updated BHA'], ['Hole Size', 'holeSize', '9.5'], ['Mud Weight', 'mudWeight', '12'], ['Inclination (°)', 'inclination', '50'], ['Friction coefficient', 'frictionCoefficient', '0.3'], ['RPM', 'rpm', '60'], ['ROP', 'rop', '250'], ['WOB', 'wob', '15']];
+  const fields = [['BHA Name', 'name', 'Updated BHA'], ['Mud Weight', 'mudWeight', '12'], ['Inclination (°)', 'inclination', '50'], ['Friction coefficient', 'frictionCoefficient', '0.3'], ['RPM', 'rpm', '60'], ['ROP', 'rop', '250'], ['WOB', 'wob', '15']];
   fields.forEach(([label, key, value]) => {
     fireEvent.change(screen.getByLabelText(label), { target: { value } });
     expect(updateBha).toHaveBeenLastCalledWith({ [key]: value });
   });
   expect(screen.getByLabelText('Inclination (°)')).toHaveAttribute('max', '90');
+  expect(screen.getByLabelText('Hole Size')).toHaveAttribute('readonly');
+  expect(screen.getByLabelText('Hole Size')).toHaveValue('8.5');
   expect(screen.getByLabelText('Friction coefficient')).toHaveAttribute('max', '1');
   expect(screen.getByLabelText('RPM')).toHaveAttribute('min', '0');
   [['Hole Size', 'in'], ['Mud Weight', 'ppg'], ['Inclination (°)', '°'], ['Friction coefficient', 'μ'], ['RPM', 'rpm'], ['ROP', 'ft/hr'], ['WOB', 'klbf']].forEach(([label, unit]) => {

@@ -8,6 +8,7 @@ import { calcOffBottomRotatingSummary } from '../../engineering/forces/calcOffBo
 import { directionSettings, operatingAvailability } from './directionalJarConfig';
 import { calcHookloadLimits, readMaximumHookload } from '../../engineering/jar/hookloadLimits';
 import './JarForces.css';
+import BucklingDetails from './BucklingDetails';
 
 const readSurvey = () => { try { return JSON.parse(localStorage.getItem(SURVEY_STORAGE_KEY)); } catch { return null; } };
 const text = v => v === undefined || v === null ? '' : String(v);
@@ -245,6 +246,10 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha, 
       {result && <>
         <p>Force-balance residual: {decimal(result.equilibriumResidualLbf)} lbf. {result.convergence.checked ? `Curved step refinement difference: ${decimal(result.convergence.differenceLbf)} lbf; tolerance ${decimal(result.convergence.toleranceLbf)} lbf; final step bound ${decimal(result.convergence.maxStepFt)} ft.` : 'No curved friction refinement required.'}</p>
 </>}
+    </details>
+    <details><summary>Engineering Details</summary>
+      <BucklingDetails bha={bha} survey={survey} bitMdFt={analysisBitMdFt} surfaceMdFt={fields.surface}
+        jarIndex={Number(fields.jar)} jarDirection={fields.jarDirection} loadingResult={loadingResult} />
     </details>
   </section>;
 }

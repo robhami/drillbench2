@@ -2,8 +2,10 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
+import { definedStringDepth } from '../../engineering/bha/definedStringDepth';
 
 const JarAnalysisInputs = ({ bha, updateBha, drillingMode = 'slide', setDrillingMode, analysisBitMdFt = '', setAnalysisBitMdFt }) => {
+  const definedDepth = definedStringDepth(bha);
   return (
     <Container fluid className="px-0">
       <Card className="analysisInputsCard">
@@ -28,25 +30,22 @@ const JarAnalysisInputs = ({ bha, updateBha, drillingMode = 'slide', setDrilling
             <Form.Group controlId="analysisBitMd">
               <Form.Label>Bit Depth (ft MD)</Form.Label>
               <Form.Control type="number" min="0" step="any" value={analysisBitMdFt}
-                disabled={!setAnalysisBitMdFt} onChange={event => setAnalysisBitMdFt(event.target.value)}
+                readOnly={definedDepth.active} disabled={!setAnalysisBitMdFt} onChange={event => setAnalysisBitMdFt(event.target.value)}
                 aria-describedby="analysisBitMdHelp" />
-              <small id="analysisBitMdHelp">Jar Forces analysis depth; separate from Auto DP reference MD.</small>
+              <small id="analysisBitMdHelp">{definedDepth.active ? 'Derived from Defined string length in BHA Data Entry.' : 'Jar Forces analysis depth; separate from Auto DP reference MD.'}</small>
             </Form.Group>
 
             <Form.Group controlId="analysisHoleSize">
-              <Form.Label>Hole Size</Form.Label>
+              <Form.Label title="Shared with Bit Size in BHA Data Entry; uniform nominal open-hole diameter.">Hole Size</Form.Label>
 
               <div className="bhaInputWithUnit">
                 <Form.Control
                   type="text"
                   inputMode="decimal"
-                  value={bha.holeSize}
-                  placeholder="8.500"
-                  onChange={(event) =>
-                    updateBha({
-                      holeSize: event.target.value
-                    })
-                  }
+                  value={bha.holeSize ?? ''}
+                  placeholder="Not Configured"
+                  readOnly
+                  title="Edit Bit Size in BHA Data Entry."
                 />
 
                 <span>in</span>

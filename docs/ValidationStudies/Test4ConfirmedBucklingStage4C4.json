@@ -1,0 +1,271 @@
+{
+  "assumptions": {
+    "youngsModulusPsi": 30000000,
+    "nominalHoleDiameterIn": 16,
+    "selectedDpIndex": 4,
+    "confirmed": true,
+    "note": "Explicit user confirmation of the existing long uniform DP idealization; no field validation or complete compressed-section stability solution."
+  },
+  "scenarios": [
+    {
+      "targetKlbf": 10,
+      "requiredSurfaceHookloadLbf": 139854.2308807373,
+      "residualLbf": -0.0022395312171283877,
+      "summary": {
+        "firstSinusoidalOnset": null,
+        "firstHelicalOnset": null,
+        "controllingComponentId": "DP",
+        "controllingMdFt": 11485,
+        "maximumSinusoidalUtilization": 0.1536066829416302,
+        "maximumHelicalUtilization": 0.10861632714359869,
+        "applicableIntervalCount": 2594,
+        "totalIntervalCount": 4672,
+        "completeCoverage": false
+      },
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "evaluatedCompressedLengthFt": 666.4212458143884,
+      "unevaluatedCompressedLengthFt": 195,
+      "exclusions": [
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11665,
+          "componentId": "upperDC",
+          "reasons": "youngsModulusPsi"
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "componentId": "jar",
+          "reasons": "youngsModulusPsi"
+        }
+      ],
+      "differencesFromStage4C3Ft": {
+        "firstSinusoidalOnset": null,
+        "firstHelicalOnset": null
+      }
+    },
+    {
+      "targetKlbf": 25,
+      "requiredSurfaceHookloadLbf": 127401.54266357422,
+      "residualLbf": -0.0011555419114301912,
+      "summary": {
+        "firstSinusoidalOnset": null,
+        "firstHelicalOnset": null,
+        "controllingComponentId": "DP",
+        "controllingMdFt": 11485,
+        "maximumSinusoidalUtilization": 0.672093941274676,
+        "maximumHelicalUtilization": 0.47524218346971664,
+        "applicableIntervalCount": 2594,
+        "totalIntervalCount": 4672,
+        "completeCoverage": false
+      },
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "evaluatedCompressedLengthFt": 2915.873665592908,
+      "unevaluatedCompressedLengthFt": 195,
+      "exclusions": [
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11665,
+          "componentId": "upperDC",
+          "reasons": "youngsModulusPsi"
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "componentId": "jar",
+          "reasons": "youngsModulusPsi"
+        }
+      ],
+      "differencesFromStage4C3Ft": {
+        "firstSinusoidalOnset": null,
+        "firstHelicalOnset": null
+      }
+    },
+    {
+      "targetKlbf": 50,
+      "requiredSurfaceHookloadLbf": 102949.37133789062,
+      "residualLbf": -0.009130921462201513,
+      "summary": {
+        "firstSinusoidalOnset": {
+          "mdFt": 9158.531658564953,
+          "componentIndex": 4,
+          "componentId": "DP",
+          "thresholdLbf": 28930.31765566394,
+          "atIntervalTop": false
+        },
+        "firstHelicalOnset": {
+          "mdFt": 10955.593563578113,
+          "componentIndex": 4,
+          "componentId": "DP",
+          "thresholdLbf": 40913.64759240175,
+          "atIntervalTop": false
+        },
+        "controllingComponentId": "DP",
+        "controllingMdFt": 11485,
+        "maximumSinusoidalUtilization": 1.5362390337059622,
+        "maximumHelicalUtilization": 1.086285038256955,
+        "applicableIntervalCount": 2594,
+        "totalIntervalCount": 4672,
+        "completeCoverage": false
+      },
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "evaluatedCompressedLengthFt": 6485,
+      "unevaluatedCompressedLengthFt": 353.98169182995207,
+      "exclusions": [
+        {
+          "topMdFt": 4841.018308170048,
+          "bottomMdFt": 5000,
+          "componentId": "DP",
+          "reasons": "Curved interval: no supported curved-well criterion implemented."
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11665,
+          "componentId": "upperDC",
+          "reasons": "youngsModulusPsi"
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "componentId": "jar",
+          "reasons": "youngsModulusPsi"
+        }
+      ],
+      "differencesFromStage4C3Ft": {
+        "firstSinusoidalOnset": 0,
+        "firstHelicalOnset": 0
+      }
+    },
+    {
+      "targetKlbf": 75,
+      "requiredSurfaceHookloadLbf": 73691.25366210938,
+      "residualLbf": -0.003193329044734128,
+      "summary": {
+        "firstSinusoidalOnset": {
+          "mdFt": 5409.443672777482,
+          "componentIndex": 4,
+          "componentId": "DP",
+          "thresholdLbf": 28930.31765566394,
+          "atIntervalTop": false
+        },
+        "firstHelicalOnset": {
+          "mdFt": 7206.50557779064,
+          "componentIndex": 4,
+          "componentId": "DP",
+          "thresholdLbf": 40913.64759240175,
+          "atIntervalTop": false
+        },
+        "controllingComponentId": "DP",
+        "controllingMdFt": 11485,
+        "maximumSinusoidalUtilization": 2.4003846070504884,
+        "maximumHelicalUtilization": 1.6973282331012065,
+        "applicableIntervalCount": 2594,
+        "totalIntervalCount": 4672,
+        "completeCoverage": false
+      },
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "evaluatedCompressedLengthFt": 6485,
+      "unevaluatedCompressedLengthFt": 2060.8281292376305,
+      "exclusions": [
+        {
+          "topMdFt": 3134.17187076237,
+          "bottomMdFt": 5000,
+          "componentId": "DP",
+          "reasons": "Curved interval: no supported curved-well criterion implemented."
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11665,
+          "componentId": "upperDC",
+          "reasons": "youngsModulusPsi"
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "componentId": "jar",
+          "reasons": "youngsModulusPsi"
+        }
+      ],
+      "differencesFromStage4C3Ft": {
+        "firstSinusoidalOnset": 0,
+        "firstHelicalOnset": 0
+      }
+    },
+    {
+      "targetKlbf": 100,
+      "requiredSurfaceHookloadLbf": 41237.030029296875,
+      "residualLbf": -0.002526154596125707,
+      "summary": {
+        "firstSinusoidalOnset": {
+          "mdFt": 5000,
+          "componentIndex": 4,
+          "componentId": "DP",
+          "thresholdLbf": 28930.31765566394,
+          "atIntervalTop": true
+        },
+        "firstHelicalOnset": {
+          "mdFt": 5000,
+          "componentIndex": 4,
+          "componentId": "DP",
+          "thresholdLbf": 40913.64759240175,
+          "atIntervalTop": true
+        },
+        "controllingComponentId": "DP",
+        "controllingMdFt": 11485,
+        "maximumSinusoidalUtilization": 3.2645299982187037,
+        "maximumHelicalUtilization": 2.3083712991273533,
+        "applicableIntervalCount": 2594,
+        "totalIntervalCount": 4672,
+        "completeCoverage": false
+      },
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "evaluatedCompressedLengthFt": 6485,
+      "unevaluatedCompressedLengthFt": 3441.8614722596994,
+      "exclusions": [
+        {
+          "topMdFt": 1753.1385277402999,
+          "bottomMdFt": 3000,
+          "componentId": "DP",
+          "reasons": "Vertical or over-horizontal interval: outside the implemented inclined-well criterion."
+        },
+        {
+          "topMdFt": 3000,
+          "bottomMdFt": 5000,
+          "componentId": "DP",
+          "reasons": "Curved interval: no supported curved-well criterion implemented."
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11665,
+          "componentId": "upperDC",
+          "reasons": "youngsModulusPsi"
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "componentId": "jar",
+          "reasons": "youngsModulusPsi"
+        }
+      ],
+      "differencesFromStage4C3Ft": {
+        "firstSinusoidalOnset": 0,
+        "firstHelicalOnset": 0
+      }
+    }
+  ]
+}

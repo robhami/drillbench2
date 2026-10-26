@@ -45,3 +45,5 @@
 .jarForcesJarSelect select { min-width: 0; max-width: 100%; }
 
 .jarForcesDirectionConfig { display: grid; gap: 6px; min-width: 0; }
+.jarForcesBucklingConfirmation { display: flex; align-items: flex-start; gap: 6px; }
+.jarForcesBucklingConfirmation input { flex: none; margin-top: 3px; }

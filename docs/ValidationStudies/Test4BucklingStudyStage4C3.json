@@ -1,0 +1,2909 @@
+{
+  "configuration": {
+    "bha": {
+      "holeSize": 16,
+      "drillpipeReferenceBitMdFt": 12000,
+      "rows": [
+        {
+          "rowId": "stabiliser",
+          "category": "STAB",
+          "toolName": "stabiliser",
+          "length": 5,
+          "weight": 111.25,
+          "od": 6.75,
+          "idSize": 2
+        },
+        {
+          "rowId": "lowerDC",
+          "category": "DC",
+          "toolName": "lowerDC",
+          "length": 300,
+          "weight": 116,
+          "od": 6.75,
+          "idSize": 1.5
+        },
+        {
+          "rowId": "jar",
+          "category": "JAR",
+          "toolName": "jar",
+          "length": 30,
+          "weight": 150,
+          "od": 9.5,
+          "idSize": 3
+        },
+        {
+          "rowId": "upperDC",
+          "category": "DC",
+          "toolName": "upperDC",
+          "length": 180,
+          "weight": 116,
+          "od": 6.75,
+          "idSize": 1.5
+        },
+        {
+          "rowId": "DP",
+          "category": "DP",
+          "toolName": "DP",
+          "length": 0,
+          "weight": 27.76,
+          "od": 5.5,
+          "idSize": 4.67,
+          "lengthMode": "auto"
+        }
+      ]
+    },
+    "bitMdFt": 12000,
+    "surfaceMdFt": 0,
+    "mudWeightPpg": 10,
+    "frictionCoefficient": 0.25,
+    "rpm": 150,
+    "jarIndex": 0,
+    "jarDirection": "down",
+    "youngsModulusPsi": 30000000,
+    "maxStepFt": 5,
+    "surveyPath": "docs/ValidationStudies/SyntheticDirectionalWell.csv",
+    "nominalHoleSource": "bha.holeSize = 16 in (study Bit Size; no explicit bore override)",
+    "conditionalAssumption": "DP only: hypothetical long uniform initially straight zero-torque frictionless-onset local comparison. Not confirmation of actual compressed-section stability."
+  },
+  "scenarios": [
+    {
+      "targetKlbf": 10,
+      "valid": true,
+      "requiredSurfaceHookloadLbf": 139854.2308807373,
+      "jarAxialLoadLbf": 9999.997760468783,
+      "residualLbf": -0.0022395312171283877,
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "totalCompressedLengthFt": 861.4212458143884,
+      "compressedIntervals": [
+        {
+          "topMdFt": 10818.578754185612,
+          "bottomMdFt": 11680,
+          "lengthFt": 861.4212458143884,
+          "maximumCompressionLbf": 9999.997760468783,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": []
+        }
+      ],
+      "geometry": {
+        "vertical": {
+          "compressedLengthFt": 0
+        },
+        "build": {
+          "compressedLengthFt": 0
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 861.4212458143884
+        }
+      },
+      "parts": [
+        {
+          "topMdFt": 10818.578754185612,
+          "bottomMdFt": 11000,
+          "lengthFt": 181.42124581438839,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 9.5,
+            "idIn": 3,
+            "componentLengthFt": 30,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 3.25,
+            "momentOfInertiaIn4": 395.8437423138897,
+            "bendingStiffnessLbfIn2": 11875312269.41669,
+            "buoyedWeightPerFt": 127.09923664122137,
+            "missingInputs": []
+          }
+        }
+      ],
+      "strict": {
+        "status": "not-evaluated",
+        "summary": {
+          "firstSinusoidalOnset": null,
+          "firstHelicalOnset": null,
+          "controllingComponentId": null,
+          "controllingMdFt": null,
+          "maximumSinusoidalUtilization": null,
+          "maximumHelicalUtilization": null,
+          "applicableIntervalCount": 0,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 0,
+        "unevaluatedCompressedLengthFt": 861.4212458143884,
+        "missingInputs": [],
+        "reasons": [
+          "Vertical or over-horizontal interval: outside the implemented inclined-well criterion.",
+          "Long, uniform, initially straight tubular, zero-torque and frictionless-onset idealization has not been confirmed for this component.",
+          "Curved interval: no supported curved-well criterion implemented."
+        ]
+      },
+      "conditionalDpOnly": {
+        "status": "partial",
+        "summary": {
+          "firstSinusoidalOnset": null,
+          "firstHelicalOnset": null,
+          "controllingComponentId": "DP",
+          "controllingMdFt": 11485,
+          "maximumSinusoidalUtilization": 0.1536066829416302,
+          "maximumHelicalUtilization": 0.10861632714359869,
+          "applicableIntervalCount": 2594,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 666.4212458143884,
+        "unevaluatedCompressedLengthFt": 195,
+        "sinusoidalThresholdLbf": 28930.31765566394,
+        "helicalThresholdLbf": 40913.64759240175,
+        "independentSiSinusoidalThresholdLbf": 28930.317655663177,
+        "radialClearanceIn": 5.25,
+        "dpBottomCompressionLbf": 4443.890131534203,
+        "independentSinusoidalOnsetMdFt": null,
+        "independentHelicalOnsetMdFt": null,
+        "compressionClassificationSampleBrackets": [
+          {
+            "topMdFt": 10817.5,
+            "bottomMdFt": 11485,
+            "classification": "below-sinusoidal-onset"
+          }
+        ]
+      },
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.0008965343513409607,
+        "jarDifferenceLbf": 0.0008335139536939096,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 9999.998593982737
+      },
+      "warnings": [
+        "Preliminary analytical screening, not operational guidance or a safe Jar Down force.",
+        "Named long-tubular frictionless-onset criteria; finite-length, end-restraint and frictional stability effects are not resolved.",
+        "The existing pre-buckling slack-off force profile is unchanged; no post-buckling redistribution is calculated.",
+        "Below-jar buckling is not evaluated. The existing lower-assembly reaction assumption is retained.",
+        "Exceeding an onset threshold is not a prediction of failure, release or firing.",
+        "Preliminary quasi-static screening; not operational guidance or a manufacturer operating limit.",
+        "The lower assembly is assumed to provide the necessary reaction. Its support capacity and movement are not calculated.",
+        "Fully mobilised nonrotating axial friction is assumed, not actual pre-slip friction or a measured parked state.",
+        "Jar load is at its centre, including the upper half of the jar; it is not a manufacturer internal firing force.",
+        "No impact, impulse, waves, stroke, time delay, pressure-end forces, buckling, lockup or contact stiffness is predicted.",
+        "Buoyancy assumes steel density 65.5 ppg and equal internal/external fluid.",
+        "Compression is propagated on the imposed survey centreline; physical stability of that compressed configuration is not established."
+      ]
+    },
+    {
+      "targetKlbf": 25,
+      "valid": true,
+      "requiredSurfaceHookloadLbf": 127401.54266357422,
+      "jarAxialLoadLbf": 24999.99884445809,
+      "residualLbf": -0.0011555419114301912,
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "totalCompressedLengthFt": 3110.873665592908,
+      "compressedIntervals": [
+        {
+          "topMdFt": 8569.126334407092,
+          "bottomMdFt": 11680,
+          "lengthFt": 3110.873665592908,
+          "maximumCompressionLbf": 24999.99884445809,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": []
+        }
+      ],
+      "geometry": {
+        "vertical": {
+          "compressedLengthFt": 0
+        },
+        "build": {
+          "compressedLengthFt": 0
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 3110.873665592908
+        }
+      },
+      "parts": [
+        {
+          "topMdFt": 8569.126334407092,
+          "bottomMdFt": 9000,
+          "lengthFt": 430.87366559290786,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 9.5,
+            "idIn": 3,
+            "componentLengthFt": 30,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 3.25,
+            "momentOfInertiaIn4": 395.8437423138897,
+            "bendingStiffnessLbfIn2": 11875312269.41669,
+            "buoyedWeightPerFt": 127.09923664122137,
+            "missingInputs": []
+          }
+        }
+      ],
+      "strict": {
+        "status": "not-evaluated",
+        "summary": {
+          "firstSinusoidalOnset": null,
+          "firstHelicalOnset": null,
+          "controllingComponentId": null,
+          "controllingMdFt": null,
+          "maximumSinusoidalUtilization": null,
+          "maximumHelicalUtilization": null,
+          "applicableIntervalCount": 0,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 0,
+        "unevaluatedCompressedLengthFt": 3110.873665592908,
+        "missingInputs": [],
+        "reasons": [
+          "Vertical or over-horizontal interval: outside the implemented inclined-well criterion.",
+          "Long, uniform, initially straight tubular, zero-torque and frictionless-onset idealization has not been confirmed for this component.",
+          "Curved interval: no supported curved-well criterion implemented."
+        ]
+      },
+      "conditionalDpOnly": {
+        "status": "partial",
+        "summary": {
+          "firstSinusoidalOnset": null,
+          "firstHelicalOnset": null,
+          "controllingComponentId": "DP",
+          "controllingMdFt": 11485,
+          "maximumSinusoidalUtilization": 0.672093941274676,
+          "maximumHelicalUtilization": 0.47524218346971664,
+          "applicableIntervalCount": 2594,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 2915.873665592908,
+        "unevaluatedCompressedLengthFt": 195,
+        "sinusoidalThresholdLbf": 28930.31765566394,
+        "helicalThresholdLbf": 40913.64759240175,
+        "independentSiSinusoidalThresholdLbf": 28930.317655663177,
+        "radialClearanceIn": 5.25,
+        "dpBottomCompressionLbf": 19443.89121552351,
+        "independentSinusoidalOnsetMdFt": null,
+        "independentHelicalOnsetMdFt": null,
+        "compressionClassificationSampleBrackets": [
+          {
+            "topMdFt": 8567.5,
+            "bottomMdFt": 11485,
+            "classification": "below-sinusoidal-onset"
+          }
+        ]
+      },
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.010945780102701974,
+        "jarDifferenceLbf": 0.010945779769826913,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 25000.00979023786
+      },
+      "warnings": [
+        "Preliminary analytical screening, not operational guidance or a safe Jar Down force.",
+        "Named long-tubular frictionless-onset criteria; finite-length, end-restraint and frictional stability effects are not resolved.",
+        "The existing pre-buckling slack-off force profile is unchanged; no post-buckling redistribution is calculated.",
+        "Below-jar buckling is not evaluated. The existing lower-assembly reaction assumption is retained.",
+        "Exceeding an onset threshold is not a prediction of failure, release or firing.",
+        "Preliminary quasi-static screening; not operational guidance or a manufacturer operating limit.",
+        "The lower assembly is assumed to provide the necessary reaction. Its support capacity and movement are not calculated.",
+        "Fully mobilised nonrotating axial friction is assumed, not actual pre-slip friction or a measured parked state.",
+        "Jar load is at its centre, including the upper half of the jar; it is not a manufacturer internal firing force.",
+        "No impact, impulse, waves, stroke, time delay, pressure-end forces, buckling, lockup or contact stiffness is predicted.",
+        "Buoyancy assumes steel density 65.5 ppg and equal internal/external fluid.",
+        "Compression is propagated on the imposed survey centreline; physical stability of that compressed configuration is not established."
+      ]
+    },
+    {
+      "targetKlbf": 50,
+      "valid": true,
+      "requiredSurfaceHookloadLbf": 102949.37133789062,
+      "jarAxialLoadLbf": 49999.99086907854,
+      "residualLbf": -0.009130921462201513,
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "totalCompressedLengthFt": 6838.981691829952,
+      "compressedIntervals": [
+        {
+          "topMdFt": 4841.018308170048,
+          "bottomMdFt": 11680,
+          "lengthFt": 6838.981691829952,
+          "maximumCompressionLbf": 49999.99086907854,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ]
+        }
+      ],
+      "geometry": {
+        "vertical": {
+          "compressedLengthFt": 0
+        },
+        "build": {
+          "compressedLengthFt": 158.98169182995207
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680
+        }
+      },
+      "parts": [
+        {
+          "topMdFt": 4841.018308170048,
+          "bottomMdFt": 4900,
+          "lengthFt": 58.98169182995207,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 9.5,
+            "idIn": 3,
+            "componentLengthFt": 30,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 3.25,
+            "momentOfInertiaIn4": 395.8437423138897,
+            "bendingStiffnessLbfIn2": 11875312269.41669,
+            "buoyedWeightPerFt": 127.09923664122137,
+            "missingInputs": []
+          }
+        }
+      ],
+      "strict": {
+        "status": "not-evaluated",
+        "summary": {
+          "firstSinusoidalOnset": null,
+          "firstHelicalOnset": null,
+          "controllingComponentId": null,
+          "controllingMdFt": null,
+          "maximumSinusoidalUtilization": null,
+          "maximumHelicalUtilization": null,
+          "applicableIntervalCount": 0,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 0,
+        "unevaluatedCompressedLengthFt": 6838.981691829952,
+        "missingInputs": [],
+        "reasons": [
+          "Vertical or over-horizontal interval: outside the implemented inclined-well criterion.",
+          "Long, uniform, initially straight tubular, zero-torque and frictionless-onset idealization has not been confirmed for this component.",
+          "Curved interval: no supported curved-well criterion implemented."
+        ]
+      },
+      "conditionalDpOnly": {
+        "status": "partial",
+        "summary": {
+          "firstSinusoidalOnset": {
+            "mdFt": 9158.531658564953,
+            "componentIndex": 4,
+            "componentId": "DP",
+            "thresholdLbf": 28930.31765566394,
+            "atIntervalTop": false
+          },
+          "firstHelicalOnset": {
+            "mdFt": 10955.593563578113,
+            "componentIndex": 4,
+            "componentId": "DP",
+            "thresholdLbf": 40913.64759240175,
+            "atIntervalTop": false
+          },
+          "controllingComponentId": "DP",
+          "controllingMdFt": 11485,
+          "maximumSinusoidalUtilization": 1.5362390337059622,
+          "maximumHelicalUtilization": 1.086285038256955,
+          "applicableIntervalCount": 2594,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 6485,
+        "unevaluatedCompressedLengthFt": 353.98169182995207,
+        "sinusoidalThresholdLbf": 28930.31765566394,
+        "helicalThresholdLbf": 40913.64759240175,
+        "independentSiSinusoidalThresholdLbf": 28930.317655663177,
+        "radialClearanceIn": 5.25,
+        "dpBottomCompressionLbf": 44443.88324014396,
+        "independentSinusoidalOnsetMdFt": 9158.531658564301,
+        "independentHelicalOnsetMdFt": 10955.593563577771,
+        "compressionClassificationSampleBrackets": [
+          {
+            "topMdFt": 5000,
+            "bottomMdFt": 9157.5,
+            "classification": "below-sinusoidal-onset"
+          },
+          {
+            "topMdFt": 9157.5,
+            "bottomMdFt": 10955,
+            "classification": "sinusoidal-onset-reached"
+          },
+          {
+            "topMdFt": 10955,
+            "bottomMdFt": 11485,
+            "classification": "helical-onset-reached"
+          }
+        ]
+      },
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.002548864276832319,
+        "jarDifferenceLbf": 0.0025488596875220537,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 49999.993417938225
+      },
+      "warnings": [
+        "Preliminary analytical screening, not operational guidance or a safe Jar Down force.",
+        "Named long-tubular frictionless-onset criteria; finite-length, end-restraint and frictional stability effects are not resolved.",
+        "The existing pre-buckling slack-off force profile is unchanged; no post-buckling redistribution is calculated.",
+        "Below-jar buckling is not evaluated. The existing lower-assembly reaction assumption is retained.",
+        "Exceeding an onset threshold is not a prediction of failure, release or firing.",
+        "Preliminary quasi-static screening; not operational guidance or a manufacturer operating limit.",
+        "The lower assembly is assumed to provide the necessary reaction. Its support capacity and movement are not calculated.",
+        "Fully mobilised nonrotating axial friction is assumed, not actual pre-slip friction or a measured parked state.",
+        "Jar load is at its centre, including the upper half of the jar; it is not a manufacturer internal firing force.",
+        "No impact, impulse, waves, stroke, time delay, pressure-end forces, buckling, lockup or contact stiffness is predicted.",
+        "Buoyancy assumes steel density 65.5 ppg and equal internal/external fluid.",
+        "Compression is propagated on the imposed survey centreline; physical stability of that compressed configuration is not established."
+      ]
+    },
+    {
+      "targetKlbf": 75,
+      "valid": true,
+      "requiredSurfaceHookloadLbf": 73691.25366210938,
+      "jarAxialLoadLbf": 74999.99680667096,
+      "residualLbf": -0.003193329044734128,
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "totalCompressedLengthFt": 8545.82812923763,
+      "compressedIntervals": [
+        {
+          "topMdFt": 3134.17187076237,
+          "bottomMdFt": 11680,
+          "lengthFt": 8545.82812923763,
+          "maximumCompressionLbf": 74999.99680667096,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ]
+        }
+      ],
+      "geometry": {
+        "vertical": {
+          "compressedLengthFt": 0
+        },
+        "build": {
+          "compressedLengthFt": 1865.82812923763
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680
+        }
+      },
+      "parts": [
+        {
+          "topMdFt": 3134.17187076237,
+          "bottomMdFt": 3200,
+          "lengthFt": 65.82812923763004,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 9.5,
+            "idIn": 3,
+            "componentLengthFt": 30,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 3.25,
+            "momentOfInertiaIn4": 395.8437423138897,
+            "bendingStiffnessLbfIn2": 11875312269.41669,
+            "buoyedWeightPerFt": 127.09923664122137,
+            "missingInputs": []
+          }
+        }
+      ],
+      "strict": {
+        "status": "not-evaluated",
+        "summary": {
+          "firstSinusoidalOnset": null,
+          "firstHelicalOnset": null,
+          "controllingComponentId": null,
+          "controllingMdFt": null,
+          "maximumSinusoidalUtilization": null,
+          "maximumHelicalUtilization": null,
+          "applicableIntervalCount": 0,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 0,
+        "unevaluatedCompressedLengthFt": 8545.82812923763,
+        "missingInputs": [],
+        "reasons": [
+          "Vertical or over-horizontal interval: outside the implemented inclined-well criterion.",
+          "Long, uniform, initially straight tubular, zero-torque and frictionless-onset idealization has not been confirmed for this component.",
+          "Curved interval: no supported curved-well criterion implemented."
+        ]
+      },
+      "conditionalDpOnly": {
+        "status": "partial",
+        "summary": {
+          "firstSinusoidalOnset": {
+            "mdFt": 5409.443672777482,
+            "componentIndex": 4,
+            "componentId": "DP",
+            "thresholdLbf": 28930.31765566394,
+            "atIntervalTop": false
+          },
+          "firstHelicalOnset": {
+            "mdFt": 7206.50557779064,
+            "componentIndex": 4,
+            "componentId": "DP",
+            "thresholdLbf": 40913.64759240175,
+            "atIntervalTop": false
+          },
+          "controllingComponentId": "DP",
+          "controllingMdFt": 11485,
+          "maximumSinusoidalUtilization": 2.4003846070504884,
+          "maximumHelicalUtilization": 1.6973282331012065,
+          "applicableIntervalCount": 2594,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 6485,
+        "unevaluatedCompressedLengthFt": 2060.8281292376305,
+        "sinusoidalThresholdLbf": 28930.31765566394,
+        "helicalThresholdLbf": 40913.64759240175,
+        "independentSiSinusoidalThresholdLbf": 28930.317655663177,
+        "radialClearanceIn": 5.25,
+        "dpBottomCompressionLbf": 69443.88917773638,
+        "independentSinusoidalOnsetMdFt": 5409.443672776163,
+        "independentHelicalOnsetMdFt": 7206.505577789632,
+        "compressionClassificationSampleBrackets": [
+          {
+            "topMdFt": 5000,
+            "bottomMdFt": 5407.5,
+            "classification": "below-sinusoidal-onset"
+          },
+          {
+            "topMdFt": 5407.5,
+            "bottomMdFt": 7205,
+            "classification": "sinusoidal-onset-reached"
+          },
+          {
+            "topMdFt": 7205,
+            "bottomMdFt": 11485,
+            "classification": "helical-onset-reached"
+          }
+        ]
+      },
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.01540006162372265,
+        "jarDifferenceLbf": 0.014566733254469,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 75000.01137340421
+      },
+      "warnings": [
+        "Preliminary analytical screening, not operational guidance or a safe Jar Down force.",
+        "Named long-tubular frictionless-onset criteria; finite-length, end-restraint and frictional stability effects are not resolved.",
+        "The existing pre-buckling slack-off force profile is unchanged; no post-buckling redistribution is calculated.",
+        "Below-jar buckling is not evaluated. The existing lower-assembly reaction assumption is retained.",
+        "Exceeding an onset threshold is not a prediction of failure, release or firing.",
+        "Preliminary quasi-static screening; not operational guidance or a manufacturer operating limit.",
+        "The lower assembly is assumed to provide the necessary reaction. Its support capacity and movement are not calculated.",
+        "Fully mobilised nonrotating axial friction is assumed, not actual pre-slip friction or a measured parked state.",
+        "Jar load is at its centre, including the upper half of the jar; it is not a manufacturer internal firing force.",
+        "No impact, impulse, waves, stroke, time delay, pressure-end forces, buckling, lockup or contact stiffness is predicted.",
+        "Buoyancy assumes steel density 65.5 ppg and equal internal/external fluid.",
+        "Compression is propagated on the imposed survey centreline; physical stability of that compressed configuration is not established."
+      ]
+    },
+    {
+      "targetKlbf": 100,
+      "valid": true,
+      "requiredSurfaceHookloadLbf": 41237.030029296875,
+      "jarAxialLoadLbf": 99999.9974738454,
+      "residualLbf": -0.002526154596125707,
+      "evaluatedDepthInterval": {
+        "topMdFt": 0,
+        "bottomMdFt": 11680
+      },
+      "totalCompressedLengthFt": 9926.8614722597,
+      "compressedIntervals": [
+        {
+          "topMdFt": 1753.1385277402999,
+          "bottomMdFt": 11680,
+          "lengthFt": 9926.8614722597,
+          "maximumCompressionLbf": 99999.9974738454,
+          "maximumCompressionMdFt": 11680,
+          "componentBoundaries": [
+            {
+              "mdFt": 11485,
+              "fromComponentIndex": 4,
+              "toComponentIndex": 3,
+              "fromComponentId": "DP",
+              "toComponentId": "upperDC"
+            },
+            {
+              "mdFt": 11665,
+              "fromComponentIndex": 3,
+              "toComponentIndex": 2,
+              "fromComponentId": "upperDC",
+              "toComponentId": "jar"
+            }
+          ],
+          "geometryTransitions": [
+            {
+              "mdFt": 3000,
+              "from": "vertical",
+              "to": "build"
+            },
+            {
+              "mdFt": 5000,
+              "from": "build",
+              "to": "straight-inclined"
+            }
+          ]
+        }
+      ],
+      "geometry": {
+        "vertical": {
+          "compressedLengthFt": 1246.8614722597001
+        },
+        "build": {
+          "compressedLengthFt": 2000
+        },
+        "straight-inclined": {
+          "compressedLengthFt": 6680
+        }
+      },
+      "parts": [
+        {
+          "topMdFt": 1753.1385277402999,
+          "bottomMdFt": 2000,
+          "lengthFt": 246.86147225970012,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 2000,
+          "bottomMdFt": 2500,
+          "lengthFt": 500,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 2500,
+          "bottomMdFt": 3000,
+          "lengthFt": 500,
+          "geometry": "vertical",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3000,
+          "bottomMdFt": 3100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3100,
+          "bottomMdFt": 3200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3200,
+          "bottomMdFt": 3300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3300,
+          "bottomMdFt": 3400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3400,
+          "bottomMdFt": 3500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3500,
+          "bottomMdFt": 3600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3600,
+          "bottomMdFt": 3700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3700,
+          "bottomMdFt": 3800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3800,
+          "bottomMdFt": 3900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 3900,
+          "bottomMdFt": 4000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4000,
+          "bottomMdFt": 4100,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4100,
+          "bottomMdFt": 4200,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4200,
+          "bottomMdFt": 4300,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4300,
+          "bottomMdFt": 4400,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4400,
+          "bottomMdFt": 4500,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4500,
+          "bottomMdFt": 4600,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4600,
+          "bottomMdFt": 4700,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4700,
+          "bottomMdFt": 4800,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4800,
+          "bottomMdFt": 4900,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 4900,
+          "bottomMdFt": 5000,
+          "lengthFt": 100,
+          "geometry": "build",
+          "componentId": "DP",
+          "geometricallyEligible": false,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 5000,
+          "bottomMdFt": 5500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 5500,
+          "bottomMdFt": 6000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 6000,
+          "bottomMdFt": 6500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 6500,
+          "bottomMdFt": 7000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 7000,
+          "bottomMdFt": 7500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 7500,
+          "bottomMdFt": 8000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 8000,
+          "bottomMdFt": 8500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 8500,
+          "bottomMdFt": 9000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 9000,
+          "bottomMdFt": 9500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 9500,
+          "bottomMdFt": 10000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 10000,
+          "bottomMdFt": 10500,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 10500,
+          "bottomMdFt": 11000,
+          "lengthFt": 500,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11000,
+          "bottomMdFt": 11485,
+          "lengthFt": 485,
+          "geometry": "straight-inclined",
+          "componentId": "DP",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 5.5,
+            "idIn": 4.67,
+            "componentLengthFt": 11485,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 5.25,
+            "momentOfInertiaIn4": 21.57068472538506,
+            "bendingStiffnessLbfIn2": 647120541.7615519,
+            "buoyedWeightPerFt": 23.521832061068704,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11485,
+          "bottomMdFt": 11500,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11500,
+          "bottomMdFt": 11665,
+          "lengthFt": 165,
+          "geometry": "straight-inclined",
+          "componentId": "upperDC",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 6.75,
+            "idIn": 1.5,
+            "componentLengthFt": 180,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 4.625,
+            "momentOfInertiaIn4": 101.65403059920415,
+            "bendingStiffnessLbfIn2": 3049620917.9761243,
+            "buoyedWeightPerFt": 98.29007633587786,
+            "missingInputs": []
+          }
+        },
+        {
+          "topMdFt": 11665,
+          "bottomMdFt": 11680,
+          "lengthFt": 15,
+          "geometry": "straight-inclined",
+          "componentId": "jar",
+          "geometricallyEligible": true,
+          "properties": {
+            "odIn": 9.5,
+            "idIn": 3,
+            "componentLengthFt": 30,
+            "youngsModulusPsi": 30000000,
+            "wellboreDiameterIn": 16,
+            "radialClearanceIn": 3.25,
+            "momentOfInertiaIn4": 395.8437423138897,
+            "bendingStiffnessLbfIn2": 11875312269.41669,
+            "buoyedWeightPerFt": 127.09923664122137,
+            "missingInputs": []
+          }
+        }
+      ],
+      "strict": {
+        "status": "not-evaluated",
+        "summary": {
+          "firstSinusoidalOnset": null,
+          "firstHelicalOnset": null,
+          "controllingComponentId": null,
+          "controllingMdFt": null,
+          "maximumSinusoidalUtilization": null,
+          "maximumHelicalUtilization": null,
+          "applicableIntervalCount": 0,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 0,
+        "unevaluatedCompressedLengthFt": 9926.8614722597,
+        "missingInputs": [],
+        "reasons": [
+          "Vertical or over-horizontal interval: outside the implemented inclined-well criterion.",
+          "Long, uniform, initially straight tubular, zero-torque and frictionless-onset idealization has not been confirmed for this component.",
+          "Curved interval: no supported curved-well criterion implemented."
+        ]
+      },
+      "conditionalDpOnly": {
+        "status": "partial",
+        "summary": {
+          "firstSinusoidalOnset": {
+            "mdFt": 5000,
+            "componentIndex": 4,
+            "componentId": "DP",
+            "thresholdLbf": 28930.31765566394,
+            "atIntervalTop": true
+          },
+          "firstHelicalOnset": {
+            "mdFt": 5000,
+            "componentIndex": 4,
+            "componentId": "DP",
+            "thresholdLbf": 40913.64759240175,
+            "atIntervalTop": true
+          },
+          "controllingComponentId": "DP",
+          "controllingMdFt": 11485,
+          "maximumSinusoidalUtilization": 3.2645299982187037,
+          "maximumHelicalUtilization": 2.3083712991273533,
+          "applicableIntervalCount": 2594,
+          "totalIntervalCount": 4672,
+          "completeCoverage": false
+        },
+        "evaluatedCompressedLengthFt": 6485,
+        "unevaluatedCompressedLengthFt": 3441.8614722596994,
+        "sinusoidalThresholdLbf": 28930.31765566394,
+        "helicalThresholdLbf": 40913.64759240175,
+        "independentSiSinusoidalThresholdLbf": 28930.317655663177,
+        "radialClearanceIn": 5.25,
+        "dpBottomCompressionLbf": 94443.88984491082,
+        "independentSinusoidalOnsetMdFt": 5000,
+        "independentHelicalOnsetMdFt": 5000,
+        "compressionClassificationSampleBrackets": [
+          {
+            "topMdFt": 5000,
+            "bottomMdFt": 11485,
+            "classification": "helical-onset-reached"
+          }
+        ]
+      },
+      "convergence": {
+        "required": true,
+        "checked": true,
+        "maxStepFt": 2.5,
+        "toleranceLbf": 0.1,
+        "refinements": 1,
+        "differenceLbf": 0.0024992068647406995,
+        "jarDifferenceLbf": 0.0024992068647406995,
+        "sharedProfileNodesChecked": 2337,
+        "coarseJarAxialLoadLbf": 99999.99997305227
+      },
+      "warnings": [
+        "Preliminary analytical screening, not operational guidance or a safe Jar Down force.",
+        "Named long-tubular frictionless-onset criteria; finite-length, end-restraint and frictional stability effects are not resolved.",
+        "The existing pre-buckling slack-off force profile is unchanged; no post-buckling redistribution is calculated.",
+        "Below-jar buckling is not evaluated. The existing lower-assembly reaction assumption is retained.",
+        "Exceeding an onset threshold is not a prediction of failure, release or firing.",
+        "Preliminary quasi-static screening; not operational guidance or a manufacturer operating limit.",
+        "The lower assembly is assumed to provide the necessary reaction. Its support capacity and movement are not calculated.",
+        "Fully mobilised nonrotating axial friction is assumed, not actual pre-slip friction or a measured parked state.",
+        "Jar load is at its centre, including the upper half of the jar; it is not a manufacturer internal firing force.",
+        "No impact, impulse, waves, stroke, time delay, pressure-end forces, buckling, lockup or contact stiffness is predicted.",
+        "Buoyancy assumes steel density 65.5 ppg and equal internal/external fluid.",
+        "Compression is propagated on the imposed survey centreline; physical stability of that compressed configuration is not established."
+      ]
+    }
+  ]
+}

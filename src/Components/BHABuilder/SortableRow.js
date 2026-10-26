@@ -9,6 +9,7 @@ import { toolType } from '../../Apps/BHAEntry/toolType.js';
 const componentLibrary = componentLibraryData.components;
 const SortableRow = ({
     row,
+    nominalClearance,
     autoDeployment,
     index,
     rowsLength,
@@ -36,6 +37,7 @@ const SortableRow = ({
     const availableTools = componentLibrary.filter(
         (tool) => tool.category === row.category
     );
+    const showClearanceError = nominalClearance && !nominalClearance.valid && nominalClearance.diameterIn !== null;
 
     const handleCategoryChange = (category) => {
         updateRow(row.rowId, {
@@ -97,6 +99,7 @@ const SortableRow = ({
             <td>
                 <Form.Select
                     size="sm"
+                    aria-label={`Component ${index + 1} type`}
                     value={row.category}
                     onChange={(event) =>
                         handleCategoryChange(event.target.value)
@@ -113,8 +116,10 @@ const SortableRow = ({
             </td>
 
             <td>
+                <div className="bhaToolControls">
                 <Form.Select
                     size="sm"
+                    aria-label={`Component ${index + 1} tool`}
                     value={row.selectedToolId}
                     disabled={!row.category}
                     onChange={(event) =>
@@ -133,6 +138,7 @@ const SortableRow = ({
                         </option>
                     ))}
                 </Form.Select>
+                </div>
             </td>
 
             {[
@@ -142,13 +148,9 @@ const SortableRow = ({
                 ['length', row.length]
             ].map(([field, value]) => (
                 <td key={field}>
-                    {field === 'length' && row.category === 'DP' && <Form.Select size="sm" aria-label={`Drillpipe length mode ${index + 1}`} value={row.lengthMode || 'manual'} onChange={e => updateRow(row.rowId, { lengthMode: e.target.value })}>
-                        <option value="auto">Auto — based on bit MD</option><option value="manual">Manual — user-entered length</option>
-                    </Form.Select>}
-                    {field === 'length' && row.category === 'DP' && row.lengthMode === 'auto' ? <div>
-                        {autoDeployment?.valid ? <output aria-label={`Calculated drillpipe length ${index + 1}`}>{autoDeployment.metadata.deployedDpLengthFt.toLocaleString()} ft</output> : <small role="status">{autoDeployment?.errors.join(' ') || 'Select a reference bit MD.'}</small>}
-                        <small style={{ display: 'block' }}>Stored manual: {row.length || 'not entered'} ft</small>
-                    </div> :
+                    {field === 'length' && row.category === 'DP' && row.lengthMode === 'auto' ? <input
+                        className="numInput" aria-label={`Calculated drillpipe length ${index + 1}`} readOnly
+                        value={autoDeployment?.valid ? autoDeployment.metadata.deployedDpLengthFt : ''} placeholder="Unavailable" /> :
                     <input
                         aria-label={`Component ${index + 1} ${field}`}
                         className="numInput"
@@ -166,6 +168,7 @@ const SortableRow = ({
                             })
                         }
                     />}
+                    {field === 'od' && row.category && showClearanceError && <small className="bhaRowError" role="alert">{nominalClearance.message}</small>}
                 </td>
             ))}
 
@@ -173,7 +176,7 @@ const SortableRow = ({
                 <Button
                     className="bhaDeleteButton"
                     onClick={() => removeRow(row.rowId)}
-                    title="Delete component"
+                    aria-label={`Delete component ${index + 1}`}
                 >
                     <i className="bi bi-trash3"></i>
                 </Button>
