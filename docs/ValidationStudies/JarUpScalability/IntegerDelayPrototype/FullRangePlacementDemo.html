@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JarFrame | Full-range placement research demonstration</title>
+<style>
+  :root { color-scheme: light; --ink:#172b3a; --muted:#597080; --line:#d8e2e8; --paper:#f3f7f8; --card:#fff; --navy:#102d40; --amber:#ed9b35; --blue:#2589a6; --violet:#7663b5; --red:#a33327; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:15px/1.5 "Segoe UI",Arial,sans-serif; }
+  header { background:var(--navy); color:white; padding:28px max(24px,calc((100vw - 1240px)/2)); }
+  header .eyebrow { text-transform:uppercase; letter-spacing:.13em; color:#b6d2df; font-size:12px; font-weight:700; }
+  h1 { margin:5px 0 4px; font-size:clamp(25px,4vw,37px); line-height:1.15; }
+  header p { margin:0; color:#d6e4e9; }
+  main { max-width:1240px; padding:20px 24px 48px; margin:auto; }
+  .warning { border:1px solid #e6a99d; background:#fff2ef; color:#70261e; border-radius:9px; padding:14px 17px; margin:0 0 18px; }
+  .warning strong { display:block; font-size:16px; }
+  .intro { display:flex; gap:18px; justify-content:space-between; align-items:end; margin:14px 0 18px; }
+  .intro h2 { margin:0 0 3px; font-size:22px; }
+  .intro p { margin:0; color:var(--muted); }
+  label { color:var(--muted); font-size:13px; font-weight:650; }
+  select { display:block; margin-top:4px; padding:8px 10px; border:1px solid #9eb2bd; border-radius:6px; background:white; color:var(--ink); font:inherit; }
+  .metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:14px; }
+  .metric,.chart-card,.details { background:var(--card); border:1px solid var(--line); border-radius:10px; box-shadow:0 2px 7px #1734480a; }
+  .metric { padding:14px 17px; border-top:3px solid var(--accent); }
+  .metric .label { color:var(--muted); font-size:13px; }
+  .metric output { display:block; margin-top:2px; font-size:25px; font-weight:750; letter-spacing:-.025em; font-variant-numeric:tabular-nums; }
+  .metric small { color:var(--muted); }
+  .charts { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+  .chart-card { min-width:0; padding:13px 12px 9px; }
+  .chart-card h3 { margin:0 0 4px 5px; font-size:16px; }
+  .chart-card svg { width:100%; height:auto; display:block; overflow:visible; }
+  .grid { stroke:#e5ecef; stroke-width:1; }
+  .axis { stroke:#8297a2; stroke-width:1; }
+  .tick,.axis-label { fill:#597080; font-size:10px; }
+  .axis-label { font-size:10px; }
+  .series { fill:none; stroke:var(--accent); stroke-width:1.7; opacity:.52; }
+  .dot { fill:var(--accent); stroke:white; stroke-width:1.5; cursor:pointer; }
+  .dot:hover,.dot:focus { stroke:#172b3a; stroke-width:2.5; outline:none; r:5.5; }
+  .selected-line { stroke:#526b79; stroke-width:1; stroke-dasharray:3 3; }
+  .selected-dot { fill:#172b3a; stroke:white; stroke-width:2; }
+  .chart-note { padding:3px 5px 0; color:var(--muted); font-size:11px; }
+  .details { margin-top:14px; padding:16px 18px; }
+  .details h3 { margin:0 0 8px; font-size:17px; }
+  .details-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:22px; }
+  dl { display:grid; grid-template-columns:minmax(145px,.7fr) 1.3fr; gap:5px 12px; margin:0; }
+  dt { color:var(--muted); } dd { margin:0; font-weight:600; }
+  .limits { margin:0; padding-left:19px; }
+  .limits li+li { margin-top:5px; }
+  .table-wrap { overflow-x:auto; margin-top:14px; }
+  table { width:100%; border-collapse:collapse; font-variant-numeric:tabular-nums; font-size:13px; }
+  th,td { padding:7px 9px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; }
+  th:first-child,td:first-child { text-align:left; }
+  th { color:var(--muted); font-weight:650; }
+  tbody tr { cursor:pointer; }
+  tbody tr:hover,tbody tr[aria-selected="true"] { background:#e8f2f5; }
+  footer { padding-top:14px; color:var(--muted); font-size:12px; }
+  @media(max-width:850px) { .charts { grid-template-columns:1fr; } .chart-card svg { max-width:620px; } }
+  @media(max-width:620px) { main { padding:15px 12px 32px; } header { padding:22px 16px; } .intro { align-items:start; flex-direction:column; } .metrics { grid-template-columns:1fr; gap:8px; } .metric output { font-size:22px; } .details-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">JarFrame · isolated validation artifact</div>
+  <h1>Full-range jar placement</h1>
+  <p>Fixed 16-position reconstructed OES research dataset · post-impact response over 50 ms</p>
+</header>
+<main>
+  <aside class="warning" role="note">
+    <strong>Idealised research demonstration — not production-validated engineering advice.</strong>
+    These frozen results do not evaluate your BHA, inputs, operating conditions or feasible rig placement. They do not recommend an optimum position.
+  </aside>
+  <section class="intro" aria-labelledby="results-heading">
+    <div><h2 id="results-heading">Response across the tested positions</h2><p>Choose a point or position to inspect all three reported metrics. Points are discrete calculations; connecting strokes are visual guides only.</p></div>
+    <label for="position">Selected jar centre above bit<select id="position"></select></label>
+  </section>
+  <section class="metrics" id="metrics" aria-live="polite"></section>
+  <section class="charts" id="charts" aria-label="Position response charts"></section>
+  <section class="details" aria-labelledby="method-heading">
+    <h3 id="method-heading">Dataset and limits</h3>
+    <div class="details-grid">
+      <dl>
+        <dt>Source</dt><dd>Stage 8 compact recurrence results</dd>
+        <dt>Research fixture</dt><dd>Reconstructed OES 8.5-in BHA with diagnostic TCI bit</dd>
+        <dt>Reported impulse</dt><dd>Tensile-only impulse, same 0–50 ms window after impact</dd>
+        <dt>Displayed tension</dt><dd>Positive magnitude; not signed axial-force convention</dd>
+        <dt>Browser calculation</dt><dd>None. This page reads a fixed embedded snapshot.</dd>
+      </dl>
+      <ul class="limits">
+        <li>Stage 8 completed all 16 saved recurrence cases with maintained engagement and recorded numerical checks.</li>
+        <li>Six positions have complete 50-ms exact-event comparisons. Ten exact-event references stop early; the late stuck-point response at 730.79 and 731.78 ft lacks an independent full-window exact-event reference.</li>
+        <li>These are sampled positions for one reconstructed fixture. Lines do not imply validated interpolation, optimization, manufacturability or rig handling.</li>
+      </ul>
+    </div>
+    <div class="table-wrap"><table aria-label="Fixed Stage 8 position results"><thead><tr><th>Jar centre (ft)</th><th>Peak tension (kN)</th><th>Tensile impulse (kN·s)</th><th>Impact velocity (m/s)</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <footer>Provenance: <code>Stage8Results.json</code>, Stage 8, refinement ×1. Values are embedded at full saved numeric precision in this standalone file. Assessment: <code>Stage10Report.md</code>.</footer>
+  </section>
+</main>
+<script>
+// Frozen display-only values copied from Stage8Results.json; no solver/runtime dependency.
+const data = [
+  {positionFt:132.07,peakTensileKN:2422.089545536988,impulseKNS:82.87837696407248,impactVelocityMS:2.906786355485816},
+  {positionFt:133.06,peakTensileKN:2417.037966107722,impulseKNS:82.79090517513365,impactVelocityMS:2.906786355485816},
+  {positionFt:193.06,peakTensileKN:2239.914640637148,impulseKNS:76.80264845082349,impactVelocityMS:2.9104916355372805},
+  {positionFt:253.06,peakTensileKN:2416.9873836094,impulseKNS:71.13252825854033,impactVelocityMS:2.9096955130634767},
+  {positionFt:313.06,peakTensileKN:2349.486310855526,impulseKNS:67.34334606992091,impactVelocityMS:3.0475878203914837},
+  {positionFt:373.06,peakTensileKN:2713.1035231086863,impulseKNS:61.3155586233429,impactVelocityMS:3.2366237243504297},
+  {positionFt:433.06,peakTensileKN:2752.2171213206635,impulseKNS:56.38206081315839,impactVelocityMS:3.2263766138181746},
+  {positionFt:493.06,peakTensileKN:3008.2372826629435,impulseKNS:52.031059331081,impactVelocityMS:3.2400019633394908},
+  {positionFt:553.06,peakTensileKN:2864.7270403179685,impulseKNS:44.1976458971979,impactVelocityMS:3.695675849920224},
+  {positionFt:611.83,peakTensileKN:3226.2433017462366,impulseKNS:36.959127049060626,impactVelocityMS:4.026028923906896},
+  {positionFt:613.06,peakTensileKN:3230.273139135112,impulseKNS:36.80744099297867,impactVelocityMS:4.026028923906896},
+  {positionFt:641.83,peakTensileKN:3194.4336233765087,impulseKNS:32.82009655473309,impactVelocityMS:4.3047914809231544},
+  {positionFt:671.83,peakTensileKN:3330.7957925963486,impulseKNS:28.00668364166612,impactVelocityMS:4.3599189896978015},
+  {positionFt:673.06,peakTensileKN:3332.463704443491,impulseKNS:27.768052460770978,impactVelocityMS:4.3618443394216975},
+  {positionFt:730.79,peakTensileKN:3010.1964455726,impulseKNS:13.291128073913134,impactVelocityMS:4.655826973706628},
+  {positionFt:731.78,peakTensileKN:2993.502509008974,impulseKNS:13.009212992254483,impactVelocityMS:4.655712423684557}
+];
+const specs = [
+  {key:'peakTensileKN',title:'Peak tensile force',unit:'kN',color:'var(--amber)',format:v=>v.toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})},
+  {key:'impulseKNS',title:'50-ms tensile impulse',unit:'kN·s',color:'var(--blue)',format:v=>v.toFixed(2)},
+  {key:'impactVelocityMS',title:'Impact velocity',unit:'m/s',color:'var(--violet)',format:v=>v.toFixed(3)}
+];
+const position = document.querySelector('#position');
+const metrics = document.querySelector('#metrics');
+const charts = document.querySelector('#charts');
+const rows = document.querySelector('#rows');
+let selected = 11;
+const fmtPos = n => n.toFixed(2);
+data.forEach((d,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${fmtPos(d.positionFt)} ft`;position.append(o);});
+function chart(spec) {
+  const W=360,H=210,L=49,R=12,T=12,B=35,plotW=W-L-R,plotH=H-T-B;
+  const lo=Math.min(...data.map(d=>d[spec.key])),hi=Math.max(...data.map(d=>d[spec.key])),pad=(hi-lo)*.12||1;
+  const min=lo-pad,max=hi+pad,x=d=>L+(d.positionFt-data[0].positionFt)/(data.at(-1).positionFt-data[0].positionFt)*plotW,y=v=>T+(max-v)/(max-min)*plotH;
+  const ticks=Array.from({length:4},(_,i)=>min+(max-min)*i/3);
+  const poly=data.map(d=>`${x(d)},${y(d[spec.key])}`).join(' ');
+  const grids=ticks.map(v=>`<line class="grid" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text class="tick" x="${L-6}" y="${y(v)+3}" text-anchor="end">${spec.format(v)}</text>`).join('');
+  const xticks=[data[0].positionFt,333,533, data.at(-1).positionFt].map(v=>{const xx=L+(v-data[0].positionFt)/(data.at(-1).positionFt-data[0].positionFt)*plotW;return `<line class="grid" x1="${xx}" x2="${xx}" y1="${T}" y2="${T+plotH}"/><text class="tick" x="${xx}" y="${H-18}" text-anchor="middle">${Math.round(v)}</text>`}).join('');
+  const dots=data.map((d,i)=>`<circle class="dot" data-index="${i}" tabindex="0" role="button" aria-label="${fmtPos(d.positionFt)} feet: ${spec.format(d[spec.key])} ${spec.unit}" cx="${x(d)}" cy="${y(d[spec.key])}" r="${i===selected?5:3.7}"><title>${fmtPos(d.positionFt)} ft · ${spec.format(d[spec.key])} ${spec.unit}</title></circle>`).join('');
+  const current=data[selected], sx=x(current);
+  return `<article class="chart-card" style="--accent:${spec.color}"><h3>${spec.title}</h3><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${spec.title} by tested jar position">${grids}${xticks}<line class="axis" x1="${L}" x2="${W-R}" y1="${T+plotH}" y2="${T+plotH}"/><line class="axis" x1="${L}" x2="${L}" y1="${T}" y2="${T+plotH}"/><polyline class="series" points="${poly}"/><line class="selected-line" x1="${sx}" x2="${sx}" y1="${T}" y2="${T+plotH}"/><text class="axis-label" x="${L+plotW/2}" y="${H-2}" text-anchor="middle">Jar centre above bit (ft)</text>${dots}<circle class="selected-dot" cx="${sx}" cy="${y(current[spec.key])}" r="6" pointer-events="none"/></svg></article>`;
+}
+function render() {
+  const d=data[selected];
+  metrics.innerHTML=specs.map(s=>`<article class="metric" style="--accent:${s.color}"><div class="label">${s.title}</div><output>${s.format(d[s.key])} <small>${s.unit}</small></output><small>at ${fmtPos(d.positionFt)} ft</small></article>`).join('');
+  charts.innerHTML=specs.map(chart).join('');
+  rows.innerHTML=data.map((r,i)=>`<tr data-index="${i}" aria-selected="${i===selected}"><td>${fmtPos(r.positionFt)}</td><td>${r.peakTensileKN.toFixed(3)}</td><td>${r.impulseKNS.toFixed(4)}</td><td>${r.impactVelocityMS.toFixed(4)}</td></tr>`).join('');
+  charts.querySelectorAll('[data-index]').forEach(el=>{el.addEventListener('click',()=>choose(+el.dataset.index));el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();choose(+el.dataset.index);}})});
+  rows.querySelectorAll('[data-index]').forEach(el=>el.addEventListener('click',()=>choose(+el.dataset.index)));
+}
+function choose(i){selected=i;position.value=String(i);render();}
+position.addEventListener('change',()=>choose(+position.value));
+render();
+</script>
+</body>
+</html>
