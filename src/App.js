@@ -7,6 +7,12 @@ import Navbar from './Navbar.js';
 import Scroll from './Scroll.js';
 import SearchDrop from './SearchDrop.js';
 import Workspace from './WorkspaceV2/Workspace.js';
+import './WorkspaceV2/DesignSystem.css';
+import { WOB_ANALYSIS_DEFAULTS } from './engineering/bha/wobAnalysisInputs';
+import { assessBhaReadiness, bhaReadinessKey } from './Components/BHABuilder/bhaReadiness';
+import { emptySurveyState, migrateSurveyAssociations } from './Apps/Survey/surveyAssociation';
+import { DemoPresentationContext } from './Components/DemoPresentation';
+import ComponentSupportNotice from './Components/BHABuilder/ComponentSupportNotice';
 
 
 
@@ -28,6 +34,8 @@ const createEmptyRow = () => ({
 
 class App extends Component {
   state = {
+    demoPresentationBhaId: null,
+    developerPanels: false,
     searchfield: [
       'BHA Data Entry',
       'Analysis Inputs',
@@ -47,11 +55,14 @@ class App extends Component {
       field: '',
       operator: '',
       currentBha: {
+        surveyState: emptySurveyState(),
+        trajectoryMode: 'vertical',
         id: '',
         name: '',
         holeSize: '',
         mudWeight: '',
         wob: '',
+        wobAnalysis: { ...WOB_ANALYSIS_DEFAULTS },
         inclination: 0,
         rows: [createEmptyRow()]
       },
@@ -69,7 +80,7 @@ class App extends Component {
     if (savedWell) {
       const parsedWell = JSON.parse(savedWell);
 
-      stateChanges.well = {
+      stateChanges.well = migrateSurveyAssociations({
         name: parsedWell.name || '',
         field: parsedWell.field || '',
         operator: parsedWell.operator || '',
@@ -85,7 +96,7 @@ class App extends Component {
         },
         rigLimits: parsedWell.rigLimits || { maximumAllowableHookloadKlbf: '' },
         savedBhas: parsedWell.savedBhas || []
-      };
+      });
     }
 
     if (savedSearchfield) {
@@ -98,10 +109,12 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.well !== this.state.well) {
-      localStorage.setItem(
-        'drillbenchWell',
-        JSON.stringify(this.state.well)
-      );
+      try {
+        localStorage.setItem('drillbenchWell', JSON.stringify(this.state.well));
+        if (this.state.wellStorageError) this.setState({ wellStorageError: '' });
+      } catch {
+        this.setState({ wellStorageError: 'Browser storage could not save the working BHA and survey association. Changes are session-only; existing stored data has not been overwritten. Free storage and Save again before leaving.' });
+      }
     }
 
     if (prevState.searchfield !== this.state.searchfield) {
@@ -222,6 +235,7 @@ class App extends Component {
         ...currentBha,
         id: bhaId
       };
+      const assessment = assessBhaReadiness(bhaToSave);
 
       const existingIndex =
         currentState.well.savedBhas.findIndex(
@@ -245,6 +259,7 @@ class App extends Component {
       }
 
       return {
+        bhaSaveFeedback: assessment.valid ? null : { signature: bhaReadinessKey(bhaToSave), messages: assessment.messages },
         well: {
           ...currentState.well,
           currentBha: bhaToSave,
@@ -267,7 +282,8 @@ class App extends Component {
         name,
         rows: state.well.currentBha.rows.map(row => ({ ...row }))
       };
-      return { well: { ...state.well, currentBha: copy, savedBhas: [...state.well.savedBhas, copy] } };
+      const assessment = assessBhaReadiness(copy);
+      return { bhaSaveFeedback: assessment.valid ? null : { signature: bhaReadinessKey(copy), messages: assessment.messages }, well: { ...state.well, currentBha: copy, savedBhas: [...state.well.savedBhas, copy] } };
     });
   };
 
@@ -328,11 +344,14 @@ class App extends Component {
       well: {
         ...currentState.well,
         currentBha: {
+          surveyState: emptySurveyState(),
+          trajectoryMode: 'vertical',
           id: '',
           name: '',
           holeSize: '',
           mudWeight: '',
           wob: '',
+          wobAnalysis: { ...WOB_ANALYSIS_DEFAULTS },
         inclination: 0,
           rows: [createEmptyRow()]
         }
@@ -373,6 +392,7 @@ class App extends Component {
     const bha = well.currentBha;
 
     const widgets = createWidgets({
+      developerPanels: this.state.developerPanels,
       bha,
       savedBhas: well.savedBhas,
       saveBha: this.saveBha,
@@ -391,10 +411,14 @@ class App extends Component {
     );
 
     return (
-      <div>
+      <DemoPresentationContext.Provider value={this.state.demoPresentationBhaId !== null && this.state.demoPresentationBhaId === bha.id}><div>
+        <ComponentSupportNotice bha={bha} />
         {USE_WORKSPACE_V2 ? (
           <>
             <Navbar
+              onDemoPresentationChange={enabled => this.setState({ demoPresentationBhaId: enabled ? bha.id : null })}
+              developerPanels={this.state.developerPanels}
+              onDeveloperPanelsChange={developerPanels => this.setState({ developerPanels })}
               currentBha={bha}
               savedBhas={well.savedBhas}
               saveBha={this.saveBha}
@@ -406,7 +430,11 @@ class App extends Component {
               deleteBha={this.deleteBha}
             />
 
+            {this.state.bhaSaveFeedback?.signature === bhaReadinessKey(bha) && <div role="status" style={{ padding: '4px 12px', fontSize: 12 }}>Draft saved — complete these items before analysis: {this.state.bhaSaveFeedback.messages.join(' ')}</div>}
+            {this.state.wellStorageError && <div role="alert" style={{ padding: '4px 12px', fontSize: 12 }}>{this.state.wellStorageError}</div>}
             <Workspace
+              bhaValidationRequest={this.state.bhaSaveFeedback?.signature}
+              developerPanels={this.state.developerPanels}
               bha={bha}
               rigLimits={well.rigLimits}
               updateRigLimits={this.updateRigLimits}
@@ -449,7 +477,7 @@ class App extends Component {
             </Scroll>
           </>
         )}
-      </div>
+      </div></DemoPresentationContext.Provider>
     );
 
   }

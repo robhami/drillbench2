@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "label": "Hypothetical dry mixed-BHA elastic analogue — NOT OES",
+  "mode": "A",
+  "staticTreatment": "perturbation-only-with-static-context",
+  "collars": [
+    {"id":"DC-A","lengthM":6,"odM":0.1651,"idM":0.0508,"densityKgM3":7850,"youngsModulusPa":200000000000},
+    {"id":"DC-B","lengthM":8,"odM":0.1524,"idM":0.07145,"densityKgM3":7850,"youngsModulusPa":200000000000},
+    {"id":"DC-C","lengthM":6,"odM":0.1651,"idM":0.07145,"densityKgM3":7850,"youngsModulusPa":200000000000}
+  ],
+  "aboveCollars": [
+    {"id":"Ideal-uniform-HWDP-body","lengthM":10,"odM":0.127,"idM":0.0762,"densityKgM3":7850,"youngsModulusPa":200000000000},
+    {"id":"Ideal-uniform-DP-body","lengthM":69.5,"odM":0.127,"idM":0.1086,"densityKgM3":7850,"youngsModulusPa":200000000000}
+  ],
+  "jar": {"id":"Hypothetical-effective-jar","lengthM":0.5,"odM":0.1651,"idM":0.0762,"effectiveBodyAreaM2":0.003,"densityKgM3":7850,"youngsModulusPa":200000000000,"hammerMassKg":20,"impactVelocityMS":1,"contactStiffnessNm":10000000},
+  "lowerCollarLengthsM": [3,5,7,9,11,13,15],
+  "baselineLowerCollarLengthM": 9,
+  "wobN": 0,
+  "gravityMS2":9.80665,
+  "durationS":0.025,
+  "numerical":{"timeStepS":0.000001,"maxSteps":200000,"maxHistoryCells":5000000,"energyRelativeTolerance":0.00003,"momentumRelativeTolerance":0.00003},
+  "convergence":{"forceAbsoluteN":0.01,"impulseAbsoluteNs":0.00001,"relative":0.001,"eventTimeS":0.000001},
+  "primaryDefinition":"First contiguous tensile stuck-force lobe after causal first arrival, ending at its first zero crossing; tensile magnitude impulse, not Skeem primary impulse",
+  "rankResolution":{"relative":0.001,"absoluteForceN":0.1,"absoluteImpulseNs":0.0001}
+}

@@ -1,16 +1,18 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Workspace from './Workspace';
+import Workspace from './FloatingWorkspace';
 import WidgetRegistry from './WidgetRegistry';
 import EngineeringStringCard from '../Apps/EngineeringString/EngineeringStringCard';
 
 jest.mock('./Widget', () => {
   const AnalysisInputs = require('../Apps/AnalysisInputs/AnalysisInputs').default;
+  const EngineeringStringCard = require('../Apps/EngineeringString/EngineeringStringCard').default;
   const JarForces = require('../Apps/JarForces/JarForces').default;
   return props => <div data-testid={props.widget.type}>
   <span data-testid={`${props.widget.type}-mode`}>{props.drillingMode}</span>
-  {props.widget.type === 'analysisInputs' && <AnalysisInputs bha={{ name: '', holeSize: '', mudWeight: '', wob: '', ...props.bha }} updateBha={() => {}} drillingMode={props.drillingMode} setDrillingMode={props.setDrillingMode} analysisBitMdFt={props.analysisBitMdFt} setAnalysisBitMdFt={props.setAnalysisBitMdFt} />}
-  {props.widget.type === 'jarForces' && props.bha && <JarForces bha={props.bha} analysisBitMdFt={props.analysisBitMdFt} rigLimits={props.rigLimits} updateRigLimits={props.updateRigLimits} />}
+  {props.widget.type === 'analysisInputs' && <AnalysisInputs bha={{ name: '', holeSize: '', mudWeight: '', wob: '', ...props.bha }} updateBha={() => {}} drillingMode={props.drillingMode} setDrillingMode={props.setDrillingMode} surveyCoverage={props.surveyCoverage} />}
+  {props.widget.type === 'engineeringString' && props.bha && <EngineeringStringCard bha={props.bha} drillingMode={props.drillingMode} setDrillingMode={props.setDrillingMode} updateBha={() => {}} summaryOnly />}
+  {props.widget.type === 'jarForces' && props.bha && <JarForces bha={props.bha} analysisBitMdFt={props.analysisBitMdFt} rigLimits={props.rigLimits} updateRigLimits={props.updateRigLimits} surveyCoverage={props.surveyCoverage} surfaceReferenceMdFt={props.surfaceReferenceMdFt} setSurfaceReferenceMdFt={props.setSurfaceReferenceMdFt} />}
   <button onClick={() => props.onClose(props.widget.id)}>Close {props.widget.type}</button>
 </div>;
 });
@@ -19,37 +21,153 @@ const key = 'wellbenchWorkspaceV2';
 const savedString = { id: 'custom-string', type: 'engineeringString', x: 90, y: 30, width: 520, height: 400, visible: false, minimized: true, z: 4 };
 const other = { id: 'jarPlacement1', type: 'jarPlacement', x: 11, y: 12, width: 580, height: 430, visible: true, minimized: false, z: 8 };
 const saved = () => JSON.parse(localStorage.getItem(key));
-const open = () => fireEvent.click(screen.getByRole('button', { name: 'String' }));
+const open = () => fireEvent.click(screen.getByRole('button', { name: 'Engineering String' }));
 
 beforeEach(() => localStorage.clear());
 
-test('Defined DP synchronizes analysis depth, rejects missing lengths and restores Auto analysis depth', () => {
+test('fresh desktop opens only entry windows without overlap and reset is explicit', () => {
+  const original = window.innerWidth;
+  window.innerWidth = 1600;
+  const view = render(<Workspace />);
+  const initial = saved();
+  expect(initial.filter(w => w.visible).map(w => w.type).sort()).toEqual(['analysisInputs', 'bhaEntry']);
+  const bha = initial.find(w => w.type === 'bhaEntry'), parameters = initial.find(w => w.type === 'analysisInputs');
+  expect(bha.x + bha.width).toBeLessThan(parameters.x);
+  view.unmount();
+  const custom = initial.map(w => ({ ...w, x: 55, visible: w.type === 'jarForces' }));
+  localStorage.setItem(key, JSON.stringify(custom));
+  render(<Workspace />);
+  expect(saved()).toEqual(custom);
+  fireEvent.click(screen.getByRole('button', { name: 'Reset layout' }));
+  expect(saved().filter(w => w.visible).map(w => w.type).sort()).toEqual(['analysisInputs', 'bhaEntry']);
+  window.innerWidth = original;
+});
+
+test('fresh reduced-width entries stack without overlapping', () => {
+  const original = window.innerWidth;
+  window.innerWidth = 1000;
+  render(<Workspace />);
+  const records = saved();
+  const bha = records.find(w => w.type === 'bhaEntry'), parameters = records.find(w => w.type === 'analysisInputs');
+  expect(bha.y + bha.height).toBeLessThan(parameters.y);
+  expect(bha.width).toBeLessThanOrEqual(1000 - 224 - 32);
+  window.innerWidth = original;
+});
+
+test('partial saved layouts gain closed entry records and remain launchable', () => {
+  localStorage.setItem(key, JSON.stringify([other]));
+  render(<Workspace />);
+  expect(saved().find(w => w.id === other.id)).toEqual(other);
+  for (const type of ['bhaEntry', 'analysisInputs']) expect(saved().find(w => w.type === type).visible).toBe(false);
+  fireEvent.click(screen.getByRole('button', { name: 'Parameter Entry' }));
+  expect(screen.getByTestId('analysisInputs')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'BHA Data Entry' }));
+  expect(screen.getByTestId('bhaEntry')).toBeInTheDocument();
+});
+
+test('renamed launchers and titles retain the existing window identifiers', () => {
+  render(<Workspace />);
+  for (const [type, title] of Object.entries({ analysisInputs: 'Parameter Entry', jarClearance: 'Neutral Point Behaviour',
+    jarForces: 'Hookload Calculations', jarConfiguration: 'Jar Position Analysis', jarPlacement: 'Impact & Impulse' })) {
+    expect(WidgetRegistry[type].title).toBe(title);
+    fireEvent.click(screen.getByRole('button', { name: title }));
+    expect(screen.getByTestId(type)).toBeInTheDocument();
+  }
+});
+
+test('saved open diagnostic windows remain hidden normally without losing saved layout', () => {
+  const diagnostics = ['bhaSummary', 'engineeringResults'].map((type, i) => ({ ...other, id: type + '-saved', type, x: 70 + i }));
+  localStorage.setItem(key, JSON.stringify([...diagnostics, other]));
+  const view = render(<Workspace />);
+  expect(screen.queryByRole('button', { name: 'BHA Summary' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Engineering Results' })).not.toBeInTheDocument();
+  for (const w of diagnostics) {
+    expect(screen.queryByTestId(w.type)).not.toBeInTheDocument();
+    expect(saved().find(s => s.id === w.id)).toEqual(w);
+  }
+  view.rerender(<Workspace developerPanels />);
+  for (const w of diagnostics) expect(screen.getByTestId(w.type)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Close bhaSummary' }));
+  fireEvent.click(screen.getByRole('button', { name: 'BHA Summary' }));
+  expect(screen.getByTestId('bhaSummary')).toBeInTheDocument();
+  view.rerender(<Workspace />);
+  expect(screen.queryByTestId('bhaSummary')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('engineeringResults')).not.toBeInTheDocument();
+  expect(saved().find(s => s.id === other.id)).toEqual(other);
+});
+
+test('both panels share nonzero-start coverage and revalidate the existing surface reference and survey', () => {
+  const { SURVEY_STORAGE_KEY, SURVEY_CHANGED_EVENT } = require('../Apps/Survey/Survey');
+  const source = { confirmed: true, originalCsv: 'MD,Inclination,Azimuth\n100,0,90\n1000,0,90' };
+  localStorage.setItem(SURVEY_STORAGE_KEY, JSON.stringify(source));
+  const bha = { mudWeight: 10, frictionCoefficient: 0.25, rpm: 150, drillpipeReferenceBitMdFt: 1000,
+    rows: [{ category: 'JAR', length: 20, weight: 100, od: 6.75 }, { category: 'DP', lengthMode: 'auto', length: 9000, weight: 20, od: 5.5 }] };
+  render(<Workspace bha={bha} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Parameter Entry' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Hookload Calculations' }));
+  expect(screen.getAllByText(/Survey coverage warning:/)).toHaveLength(2);
+  expect(screen.getAllByText(/Survey coverage warning:/)[0]).toHaveTextContent('missing 0–100 ft');
+  fireEvent.change(screen.getByLabelText('Surface reference MD (ft)'), { target: { value: '100' } });
+  expect(screen.queryByText(/Survey coverage warning:/)).not.toBeInTheDocument();
+  fireEvent.change(screen.getByLabelText('Surface hookload / axial support (klbf)'), { target: { value: '10' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Calculate static jar load' }));
+  expect(screen.getByRole('table', { name: 'Jar Force Results' })).toBeInTheDocument();
+  fireEvent(window, new CustomEvent(SURVEY_CHANGED_EVENT, { detail: { confirmed: true, originalCsv: 'MD,Inclination,Azimuth\n0,0,90\n1000,NaN,90' } }));
+  const warnings = screen.getAllByText(/Survey coverage warning:/);
+  expect(warnings).toHaveLength(2);
+  expect(warnings[0].textContent).toBe(warnings[1].textContent);
+  expect(screen.queryByRole('table', { name: 'Jar Force Results' })).not.toBeInTheDocument();
+});
+
+test('survey shorter than synchronized deployed depth warns and never extrapolates Jar Forces', () => {
+  const { SURVEY_STORAGE_KEY } = require('../Apps/Survey/Survey');
+  localStorage.setItem(SURVEY_STORAGE_KEY, JSON.stringify({ confirmed: true, originalCsv: 'MD,Inclination,Azimuth\n0,0,90\n500,0,90' }));
+  const bha = { mudWeight: 10, frictionCoefficient: 0.25, rpm: 150, drillpipeReferenceBitMdFt: 1000,
+    rows: [{ category: 'JAR', length: 20, weight: 100, od: 6.75 }, { category: 'DP', lengthMode: 'auto', length: 9000, weight: 20, od: 5.5 }] };
+  const { rerender } = render(<Workspace bha={bha} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Parameter Entry' }));
+  expect(screen.getByText(/Survey coverage warning:/)).toHaveTextContent('1,000');
+  fireEvent.click(screen.getByRole('button', { name: 'Hookload Calculations' }));
+  fireEvent.change(screen.getByLabelText('Surface hookload / axial support (klbf)'), { target: { value: '10' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Calculate static jar load' }));
+  const warnings = screen.getAllByText(/Survey coverage warning:/);
+  expect(warnings).toHaveLength(2);
+  expect(warnings[0].textContent).toBe(warnings[1].textContent);
+  expect(warnings[0]).toHaveTextContent('missing 500–1,000 ft');
+  rerender(<Workspace bha={{ ...bha, drillpipeReferenceBitMdFt: 400 }} />);
+  expect(screen.queryByText(/Survey coverage warning:/)).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Calculate static jar load' }));
+  expect(screen.getByRole('table', { name: 'Jar Force Results' })).toBeInTheDocument();
+  rerender(<Workspace bha={{ ...bha, drillpipeReferenceBitMdFt: '' }} />);
+  expect(screen.queryByRole('table', { name: 'Jar Force Results' })).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Calculate static jar load' })).toBeDisabled();
+});
+
+test('Parameter Entry no longer duplicates BHA-controlled MD fields', () => {
   const auto = { rows: [{ rowId: 'dc', category: 'DC', length: 300 }, { rowId: 'dp', category: 'DP', length: 9000, lengthMode: 'auto' }], drillpipeReferenceBitMdFt: 12000 };
   const { rerender, unmount } = render(<Workspace bha={auto} />);
-  fireEvent.click(screen.getByRole('button', { name: 'Analysis' }));
-  fireEvent.change(screen.getByLabelText('Bit Depth (ft MD)'), { target: { value: '7000' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Parameter Entry' }));
+  expect(screen.queryByLabelText('Bit Depth (ft MD)')).not.toBeInTheDocument();
   const defined = { ...auto, rows: auto.rows.map(r => r.category === 'DP' ? { ...r, lengthMode: 'manual' } : r) };
   rerender(<Workspace bha={defined} />);
-  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(9300);
-  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveAttribute('readonly');
+  expect(screen.queryByLabelText('Bit Depth (ft MD)')).not.toBeInTheDocument();
   rerender(<Workspace bha={{ ...defined, rows: [defined.rows[0], { ...defined.rows[1], length: 9500 }] }} />);
-  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(9800);
+  expect(screen.queryByLabelText('Bit Depth (ft MD)')).not.toBeInTheDocument();
   rerender(<Workspace bha={{ ...defined, rows: [defined.rows[0], { ...defined.rows[1], length: '' }] }} />);
-  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(null);
+  expect(screen.queryByLabelText('Bit Depth (ft MD)')).not.toBeInTheDocument();
   rerender(<Workspace bha={auto} />);
-  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(7000);
+  expect(screen.queryByLabelText('Bit Depth (ft MD)')).not.toBeInTheDocument();
   unmount();
   render(<Workspace bha={JSON.parse(JSON.stringify(defined))} />);
-  expect(screen.getByLabelText('Bit Depth (ft MD)')).toHaveValue(9300);
+  expect(screen.queryByLabelText('Bit Depth (ft MD)')).not.toBeInTheDocument();
   expect(auto.drillpipeReferenceBitMdFt).toBe(12000);
 });
 
-test('only Analysis Inputs controls the shared mode for String and Results', () => {
-  render(<Workspace />);
+test('shared drilling mode remains editable in Engineering String, outside Parameter Entry', () => {
+  render(<Workspace developerPanels />);
   open();
-  expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Analysis' }));
-  expect(screen.getAllByRole('combobox')).toHaveLength(1);
+  fireEvent.click(screen.getByRole('button', { name: 'Engineering Results' }));
+  expect(screen.getAllByRole('combobox', { name: 'Drilling Mode' })).toHaveLength(1);
   fireEvent.change(screen.getByRole('combobox', { name: 'Drilling Mode' }), { target: { value: 'rotate' } });
   expect(screen.getByTestId('engineeringString-mode')).toHaveTextContent('rotate');
   expect(screen.getByTestId('engineeringResults-mode')).toHaveTextContent('rotate');
@@ -64,7 +182,7 @@ test('Analysis Inputs defaults to 470 px but retains manually saved dimensions',
   const layout = saved().map(w => w.type === 'analysisInputs' ? { ...w, width: 650, height: 530 } : w);
   localStorage.setItem(key, JSON.stringify(layout));
   render(<Workspace />);
-  fireEvent.click(screen.getByRole('button', { name: 'Analysis' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Parameter Entry' }));
   expect(saved().find(w => w.type === 'analysisInputs')).toMatchObject({ width: 650, height: 530 });
 });
 
@@ -76,10 +194,10 @@ test('String registry still renders the separate Engineering String component', 
 test('Configuration window registers and opens independently without resetting saved layout', () => {
   localStorage.setItem(key, JSON.stringify([other]));
   render(<Workspace />);
-  expect(WidgetRegistry.jarConfiguration.title).toBe('Jar Configuration Analysis');
+  expect(WidgetRegistry.jarConfiguration.title).toBe('Jar Position Analysis');
   expect(saved().find(w => w.id === other.id)).toEqual(other);
   expect(screen.queryByTestId('jarConfiguration')).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Config' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Jar Position Analysis' }));
   expect(screen.getByTestId('jarConfiguration')).toBeInTheDocument();
   expect(screen.getByTestId('jarPlacement')).toBeInTheDocument();
   expect(saved().find(w => w.id === other.id)).toEqual(other);
@@ -103,10 +221,10 @@ test('Survey registers independently and adds only its missing window to an exis
 test('Jar Clearance registers and opens without resetting saved windows or replacing Jar Placement', () => {
   localStorage.setItem(key, JSON.stringify([other, savedString]));
   render(<Workspace />);
-  expect(WidgetRegistry.jarClearance.title).toBe('Jar Clearance Across Run');
+  expect(WidgetRegistry.jarClearance.title).toBe('Neutral Point Behaviour');
   expect(saved().find(w => w.id === other.id)).toEqual(other);
   expect(screen.queryByTestId('jarClearance')).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Run' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Neutral Point Behaviour' }));
   expect(screen.getByTestId('jarClearance')).toBeInTheDocument();
   expect(screen.getByTestId('jarPlacement')).toBeInTheDocument();
   expect(saved().find(w => w.id === other.id)).toEqual(other);
@@ -117,9 +235,9 @@ test('Jar Clearance registers and opens without resetting saved windows or repla
 test('Jar Forces opens independently and preserves existing layout and jar performance window', () => {
   localStorage.setItem(key, JSON.stringify([other, savedString]));
   render(<Workspace />);
-  expect(WidgetRegistry.jarForces.title).toBe('Jar Forces');
+  expect(WidgetRegistry.jarForces.title).toBe('Hookload Calculations');
   expect(screen.queryByTestId('jarForces')).not.toBeInTheDocument();
-  fireEvent.click(screen.getByRole('button', { name: 'Forces' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Hookload Calculations' }));
   expect(screen.getByTestId('jarForces')).toBeInTheDocument();
   expect(screen.getByTestId('jarPlacement')).toBeInTheDocument();
   expect(saved().filter(w => w.type === 'jarForces')).toHaveLength(1);
@@ -145,7 +263,7 @@ test('String navigation restores hidden/minimized window and preserves reachable
   open();
   const restored = saved().find(w => w.type === 'engineeringString');
   expect(restored).toEqual({ ...savedString, visible: true, minimized: false, z: 9 });
-  expect(screen.getByRole('button', { name: 'String' })).toHaveClass('open');
+  expect(screen.getByRole('button', { name: 'Engineering String' })).toHaveClass('open');
   fireEvent.click(screen.getByRole('button', { name: 'Close engineeringString' }));
   expect(screen.queryByTestId('engineeringString')).not.toBeInTheDocument();
   open();
@@ -187,17 +305,17 @@ test('Analysis Inputs shares depth with Jar Forces across closing/reopening with
   const bha = { mudWeight: 10, frictionCoefficient: 0.25, rpm: 150, drillpipeReferenceBitMdFt: 12000,
     rows: [{ category: 'JAR', length: 20, weight: 100, od: 6.75 }, { category: 'DP', length: 10000, lengthMode: 'auto', weight: 20, od: 5.5 }] };
   const before = JSON.stringify(bha), updateBha = jest.fn();
-  render(<Workspace bha={bha} updateBha={updateBha} />);
-  fireEvent.click(screen.getByRole('button', { name: 'Analysis' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Forces' }));
-  expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('Required');
-  fireEvent.change(screen.getByLabelText('Bit Depth (ft MD)'), { target: { value: '1000' } });
+  const { rerender } = render(<Workspace bha={bha} updateBha={updateBha} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Parameter Entry' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Hookload Calculations' }));
+  expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('12,000.0 ft');
+  rerender(<Workspace bha={{ ...bha, drillpipeReferenceBitMdFt: 1000 }} updateBha={updateBha} />);
   expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('1,000.0 ft');
   expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('Deployed string ready');
   fireEvent.click(screen.getByRole('button', { name: 'Close jarForces' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Forces' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Hookload Calculations' }));
   expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('1,000.0 ft');
-  fireEvent.change(screen.getByLabelText('Bit Depth (ft MD)'), { target: { value: '2000' } });
+  rerender(<Workspace bha={{ ...bha, drillpipeReferenceBitMdFt: 2000 }} updateBha={updateBha} />);
   expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('2,000.0 ft');
   expect(JSON.stringify(bha)).toBe(before); expect(updateBha).not.toHaveBeenCalled();
 });
@@ -206,10 +324,10 @@ test('Workspace passes rig-level limits to Forces without writing BHA or layout 
   const bha = { mudWeight: 10, frictionCoefficient: 0.25, rpm: 150, rows: [] };
   const updateRigLimits = jest.fn();
   render(<Workspace bha={bha} rigLimits={{ maximumAllowableHookloadKlbf: '300' }} updateRigLimits={updateRigLimits} />);
-  fireEvent.click(screen.getByRole('button', { name: 'Forces' }));
-  fireEvent.click(screen.getByText('Rig Limits'));
-  expect(screen.getByLabelText('Maximum Allowable Hookload (klbf)')).toHaveValue(300);
-  fireEvent.change(screen.getByLabelText('Maximum Allowable Hookload (klbf)'), { target: { value: '310' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Hookload Calculations' }));
+
+  expect(screen.getByLabelText('Maximum Allowable Rig Hookload (klbf)')).toHaveValue(300);
+  fireEvent.change(screen.getByLabelText('Maximum Allowable Rig Hookload (klbf)'), { target: { value: '310' } });
   expect(updateRigLimits).toHaveBeenCalledWith({ maximumAllowableHookloadKlbf: '310' });
   expect(bha).not.toHaveProperty('rigLimits');
   expect(JSON.parse(localStorage.getItem('wellbenchWorkspaceV2')).every(w => !Object.prototype.hasOwnProperty.call(w, 'rigLimits'))).toBe(true);

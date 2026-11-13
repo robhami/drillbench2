@@ -11,7 +11,8 @@ const BHAEntry = ({
   updateRow,
   addRow,
   removeRow,
-  reorderRows
+  reorderRows,
+  bhaValidationRequest
 }) => {
   return (
     <Container>
@@ -20,6 +21,7 @@ const BHAEntry = ({
 
         <Card.Body>
           <BHABuilder
+            bhaValidationRequest={bhaValidationRequest}
             bha={bha}
             updateBha={updateBha}
             updateRow={updateRow}

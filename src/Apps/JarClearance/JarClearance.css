@@ -18,3 +18,27 @@
 .jarClearanceTable table[aria-label="Scenario comparison"] td { vertical-align: top; overflow-wrap: anywhere; }
 .wobOperatingRanges { border-top: 1px solid #d6dee5; border-bottom: 1px solid #d6dee5; margin: 10px 0; padding: 4px 0; }
 .wobOperatingRanges input { width: 85px; }
+.jarClearanceGraph { min-width: 0; margin: 8px 0; }
+.jarClearanceGraphCaption { font-size: 10px; color: #667482; }
+.jarClearanceAdvanced > summary { padding: 5px 0; }
+.wb2 .jarClearance .wbCurrentNP { padding: 8px; margin-bottom: 8px; }
+.wb2 .jarClearance .wbCurrentNP details { margin: 4px 0; padding-top: 4px; }
+
+.jarClearance { box-sizing: border-box; }
+.jarClearanceGraphArea { min-height: 280px; }
+.jarClearanceLegend { display: flex; flex-wrap: wrap; gap: 4px 8px; margin: 4px 0; }
+.jarClearanceLegend button { background: transparent; border: 1px solid #b8c5d1; border-radius: 4px; padding: 4px 7px; font-size: 12px; cursor: pointer; }
+.jarClearanceLegend button[aria-pressed="false"] { text-decoration: line-through; opacity: .55; }
+.jarClearanceLegend button:focus-visible { outline: 2px solid #0072B2; outline-offset: 2px; }
+.jarClearance .wbCurrentNPDetails > summary { cursor: pointer; padding: 5px 0; font-weight: 600; }
+
+.jarClearanceLineKey { display: inline-block; width: 22px; border-top-width: 2.25px; vertical-align: middle; margin-right: 4px; }
+.jarClearanceLegend button { font-size: 12.5px; }
+.jarClearanceGraphCaption { font-size: 11px; line-height: 1.45; }
+.jarClearanceZoneLabel { font-size: 12px; color: #6c541e; }
+.jarClearanceZoneLabel > span { display: inline-block; width: 20px; height: 10px; margin-right: 6px; border: 1px dotted #a16f18; background: rgba(225,166,53,.10); }
+.jarClearanceEmpty { min-height: 300px; display: grid; place-items: center; padding: 24px; color: #596879; border: 1px solid #e2e8f0; text-align: center; }
+
+.wbFloating .jarClearance > h5 { display: none; }
+.wbFloatingWindow .wbFloatingContent:has(.jarClearance) { overflow: hidden; }
+.wbFloatingWindow .wbFloatingContent > .wbDockPanel:has(> .jarClearance) { overflow: hidden; min-height: 0; }

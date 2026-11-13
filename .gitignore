@@ -20,6 +20,10 @@
 # added based on chatgpt
 .env
 
+/.env.development
+/.codex-temp/
+/validation-temp/
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

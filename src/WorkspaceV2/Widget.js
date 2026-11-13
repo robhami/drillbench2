@@ -2,15 +2,23 @@ import React from 'react';
 import { Rnd } from 'react-rnd';
 import WidgetRegistry from './WidgetRegistry';
 import { buildEngModel } from '../engineering/models/buildEngModel.js';
+import { analysisDepth } from '../engineering/bha/analysisDepth';
+import { deployDrillstring } from '../engineering/bha/deployDrillstring';
+import { assessBhaReadiness } from '../Components/BHABuilder/bhaReadiness';
+import { hasSurveyAssociation } from '../Apps/Survey/surveyAssociation';
 
 
 const Widget = ({
     widget,
+    contentOnly = false,
     bha,
+    bhaValidationRequest,
     rigLimits,
     updateRigLimits,
     analysisBitMdFt,
-    setAnalysisBitMdFt,
+    surveyCoverage,
+    surfaceReferenceMdFt,
+    setSurfaceReferenceMdFt,
     drillingMode,
     setDrillingMode,
     updateBha,
@@ -28,9 +36,17 @@ const Widget = ({
 }) => {
 
 
+    const readiness = React.useMemo(() => assessBhaReadiness(bha), [bha]);
+    const requiresCompleteBha = !['bhaEntry', 'analysisInputs', 'survey'].includes(widget.type);
+    const deployment = React.useMemo(() => {
+        const depth = analysisDepth(bha);
+        return depth.valid ? deployDrillstring(bha, depth.bitMdFt) : { valid: false, errors: [depth.error] };
+    }, [bha]);
+    const usesDeployedBha = ['engineeringString', 'engineeringResults', 'jarPlacement'].includes(widget.type);
+    const displayBha = usesDeployedBha && deployment.valid ? deployment.bha : bha;
     const engModel = React.useMemo(
-        () => buildEngModel(bha),
-        [bha]
+        () => readiness.valid ? buildEngModel(displayBha) : null,
+        [displayBha, readiness.valid]
     );
 
     const registryEntry =
@@ -43,6 +59,29 @@ const Widget = ({
     const Component =
         registryEntry.component;
 
+
+    const missingTrajectory = (bha?.trajectoryMode || hasSurveyAssociation(bha)) && surveyCoverage && !surveyCoverage.covered && ['engineeringString', 'jarClearance'].includes(widget.type);
+    const trajectoryMessage = surveyCoverage?.status === 'invalid-required-interval' ? 'Set a valid analysis depth and surface reference MD.' :
+        bha?.trajectoryMode === 'vertical' ? 'Set a valid analysis depth in BHA Data Entry.' : 'Directional survey required. Select or import a full-coverage survey in Survey.';
+    const content = requiresCompleteBha && !readiness.valid ? <div role="alert"><p>Complete BHA Data Entry before analysis.</p>{readiness.messages.map(message => <p key={message}>{message}</p>)}</div> : usesDeployedBha && !deployment.valid ? <p role="alert">Analysis depth unavailable: {deployment.errors.join(' ')}</p> : missingTrajectory ? <p role="status">{trajectoryMessage}</p> : <Component
+                            bha={displayBha}
+                            bhaValidationRequest={bhaValidationRequest}
+                            rigLimits={rigLimits}
+                            updateRigLimits={updateRigLimits}
+                            analysisBitMdFt={analysisBitMdFt}
+                            surveyCoverage={surveyCoverage}
+                            surfaceReferenceMdFt={surfaceReferenceMdFt}
+                            setSurfaceReferenceMdFt={setSurfaceReferenceMdFt}
+                            engModel={engModel}
+                            drillingMode={drillingMode}
+                            setDrillingMode={setDrillingMode}
+                            updateBha={updateBha}
+                            updateRow={updateRow}
+                            addRow={addRow}
+                            removeRow={removeRow}
+                            reorderRows={reorderRows}
+                        />;
+    if (contentOnly) return <div className="wbDockPanel">{content}</div>;
 
     const minimizedHeight = 36;
     const minimizedMargin = 8;
@@ -169,21 +208,7 @@ const Widget = ({
                 </header>
                 {!widget.minimized && (
                     <div className="wb2WidgetBody">
-                        <Component
-                            bha={bha}
-                            rigLimits={rigLimits}
-                            updateRigLimits={updateRigLimits}
-                            analysisBitMdFt={analysisBitMdFt}
-                            setAnalysisBitMdFt={setAnalysisBitMdFt}
-                            engModel={engModel}
-                            drillingMode={drillingMode}
-                            setDrillingMode={setDrillingMode}
-                            updateBha={updateBha}
-                            updateRow={updateRow}
-                            addRow={addRow}
-                            removeRow={removeRow}
-                            reorderRows={reorderRows}
-                        />
+                        {content}
                     </div>
                 )}
             </section>

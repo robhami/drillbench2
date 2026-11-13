@@ -9,18 +9,18 @@ import Survey from '../Apps/Survey/Survey';
 import JarClearance from '../Apps/JarClearance/JarClearance';
 import JarForces from '../Apps/JarForces/JarForces';
 const WidgetRegistry = {
-    jarForces: { title: 'Jar Forces', component: JarForces },
-    jarClearance: { title: 'Jar Clearance Across Run', component: JarClearance },
+    jarForces: { title: 'Hookload Calculations', component: JarForces },
+    jarClearance: { title: 'Neutral Point Behaviour', component: JarClearance },
     survey: { title: 'Survey', component: Survey },
-    jarConfiguration: { title: 'Jar Configuration Analysis', component: JarConfiguration },
-    jarPlacement: { title: 'Jar Placement', component: JarPlacement },
+    jarConfiguration: { title: 'Jar Position Analysis', component: JarConfiguration },
+    jarPlacement: { title: 'Impact & Impulse', component: JarPlacement },
     bhaEntry: {
         title: 'BHA Data Entry',
         component: BHAEntry
     },
 
     analysisInputs: {
-        title: 'Analysis Inputs',
+        title: 'Parameter Entry',
         component: AnalysisInputs
     },
 

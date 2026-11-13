@@ -3,6 +3,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { useDemoPresentation } from './Components/DemoPresentation';
 
 const AppNavbar = ({
 
@@ -14,28 +15,23 @@ const AppNavbar = ({
   loadBha,
   newBha,
   deleteBha,
-  duplicateBha
+  duplicateBha,
+  developerPanels = false,
+  onDeveloperPanelsChange,
+  onDemoPresentationChange
 }) => {
+  const [settingsOpen, setSettingsOpen] = React.useState(false);
+  const demoPresentation = useDemoPresentation();
 
 
   return (
     <Navbar className="dbNavbar">
       <Container fluid className="dbNavbarInner">
         <div className="dbNavbarLeft">
-          <Button
-            type="button"
-            variant="link"
-            className="dbIconButton dbMenuButton"
-            aria-label="Open menu"
-            title="Menu"
-          >
-            <i className="bi bi-list" aria-hidden="true" />
-          </Button>
-
           <Navbar.Brand className="dbBrand">
-            <span className="dbTitle">WellBench</span>
+            <span className="dbTitle">Drill<span className="dbTitleFrame">Frame</span></span>
             <span className="dbSubtitle">
-              Drilling Analysis System
+              DRILLING ANALYSIS SUITE
             </span>
           </Navbar.Brand>
         </div>
@@ -99,6 +95,7 @@ const AppNavbar = ({
           </Button>
 
           <Form.Select
+            aria-label="Saved BHA workspace"
             className="dbBhaSelect"
             value={currentBha?.id || ''}
             onChange={(event) => {
@@ -121,10 +118,19 @@ const AppNavbar = ({
             variant="link"
             className="dbIconButton"
             aria-label="Open settings"
+            aria-expanded={settingsOpen}
+            onClick={() => setSettingsOpen(open => !open)}
             title="Settings"
           >
             <i className="bi bi-gear" aria-hidden="true" />
           </Button>
+          {settingsOpen && <div role="group" aria-label="Workspace settings"
+            style={{ position: 'absolute', right: 12, top: '100%', zIndex: 10000, padding: '8px 12px', background: 'white', border: '1px solid #d8dee5', borderRadius: 4, whiteSpace: 'nowrap' }}>
+            {onDemoPresentationChange && <label style={{ display: 'block' }}><input type="checkbox" checked={demoPresentation}
+              onChange={event => onDemoPresentationChange(event.target.checked)} /> Demo Presentation View</label>}
+            <label><input type="checkbox" checked={developerPanels}
+              onChange={event => onDeveloperPanelsChange?.(event.target.checked)} /> Show developer panels</label>
+          </div>}
         </div>
       </Container>
     </Navbar>

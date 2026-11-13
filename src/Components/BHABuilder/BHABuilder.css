@@ -17,21 +17,23 @@
 .bhaWorkspace .bhaDpSwitch button[aria-pressed="true"] { background: #dce8f4; color: #1d466b; font-weight: 600; }
 .bhaWorkspace .bhaDpSwitch button:focus-visible { outline-offset: -2px; }
 .bhaWorkspace .bhaTableWrapper { overflow-x: auto; max-width: 100%; }
-#bhaCard .bhaWorkspace .bhaComponentTable { width: 670px; min-width: 670px; max-width: 670px; table-layout: fixed; }
+#bhaCard .bhaWorkspace .bhaComponentTable { width: 675px; min-width: 675px; max-width: 675px; table-layout: fixed; }
 #bhaCard .bhaWorkspace .bhaComponentTable tr > th,
 #bhaCard .bhaWorkspace .bhaComponentTable tr > td { width: auto; white-space: normal; overflow-wrap: anywhere; vertical-align: middle; padding: 2px !important; }
 .bhaWorkspace .bhaDragCol { width: 24px; }
 .bhaWorkspace .bhaNumberCol { width: 28px; }
 .bhaWorkspace .bhaTypeCol { width: 65px; }
-.bhaWorkspace .bhaToolCol { width: 245px; }
+.bhaWorkspace .bhaToolCol { width: 210px; }
 .bhaWorkspace .bhaDimensionCol { width: 60px; }
 .bhaWorkspace .bhaWeightCol { width: 70px; }
-.bhaWorkspace .bhaLengthCol { width: 90px; }
+.bhaWorkspace .bhaLengthCol { width: 68px; }
+.bhaWorkspace .bhaCumulativeCol { width: 62px; }
 .bhaWorkspace .bhaDeleteCol { width: 28px; }
 #bhaCard .bhaWorkspace .bhaComponentTable select,
 #bhaCard .bhaWorkspace .bhaComponentTable .numInput { width: 100%; max-width: 100%; min-width: 0; height: 28px; box-sizing: border-box; padding: 2px 3px; }
 #bhaCard .bhaWorkspace .bhaComponentTable .numInput { text-align: center; }
-#bhaCard .bhaWorkspace .bhaComponentTable .numInput[readonly] { background: #e9edf1; color: #35404b; border: 1px solid #c5cbd1; cursor: default; }
+#bhaCard .bhaWorkspace .bhaComponentTable .numInput[readonly]:not(.bhaCumulativeInput) { background: #e9edf1; color: #35404b; border: 1px solid #c5cbd1; cursor: default; }
+#bhaCard .bhaWorkspace .bhaComponentTable .bhaCumulativeInput[readonly] { user-select: text; }
 #bhaCard .bhaWorkspace .bhaComponentTable td:nth-child(4) select { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #bhaCard .bhaWorkspace .bhaComponentTable td:nth-child(8) select { display: block; margin-bottom: 3px; }
 #bhaCard .bhaWorkspace .bhaComponentTable td:nth-child(8) output { display: block; width: 100%; text-align: center; font-variant-numeric: tabular-nums; }
@@ -41,3 +43,26 @@
 #bhaCard .bhaWorkspace .bhaDragHandle,
 #bhaCard .bhaWorkspace .bhaDeleteButton { width: 20px; min-width: 20px; height: 28px; padding: 0; }
 .bhaWorkspace button:focus-visible { outline: 2px solid #276ac3; outline-offset: 1px; }
+.bhaWorkspace .bhaComponentTable .numInput[aria-invalid="true"] { box-shadow: inset 0 0 0 2px #a43715; }
+.bhaWorkspace .bhaValidationSummary { font-size: .8rem; color: #92351b; margin: 6px 0; }
+.bhaWorkspace .bhaValidationSummary p { margin: 2px 0; }
+.bhaWorkspace .bhaLibraryOverrideNotice { display: block; color: #775b16; font-size: .62rem; line-height: 1.15; }
+.bhaWorkspace .bhaEngineeringSummary { flex: 0 1 675px; width: min(675px, 100%); min-width: min(500px, 100%); max-width: 100%; margin: 0 0 2px 0; padding: 3px 5px; border: 1px solid #d9e0e6; border-radius: 4px; background: #fff; color: #334452; font-size: .68rem; line-height: 1.2; }
+.bhaWorkspace .bhaSummaryHeading { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 8px; padding: 1px 2px 3px; border: 0; background: transparent; color: #203c53; font-size: .75rem; font-weight: 600; text-align: left; }
+.bhaWorkspace .bhaSummaryHeading > span:first-child { display: inline-flex; align-items: center; gap: 6px; }
+.bhaWorkspace .bhaSummaryHeading i { width: 10px; font-size: .65rem; }
+.bhaWorkspace .bhaEngineeringSummaryGrid { display: block; }
+.bhaWorkspace .bhaEngineeringSummaryGrid[hidden] { display: none; }
+.bhaWorkspace .bhaSummaryTable { width: 100%; margin: 0; table-layout: fixed; border-collapse: collapse; font-size: .66rem; }
+.bhaWorkspace .bhaSummaryTable th, .bhaWorkspace .bhaSummaryTable td { padding: 2px 4px; border: 0; line-height: 1.15; vertical-align: middle; }
+.bhaWorkspace .bhaSummaryTable thead th { color: #62798b; font-size: .62rem; font-weight: 600; text-align: right; white-space: nowrap; }
+.bhaWorkspace .bhaSummaryTable thead th:first-child { width: 43%; text-align: left; }
+.bhaWorkspace .bhaSummaryTable tbody th { color: #334452; font-weight: 500; text-align: left; }
+.bhaWorkspace .bhaSummaryTable tbody td { color: #203c53; font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; white-space: nowrap; }
+.bhaWorkspace .bhaSummaryTable tbody th > span { display: inline; }
+.bhaWorkspace .bhaSummaryTable .bhaSummaryDash { color: #778693; font-weight: 400; }
+.bhaWorkspace .bhaSummaryValue { display: block; }
+.bhaWorkspace .bhaSummaryInfo { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 13px; height: 13px; padding: 0; border: 0; background: transparent; color: #62798b; font-size: .65rem; line-height: 1; }
+.bhaWorkspace .bhaSummaryInfo:hover, .bhaWorkspace .bhaSummaryInfo:focus-visible { color: #174d73; }
+@media (max-width: 980px) { .bhaWorkspace .bhaEngineeringSummary { flex-basis: 100%; width: 100%; min-width: 0; } }
+@media (max-width: 520px) { .bhaWorkspace .bhaEngineeringSummaryGrid { grid-template-columns: 1fr; gap: 5px; } }

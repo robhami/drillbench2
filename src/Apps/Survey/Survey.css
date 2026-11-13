@@ -1,4 +1,4 @@
-.surveyPanel { height: 100%; overflow: auto; padding: 8px; font-size: 13px; }
+.surveyPanel { height: 100%; overflow: auto; padding: 8px; font-size: 13px; box-sizing: border-box; container-type: inline-size; }
 .surveyPanel h5 { margin: 0 0 8px; }
 .surveyPanel p { margin: 6px 0; }
 .surveyNotice { background: #fff3cd; color: #534108; padding: 4px 8px; }
@@ -14,4 +14,31 @@
 .surveyTable th { position: sticky; top: 0; background: #eef2f5; color: #253647; }
 .surveyTable caption { caption-side: top; color: #253647; }
 .surveyPanel [role="alert"] { color: #8a1924; }
+.surveyTrajectoryControls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.surveyTrajectoryControls button { padding: 4px 9px; border: 1px solid #bdcbd7; background: white; border-radius: 4px; color: #334155; }
+.surveyTrajectoryControls label { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+.surveyTrajectoryControls input { width: 72px; padding: 3px; }
+.surveyTrajectoryControls > span, .surveyTrajectoryConvention { font-size: 11px; color: #667482; }
+.surveyTrajectoryGrid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.surveyTrajectoryView { min-width: 0; border: 1px solid #dce4eb; border-radius: 5px; overflow: hidden; background: white; }
+.surveyTrajectoryView h6 { margin: 0; padding: 6px 10px; font-size: 12px; font-weight: 600; color: #40576a; }
+.surveyTrajectoryEmpty { padding: 20px; min-height: 120px; display: grid; align-items: center; background: #f5f8fa; color: #596879; }
+.surveyStationReadout { padding: 7px 9px; margin: 8px 0; background: #f3f7fa; border: 1px solid #dce4eb; border-radius: 4px; font-size: 12px; }
+.surveyStationReadout label { display: flex; gap: 8px; align-items: center; }
+.surveyStationReadout select { max-width: 100%; }
+.surveyStationReadout dl { display: flex; flex-wrap: wrap; gap: 5px 20px; margin: 6px 0 0; }
+.surveyStationReadout dd { margin: 0; font-weight: 600; }
+.surveyStationReadout > span { display: block; margin-top: 4px; color: #667482; }
+.surveyInformation { margin-top: 10px; border-top: 1px solid #dce4eb; padding-top: 8px; }
+.surveyInformation h6 { font-size: 13px; font-weight: 600; }
+.wbFloatingWindow .wbFloatingContent:has(.surveyPanel) { overflow: hidden; }
+.wbFloatingWindow .wbFloatingContent > .wbDockPanel:has(> .surveyPanel) { overflow: hidden; min-height: 0; }
+@container (min-width: 900px) {
+  .surveyTrajectoryGrid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); grid-template-rows: 1fr 1fr; }
+  .surveyTrajectory-3d { grid-column: 1; grid-row: 1 / 3; }
+  .surveyTrajectory-vertical { grid-column: 2; grid-row: 1; }
+  .surveyTrajectory-plan { grid-column: 2; grid-row: 2; }
+}
+.surveyTrajectoryEnlarged .surveyTrajectoryGrid { display: block; }
+.surveyTrajectoryEnlarged .surveyTrajectory-vertical, .surveyTrajectoryEnlarged .surveyTrajectory-plan { display: none; }
 .surveyPanel details { margin-top: 8px; }

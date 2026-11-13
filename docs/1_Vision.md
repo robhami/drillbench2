@@ -1,4 +1,4 @@
-# WellBench Vision
+# DrillFrame Vision
 
 **Version:** 0.2  
 **Date:** 11 Aug 2026  
@@ -10,7 +10,7 @@
 
 To build the most intuitive and practical engineering workspace for drilling tools and Bottom Hole Assembly (BHA) design.
 
-WellBench combines proven engineering calculations, modern visualisation and professional reporting to help engineers, supervisors and managers make better decisions faster.
+DrillFrame combines proven engineering calculations, modern visualisation and professional reporting to help engineers, supervisors and managers make better decisions faster.
 
 The objective is not to replace large enterprise drilling software, but to provide a modern, affordable engineering platform for service companies and engineering teams.
 
@@ -18,7 +18,7 @@ The objective is not to replace large enterprise drilling software, but to provi
 
 # Target Market
 
-WellBench is primarily aimed at:
+DrillFrame is primarily aimed at:
 
 - Independent drilling tool companies
 - Fishing companies
@@ -47,7 +47,7 @@ These organisations often rely on spreadsheets, manual calculations and internal
 
 # Target Users
 
-WellBench is designed for engineers and operational personnel including:
+DrillFrame is designed for engineers and operational personnel including:
 
 - Applications Engineers
 - Drilling Engineers
@@ -64,7 +64,7 @@ The software should remain approachable for occasional users while providing suf
 
 # Product Philosophy
 
-WellBench should be:
+DrillFrame should be:
 
 - Engineering driven
 - Simple to learn
@@ -99,7 +99,7 @@ Every engineering module should answer a practical operational question.
 
 # Core Platform
 
-The WellBench platform will provide:
+The DrillFrame platform will provide:
 
 - Project management
 - BHA Builder
@@ -231,7 +231,7 @@ An engineer should be able to:
 - Produce professional customer-ready reports.
 - Reuse engineering data across multiple workflows.
 
-A manager should immediately recognise that WellBench improves engineering consistency, reduces manual effort and captures organisational knowledge.
+A manager should immediately recognise that DrillFrame improves engineering consistency, reduces manual effort and captures organisational knowledge.
 
 ---
 

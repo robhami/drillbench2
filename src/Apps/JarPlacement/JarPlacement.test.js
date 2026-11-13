@@ -14,11 +14,11 @@ const bha = {
 test('Jar Placement shows only compact performance, independent of shared drilling mode', () => {
   const setDrillingMode = jest.fn();
   const { rerender } = render(<JarPlacement bha={bha} drillingMode="slide" setDrillingMode={setDrillingMode} />);
-  expect(screen.getByRole('heading', { name: 'Jar Performance' })).toBeInTheDocument();
+  expect(screen.getByRole('region', { name: 'Primary stuck-point force versus time' })).toBeInTheDocument();
   expect(screen.queryByText('Jar Placement — Drilling')).not.toBeInTheDocument();
   expect(screen.queryByText('PRELIMINARY — NOT FOR OPERATIONAL USE')).not.toBeInTheDocument();
   expect(screen.getAllByText('Preliminary — Idealised Skeem Model (1979)')).toHaveLength(1);
-  expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Jar Up' })).toHaveAttribute('aria-selected', 'true');
   expect(screen.queryByText('Test Jar')).not.toBeInTheDocument();
   expect(screen.queryByText(/^Neutral point:|^Jar centre:|above neutral point|jar avoidance zone/)).not.toBeInTheDocument();
   expect(screen.queryByRole('img')).not.toBeInTheDocument();
@@ -35,5 +35,5 @@ test('Jar Placement shows only compact performance, independent of shared drilli
 test('details stay collapsed and no static-placement warnings leak into performance', () => {
   render(<JarPlacement bha={{ ...bha, wob: 1000 }} drillingMode="slide" />);
   expect(screen.queryByText(/^Neutral point:|Avoidance status/)).not.toBeInTheDocument();
-  expect(screen.getByText('Engineering details and applicability').closest('details')).not.toHaveAttribute('open');
+  expect(screen.getByText('Engineering Details').closest('details')).not.toHaveAttribute('open');
 });

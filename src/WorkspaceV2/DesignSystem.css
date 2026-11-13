@@ -1,0 +1,90 @@
+/* Shared workspace presentation only. Existing engineering and BHA controls retain their models. */
+:root {
+  --wb-font: 'Segoe UI', system-ui, sans-serif;
+  --wb-ink: #193344;
+  --wb-muted: #667482;
+  --wb-border: #CDD8DF;
+  --wb-surface: #fff;
+  --wb-canvas: #FFFFFF;
+  --wb-accent: #198C95;
+  --wb-action: #14747C; /* Darker teal for readable small text and white button labels. */
+  --wb-input: #F7F9FA;
+  --wb-titlebar: #E6EEF2;
+  --wb-warn: #775b20;
+  --wb-error: #9c3838;
+  --wb-gap: 12px;
+  --wb-radius: 6px;
+  --wb-toolbar-height: 72px;
+}
+.dbNavbar, .wb2 { font-family: var(--wb-font); color: var(--wb-ink); }
+.dbNavbar { position: relative; z-index: 1000; height: var(--wb-toolbar-height); padding: 0 20px; background: var(--wb-surface); box-shadow: none; border-bottom: 1px solid var(--wb-border); }
+/* Keep window z-order inside the workspace, below toolbar popovers. */
+.wb2 { isolation: isolate; }
+.dbNavbar .dbNavbarInner { gap: 24px; }
+.dbNavbar .dbNavbarLeft { flex: 0 0 auto; }
+.dbNavbar .dbTitle { font-size: 21px; letter-spacing: -.7px; color: #253444; }
+.dbNavbar .dbTitleFrame { color: var(--wb-accent); }
+.dbNavbar .dbSubtitle { font-size: 9px; letter-spacing: 1.2px; color: #526170; }
+.dbNavbar .dbToolbar { gap: 2px; min-width: 0; }
+.dbNavbar .dbActionButton { gap: 6px; padding: 0 8px !important; font-size: 12px; white-space: nowrap; height: 34px; }
+.dbNavbar .dbIconButton { height: 34px; min-width: 34px; }
+.dbNavbar .dbBhaSelect { order: -1; width: clamp(160px, 20vw, 280px); min-width: 0; height: 34px; margin-right: 14px; font-size: 12px; border-color: var(--wb-border); }
+.wb2 { height: calc(100vh - var(--wb-toolbar-height)); font-size: 13px; }
+.wb2 .wb2Sidebar { width: 224px; flex-basis: 224px; padding: 20px 12px; gap: 5px; background: var(--wb-surface); border-color: var(--wb-border); }
+.wb2 .wb2SidebarBrand { justify-content: flex-start; height: auto; margin: 0 10px 10px; padding: 0; border: 0; font-size: 10px; letter-spacing: 1.5px; color: var(--wb-muted); }
+.wb2 .wb2Sidebar button { display: flex; align-items: center; gap: 10px; padding: 10px; min-height: 42px; font-size: 12px; line-height: 1.4; text-align: left; overflow-wrap: normal; border: 0; border-radius: var(--wb-radius); color: var(--wb-muted); }
+.wb2 .wb2Sidebar button > i { flex: 0 0 17px; font-size: 15px; }
+.wb2 .wb2Sidebar button > span:not(.wb2OpenIndicator) { flex: 1; }
+.wb2 .wb2Sidebar button.open, .wb2 .wb2Sidebar button.selected { background: #EDF2F5; color: var(--wb-action); font-weight: 600; }
+.wb2 .wb2Sidebar button.selected { box-shadow: inset 2px 0 var(--wb-accent); }
+.wb2 .wb2OpenIndicator { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex: 0 0 5px; }
+.wb2 .wb2Sidebar .wb2Reset { margin-top: auto; font-size: 11px; }
+.wb2 .wb2Canvas { overflow: auto; background: var(--wb-canvas); }
+.wb2 .wb2Widget { border-color: var(--wb-border); border-radius: var(--wb-radius); box-shadow: 0 3px 14px #2534440b; }
+.wb2 .wb2WidgetHeader { background: var(--wb-titlebar); border-color: var(--wb-border); min-height: 38px; font-size: 12px; padding: 7px 8px 7px 12px; }
+.wb2 .wb2WidgetBody { height: calc(100% - 38px); padding: 14px; }
+.wb2 .wb2WidgetTitle { gap: 8px; }
+.wb2 .wb2WidgetTitle span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel,.engineeringStringSurveyCard) { font: 12px/1.5 var(--wb-font); color: var(--wb-ink); }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel) h5 { font-size: 15px; font-weight: 600; margin: 0 0 12px; }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel) h6 { font-size: 12px; font-weight: 600; margin: 12px 0 8px; }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel) p { margin: 8px 0; }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel) details { margin: 10px 0; border-top: 1px solid var(--wb-border); padding-top: 10px; }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel) summary { font-size: 12px; font-weight: 600; color: var(--wb-muted); cursor: pointer; }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel) label { font-size: 11px; color: var(--wb-muted); }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel) :is(input:not([type=checkbox]):not([type=file]),select) { min-height: 32px; border: 1px solid var(--wb-border); border-radius: 4px; padding: 5px 8px; color: var(--wb-ink); background: var(--wb-input); font: 12px var(--wb-font); }
+.wb2 :is(input[type=text],input[type=number],input:not([type]),select,textarea):not([readonly]):not(:disabled):not([aria-invalid=true]):not(.is-invalid) { background-color: var(--wb-input); color: var(--wb-ink); border-color: var(--wb-border); }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel) button { border: 1px solid var(--wb-border); border-radius: 4px; min-height: 32px; font: 600 12px var(--wb-font); padding: 6px 12px; }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration) button[type=submit] { background: var(--wb-action); color: white; border-color: var(--wb-action); }
+.wb2 :is(.jarForces,.jarClearance,.jarConfiguration,.jarPerformance,.surveyPanel) [role=alert] { color: var(--wb-error); background: #fcf1f0; border-left: 2px solid #c67f78; padding: 8px 10px; }
+.wb2 :is(.jarForcesNotice,.jarClearanceNotice,.jarConfigurationNotice) { color: var(--wb-warn); background: #faf7ee; border: 1px solid #eee6cf; border-radius: 4px; padding: 8px 10px; font-size: 11px; }
+.wb2 .wbResultState { background: #f2f6f8; border: 1px solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px; margin: 0 0 12px; }
+.wb2 .wbResultState strong { display: block; font-size: 13px; }
+.wb2 .wbResultState p { margin: 4px 0; color: var(--wb-muted); }
+.wb2 .jarForcesPrimaryLoad td { font-size: 22px; font-variant-numeric: tabular-nums; color: #315f73; }
+.wb2 .jarForcesPending { border-radius: var(--wb-radius); padding: 12px; }
+.wb2 .engineeringStringSurveyCard { gap: 4px; }
+.wb2 .wbCurrentNP { border: 1px solid var(--wb-border); border-radius: var(--wb-radius); padding: 12px; margin-bottom: 12px; }
+.wb2 .wbCurrentNP .engineeringStringSurveyCard { display: block; height: auto; overflow: visible; }
+.wb2 .wbCurrentNP .engineeringStringSummary { width: 100%; }
+.wb2 .wbCurrentNP .engineeringStringDisclaimer { margin-top: 8px; }
+:is(.dbNavbar,.wb2) :is(button,input,select,summary):focus-visible { outline: 2px solid var(--wb-accent); outline-offset: 2px; }
+@media(max-width: 1200px) {
+  :root { --wb-toolbar-height: 108px; }
+  .dbNavbar .dbNavbarInner { flex-wrap: wrap; gap: 4px; align-content: center; }
+  .dbNavbar .dbNavbarLeft { height: auto; }
+  .dbNavbar .dbToolbar { width: 100%; height: auto; flex-wrap: wrap; gap: 2px; }
+  .dbNavbar .dbBhaSelect { width: 180px; margin-right: auto; }
+}
+@media(max-width: 900px) {
+  .wb2 .wb2Sidebar { width: 184px; flex-basis: 184px; padding: 14px 8px; }
+  .wb2 .wb2Sidebar button { font-size: 11px; gap: 7px; padding: 9px 8px; }
+  .dbNavbar { padding: 0 12px; }
+  .dbNavbar .dbActionButton { padding: 0 5px !important; font-size: 11px; }
+}
+@media(max-width: 640px) {
+  :root { --wb-toolbar-height: 150px; }
+  .dbNavbar .dbToolbar { row-gap: 6px; }
+  .dbNavbar .dbBhaSelect { flex-basis: calc(100% - 40px); order: -2; }
+  .wb2 .wb2Sidebar { width: 158px; flex-basis: 158px; }
+}

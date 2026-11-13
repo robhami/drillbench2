@@ -1,6 +1,8 @@
 import { deployDrillstring } from './deployDrillstring';
 import { calcComponentPositions } from './calcComponentPositions';
 import { evaluateSurveyAtMd } from '../survey/surveyGeometry';
+import { validateSurveyCoverage } from '../survey/surveyCoverage';
+import { staticPropertyIssue } from './componentApplicability';
 
 const finite = v => (typeof v === 'number' || typeof v === 'string') && String(v).trim() !== '' && Number.isFinite(Number(v));
 const fail = (message, status = 'invalid-input') => ({ valid: false, status, errors: [message] });
@@ -14,6 +16,8 @@ const populated = row => row && ['category', 'toolName', 'selectedToolId', 'leng
 export function calcStringWeightSummary(input = {}) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return fail('Supply string weight inputs as an object.');
   const { bha, survey } = input;
+  const propertyIssue = staticPropertyIssue(bha);
+  if (propertyIssue) return fail(propertyIssue, 'unsupported-properties');
   if (!finite(input.bitMdFt) || Number(input.bitMdFt) < 0) return fail('Enter a nonnegative bit MD for the string weight summary.');
   const surface = input.surfaceMdFt === undefined ? 0 : input.surfaceMdFt;
   if (!finite(surface) || Number(surface) < 0) return fail('Enter a nonnegative surface reference MD.');
@@ -29,7 +33,8 @@ export function calcStringWeightSummary(input = {}) {
   const positions = calcComponentPositions({ ...deployment.bha, mudWeight: Number(input.mudWeightPpg) });
   if (!Number.isFinite(positions.totalLength) || Math.abs(positions.totalLength - (bitMd - surfaceMd)) > 1e-7) return fail('The complete deployed string must extend from surface reference to bit.', 'invalid-deployment');
   if (!survey?.valid || !survey.summary || !Array.isArray(survey.segments) || !survey.segments.length) return fail('A valid confirmed survey is required for frictionless hookload.', 'outside-survey');
-  if (surfaceMd < survey.summary.startMdFt || bitMd > survey.summary.endMdFt) return fail('Survey must cover the full deployed string; no extrapolation.', 'outside-survey');
+  const coverage = validateSurveyCoverage(survey, { startMdFt: surfaceMd, endMdFt: bitMd, calculations: ['string-weight projection', 'off-bottom hookloads'] });
+  if (!coverage.covered) return { ...fail(coverage.message, 'outside-survey'), coverage };
   const jar = positions.components.filter(c => String(c.category).toUpperCase() === 'JAR')[jarIndex];
   if (!jar) return fail('Selected jar is unavailable.');
   let air = 0, buoyed = 0, above = 0, below = 0, axial = 0;

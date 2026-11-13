@@ -74,7 +74,7 @@ test('blank hookloads, missing survey and incomplete coverage never produce a de
   first.unmount(); localStorage.removeItem(SURVEY_STORAGE_KEY);
   mount(<JarHarness bha={bha} />);
   change('Surface hookload / axial support (klbf)', '100'); calculate();
-  expect(screen.getByRole('alert')).toHaveTextContent('Import a directional survey');
+  expect(screen.getByRole('alert')).toHaveTextContent('Associate a survey');
 });
 
 test('selected jar controls physical section and deployment uses actual DP length', () => {
@@ -107,17 +107,24 @@ test('BHA and survey remain unchanged, source/BHA changes invalidate results', (
 });
 
 
-const row = (table, label) => within(screen.getByRole('table', { name: table })).getByText(label).closest('tr');
+const supportingTable = name => {
+  if (['String Weight', 'Operating Hookloads'].includes(name)) {
+    const summary = screen.getByText('String Weight & Operating Hookloads');
+    if (!summary.closest('details').open) fireEvent.click(summary);
+  }
+  return screen.getByRole('table', { name });
+};
+const row = (table, label) => within(supportingTable(table)).getByText(label).closest('tr');
 const cells = (table, label) => [...row(table, label).querySelectorAll('td')];
 const values = (table, label) => cells(table, label).map(n => n.textContent);
 const rotatingBha = { ...bha, rpm: 150, rop: 60, rows: bha.rows.map(r => ({ ...r, od: 6.75 })) };
 
 test('four-column tables group weights and operating predictions, with two-column prominent jar results', () => {
   mount(<JarHarness bha={rotatingBha} />);
-  const weights = screen.getByRole('table', { name: 'String Weight' });
+  const weights = supportingTable('String Weight');
   expect(within(weights).getAllByRole('rowheader').map(n => n.querySelector('span').textContent)).toEqual(['Total Deployed String', 'Total BHA', 'Above Jar Centre', 'Below Jar Centre', 'Fixed BHA Above Jar']);
   expect(within(weights).getAllByRole('columnheader').map(n => n.textContent)).toEqual(['Component', 'Air Weight(klbf)', 'Buoyed Weight(klbf)', 'Inclination Corrected(klbf)']);
-  const operations = screen.getByRole('table', { name: 'Operating Hookloads' });
+  const operations = supportingTable('Operating Hookloads');
   expect(within(operations).getAllByRole('rowheader').map(n => n.querySelector('span').textContent)).toEqual(['Pickup', 'Rotating Off Bottom', 'Slack-Off']);
   expect(values('Operating Hookloads', 'Rotating Off Bottom')).toEqual(['85.6', '0.0', 'Rotation only']);
   expect(screen.queryByRole('region', { name: 'Well Conditions' })).not.toBeInTheDocument();
@@ -128,7 +135,7 @@ test('four-column tables group weights and operating predictions, with two-colum
   expect(row('Jar Force Results', 'Jar-centre axial load')).toHaveClass('jarForcesPrimaryLoad');
   expect(values('Jar Force Results', 'Jar-centre axial load')[0]).toContain('tension');
   for (const table of screen.getAllByRole('table')) {
-    const columns = ['Jar Force Results', 'Buckling summary'].includes(table.getAttribute('aria-label')) ? 2 : 4;
+    const columns = ['Jar Force Results', 'Buckling summary', 'Manufacturer Operating Status'].includes(table.getAttribute('aria-label')) ? 2 : 4;
     for (const tr of within(table).getAllByRole('row')) expect(tr.children).toHaveLength(columns);
     for (const info of table.querySelectorAll('.jarForcesInfo')) {
       expect(info).toHaveAttribute('tabindex', '0'); expect(info.getAttribute('title')).toBeTruthy();
@@ -140,7 +147,7 @@ test('shared analysis depth is read-only, separate from Auto DP reference, and i
   const { rerender } = render(<JarHarness bha={rotatingBha} />);
   expect(screen.queryByLabelText('Bit Depth (ft MD)')).not.toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Calculate required hookload' })).toBeDisabled();
-  expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('Required in Analysis Inputs');
+  expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('Required in Parameter Entry');
   rerender(<JarHarness bha={rotatingBha} analysisBitMdFt={1010} />);
   expect(screen.getByText(/Analysis bit MD:/)).toHaveTextContent('1,010.0 ft');
   expect(screen.queryByLabelText('Selected jar')).not.toBeInTheDocument();
@@ -169,16 +176,17 @@ test('shared mud, friction and RPM synchronize immediately without resetting loc
   expect(screen.queryByText('Jar-centre axial load')).not.toBeInTheDocument();
   expect(values('String Weight', 'Total Deployed String')).toEqual(['101.0', '70.2', '35.1']);
   expect(Number(values('Operating Hookloads', 'Pickup')[0])).toBeGreaterThan(pickup);
-  expect(screen.getByText(/Shared Analysis Inputs:/)).toHaveTextContent('mud 20 ppg, friction 0.5, RPM 300');
+  expect(screen.getByText(/Shared Parameter Entry:/)).toHaveTextContent('mud 20 ppg, friction 0.5, RPM 300');
   rerender(<JarHarness bha={{ ...rotatingBha, rpm: 0 }} />);
-  expect(values('Operating Hookloads', 'Rotating Off Bottom')[0]).toContain('positive RPM');
+  expect(values('Operating Hookloads', 'Rotating Off Bottom')[0]).toBe('Unavailable');
+  expect(screen.getByText(/Supporting calculations unavailable:/)).toHaveTextContent('positive RPM');
   expect(values('Operating Hookloads', 'Pickup')[1]).toContain('Unavailable');
 });
 
 test.each(['mudWeight', 'frictionCoefficient', 'rpm'])('missing shared %s is explicit and never replaced by stale local values', field => {
   const { rerender } = mount(<JarHarness bha={rotatingBha} />);
   rerender(<JarHarness bha={{ ...rotatingBha, [field]: undefined }} />);
-  expect(screen.getByText(/Shared Analysis Inputs:/)).toHaveTextContent('Unavailable');
+  expect(screen.getByText(/Shared Parameter Entry:/)).toHaveTextContent('Unavailable');
   if (field === 'mudWeight') expect(values('String Weight', 'Total Deployed String')).toEqual(['Unavailable', 'Unavailable', 'Unavailable']);
   else expect(values('String Weight', 'Total Deployed String')[0]).toBe('101.0');
   const mode = field === 'rpm' ? 'Rotating Off Bottom' : 'Pickup';
@@ -281,9 +289,9 @@ test('inverse load remains available without RPM while the rotating comparison i
 
 test('table definitions distinguish inclination correction, hookload, drag and pure rotation', () => {
   mount(<JarHarness bha={rotatingBha} />);
-  const weights = screen.getByRole('table', { name: 'String Weight' });
+  const weights = supportingTable('String Weight');
   expect(within(weights).getByText('Inclination Corrected')).toHaveAttribute('title', 'Buoyed weight corrected for well inclination, excluding frictional drag. Represents the axial component of weight along the wellbore.');
-  const operations = screen.getByRole('table', { name: 'Operating Hookloads' });
+  const operations = supportingTable('Operating Hookloads');
   expect(within(operations).getByText('Hookload')).toHaveAttribute('title', 'Predicted surface load accounting for buoyancy, well inclination and frictional resistance under the selected operating condition.');
   expect(within(operations).getByText('Drag')).toHaveAttribute('title', 'Additional axial resistance generated by friction acting at wellbore contact points. Calculated relative to rotating off-bottom hookload.');
   expect(within(operations).getByText('Rotating Off Bottom').closest('th').querySelector('[title]')).toHaveAttribute('title', 'Rotation at fixed depth with zero axial movement. The current model assumes zero axial frictional drag during pure rotation.');

@@ -1,4 +1,16 @@
-# Getting Started with Create React App
+# DrillFrame
+
+DRILLING ENGINEERING SOFTWARE
+
+DrillFrame provides BHA, survey, axial-load, hookload and neutral-point analysis. **JarFrame** groups the existing **Jar Position Analysis** (study modes A/B/C) and **Impact & Impulse** (Jar Up / Jar Down) modules.
+
+**PRELIMINARY — NOT FOR OPERATIONAL USE.** Existing research applicability restrictions and explicit dynamic initial-condition confirmation remain in force.
+
+Historical validation reports refer to **WellBench**, the application now named DrillFrame. Their original evidence and filenames are preserved. Internal `wellbench*` / `drillbench*` storage keys, events, project directory and module identifiers remain unchanged to preserve saved BHAs, surveys and layouts; no data migration is required.
+
+See [the branding and compatibility audit](docs/ValidationStudies/DrillFrameJarFrameRebrandingStage5C15.md).
+
+## Development
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

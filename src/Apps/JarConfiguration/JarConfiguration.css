@@ -27,3 +27,36 @@
 .jarConfigurationMaxima strong { font-size: 14px; }
 .jarConfigurationMaxima span { display: block; font-size: 12px; }
 .jarConfiguration details { margin-top: 8px; }
+.jarPositionTabs { display: flex; gap: 4px; border-bottom: 1px solid #d5dee5; margin-bottom: 8px; }
+.jarPositionTabs button { padding: 6px 12px; background: white; border: 1px solid #d5dee5; border-radius: 4px 4px 0 0; }
+.jarPositionTabs button[aria-selected="true"] { background: #edf6fb; color: #12587b; border-bottom-color: #12587b; }
+.jarPositionMetric { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+.jarPositionMetric select { padding: 5px; max-width: 100%; }
+.jarPositionSummary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.jarPositionComparison { background: #eef5f8; padding: 6px 8px; }
+.jarPositionState { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; }
+.jarMatrix { container-type: inline-size; }
+.matrixStudy, .matrixSelected > label { display: flex; flex-direction: column; gap: 4px; }
+.matrixStudy select { width: 100%; }
+.matrixRanges input { width: 100%; }
+.matrixRanges .matrixPolicy { grid-column: span 2; }
+.matrixLegend { display: flex; flex-wrap: wrap; gap: 3px 10px; font-size: 11px; line-height: 1.4; margin: 4px 0; }
+.matrixActions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.matrixConstraint, .matrixStatus, .matrixQualification, .matrixCounts { font-size: 11px; }
+.matrixWorkspace, .matrixOverview, .matrixSelected { min-width: 0; }
+.matrixResults { grid-template-columns: repeat(2, minmax(0, 1fr)); font-size: 12px; }
+.matrixSelected { border-top: 1px solid #d5dee5; padding-top: 10px; margin-top: 10px; }
+.matrixSelected select { max-width: 100%; }
+.matrixFeasibility { background: #f1f5f9; padding: 5px 7px; font-size: 11px; }
+.matrixEmpty { min-height: 280px; display: grid; place-items: center; color: #64748b; padding: 12px; text-align: center; }
+.matrixAdvanced > label { display: flex; align-items: center; gap: 8px; }
+.matrixAdvanced .jarConfiguration { height: auto; overflow: visible; }
+@container (max-width: 340px) { .matrixRanges .matrixPolicy { grid-column: auto; } }
+@container (min-width: 900px) {
+  .matrixWorkspace { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; }
+  .matrixSelected { border-top: 0; border-left: 1px solid #d5dee5; margin-top: 0; padding: 0 0 0 12px; }
+}
+.upperCollarWorkspace { display: block !important; }
+.upperCollarWorkspace .matrixSelected { border-left: 0; border-top: 1px solid #dbe3eb; padding: 12px 0 0; margin-top: 12px; }
+.upperCollarHistory, .upperCollarAdvancedAnalysis { margin: 10px 0; }
+.jarMatrix h3 { margin: 8px 0; font-size: 16px; }

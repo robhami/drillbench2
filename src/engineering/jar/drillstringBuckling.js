@@ -79,7 +79,12 @@ export function calcJarDownBuckling(input = {}) {
     const segment = input.survey.segments.find(s => midpoint >= s.fromMdFt && midpoint <= s.toMdFt);
     const inclinationDeg = evaluateSurveyAtMd(input.survey, mdFt).inclinationDeg;
     const curvatureRadPerFt = segment.doglegRad / segment.lengthFt;
-    const threshold = calcBucklingThresholds({ odIn: c.od, idIn: c.idSize,
+    const definition = c.componentDefinition;
+    const unsupportedSection = definition && (definition.geometry?.kind === 'segmented' || definition.sectionModel === 'complex' || definition.effectiveProperties ||
+      String(definition.material?.youngsModulusPsi ?? '').trim() !== '');
+    const threshold = unsupportedSection ? { applicability: 'unavailable', missingInputs: ['validatedStructuralSection'],
+      warnings: [`${c.toolName || c.category}: segmented/complex tool stiffness or explicit material properties are not integrated by the annular buckling model. Blade OD is not a solid annulus.`],
+      sinusoidalThresholdLbf: null, helicalThresholdLbf: null, momentOfInertiaIn4: null, bendingStiffnessLbfIn2: null, radialClearanceIn: null } : calcBucklingThresholds({ odIn: c.od, idIn: c.idSize,
       youngsModulusPsi: c.youngsModulusPsi !== undefined ? c.youngsModulusPsi : input.youngsModulusPsi,
       wellboreDiameterIn: input.wellboreDiameterIn !== undefined ? input.wellboreDiameterIn : input.bha.holeSize,
       componentLengthFt: c.length, buoyedWeightPerFt: c.weightPerFoot * staticLoads.buoyancyFactor,

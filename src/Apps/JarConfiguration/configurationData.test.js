@@ -47,6 +47,22 @@ test('fixed-total trace has correct units, hover values, maxima and actual marke
   expect(plot.data.find(t => t.name === 'Maximum sampled value').y).toEqual([result.maxima.impulse.impulseLbfS]);
   expect(configurationPlot(result, 'impulse', { ...result.samples[0], totalCollarLengthFt: 300 }).data.some(t => t.name === 'Actual BHA')).toBe(false);
 });
+
+test('default graph keeps BHA centre coordinates while force and impulse maxima move independently', () => {
+  const result = sweep('fixed-total'), before = JSON.stringify(result);
+  const force = configurationPlot(result, 'peakForce', result.samples[0], 1, geometry.jarHalfLengthFt);
+  const impulse = configurationPlot(result, 'impulse', result.samples[0], 1, geometry.jarHalfLengthFt);
+  expect(force.data[0].x).toEqual([65, 125, 185]);
+  expect(force.data[0].y).toEqual(result.samples.map(s => s.peakStuckPointForceKlbf));
+  expect(force.data.find(t => t.name === 'Maximum sampled value').x).toEqual([185]);
+  expect(impulse.data.find(t => t.name === 'Maximum sampled value').x).toEqual([65]);
+  for (const plot of [force, impulse]) {
+    expect(plot.data.find(t => t.name === 'Actual BHA').x).toEqual([65]);
+    expect(plot.layout.xaxis.title.text).toBe('Jar centre position (ft above bit)');
+  }
+  expect(force.layout.uirevision).not.toBe(impulse.layout.uirevision);
+  expect(JSON.stringify(result)).toBe(before);
+});
 test('2D invalid samples produce null gaps, not zero or connected segments', () => {
   const result = calcSkeemConfigurationSweep({ ...configurationRequest(geometry, fields).request, l1: { minFt: 180, maxFt: 300, samples: 3 } });
   const plot = configurationPlot(result, 'impactForce');

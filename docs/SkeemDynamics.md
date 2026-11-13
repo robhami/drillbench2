@@ -1,7 +1,9 @@
+> Product naming: DrillFrame is the application; JarFrame contains Jar Position Analysis and Impact & Impulse. Legacy WellBench wording below describes the same application. Engineering evidence and equations are unchanged.
+
 # Skeem jar dynamics - Stages 1 and 2
 
-**PRELIMINARY — NOT FOR OPERATIONAL USE.** This standalone calculation has no
-UI integration. Stage 1 implements pre-impact Equations 1-3; Stage 2 adds
+**PRELIMINARY — NOT FOR OPERATIONAL USE.** These standalone functions are used
+by the Jar Performance adapter. Stage 1 implements pre-impact Equations 1-3; Stage 2 adds
 primary impact force and impulse. Fish movement and optimum placement are
 not calculated.
 
@@ -240,8 +242,10 @@ its complete result as `preImpact`. It adds three required inputs:
 
 The paper's tensile impact-wave magnitudes are positive. They are not the
 compression-positive axial loads used elsewhere in WellBench. Each history
-interval includes `compressionPositiveForceLbf = -tensileForceLbf`; no
-static load calculation or UI consumes or changes these results.
+interval includes `compressionPositiveForceLbf = -tensileForceLbf`; static
+load calculations do not consume or change these results. Stage 5C.6 plots the
+existing positive-tensile primary history with explicit location/sign labels;
+see [audit](ValidationStudies/JarImpactStage5C6Audit.md).
 
 W is supplied explicitly, not inferred from geometry or converted using g.
 The paper describes the wave picking up the released lower collars and

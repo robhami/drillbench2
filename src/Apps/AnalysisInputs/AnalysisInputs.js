@@ -2,147 +2,66 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import { definedStringDepth } from '../../engineering/bha/definedStringDepth';
+import { wobAnalysisInputs, validateWobAnalysis } from '../../engineering/bha/wobAnalysisInputs';
+import { inferTrajectoryMode, resolveActiveSurvey, surveyGeometry, trajectorySelectionPatch } from '../Survey/surveyAssociation';
 
-const JarAnalysisInputs = ({ bha, updateBha, drillingMode = 'slide', setDrillingMode, analysisBitMdFt = '', setAnalysisBitMdFt }) => {
-  const definedDepth = definedStringDepth(bha);
-  return (
-    <Container fluid className="px-0">
-      <Card className="analysisInputsCard">
-
-
-        <Card.Body>
-          <div className="analysisInputGrid">
-            <Form.Group controlId="analysisBhaName" className="analysisNameField">
-              <Form.Label>BHA Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={bha.name}
-                placeholder='8½" Production BHA'
-                onChange={(event) =>
-                  updateBha({
-                    name: event.target.value
-                  })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group controlId="analysisBitMd">
-              <Form.Label>Bit Depth (ft MD)</Form.Label>
-              <Form.Control type="number" min="0" step="any" value={analysisBitMdFt}
-                readOnly={definedDepth.active} disabled={!setAnalysisBitMdFt} onChange={event => setAnalysisBitMdFt(event.target.value)}
-                aria-describedby="analysisBitMdHelp" />
-              <small id="analysisBitMdHelp">{definedDepth.active ? 'Derived from Defined string length in BHA Data Entry.' : 'Jar Forces analysis depth; separate from Auto DP reference MD.'}</small>
-            </Form.Group>
-
-            <Form.Group controlId="analysisHoleSize">
-              <Form.Label title="Shared with Bit Size in BHA Data Entry; uniform nominal open-hole diameter.">Hole Size</Form.Label>
-
-              <div className="bhaInputWithUnit">
-                <Form.Control
-                  type="text"
-                  inputMode="decimal"
-                  value={bha.holeSize ?? ''}
-                  placeholder="Not Configured"
-                  readOnly
-                  title="Edit Bit Size in BHA Data Entry."
-                />
-
-                <span>in</span>
-              </div>
-            </Form.Group>
-
-            <Form.Group controlId="analysisMudWeight">
-              <Form.Label>Mud Weight</Form.Label>
-
-              <div className="bhaInputWithUnit">
-                <Form.Control
-                  type="text"
-                  inputMode="decimal"
-                  value={bha.mudWeight}
-                  placeholder="12.0"
-                  onChange={(event) =>
-                    updateBha({
-                      mudWeight: event.target.value
-                    })
-                  }
-                />
-
-                <span>ppg</span>
-              </div>
-            </Form.Group>
-
-            <Form.Group controlId="analysisInclination">
-              <Form.Label>Inclination (°)</Form.Label>
-              <div className="bhaInputWithUnit">
-                <Form.Control type="number" min="0" max="90" step="0.1"
-                  value={bha.inclination ?? 0}
-                  onChange={(event) => updateBha({ inclination: event.target.value })} />
-                <span>°</span>
-              </div>
-            </Form.Group>
-            <Form.Group controlId="analysisFriction">
-              <Form.Label>Friction coefficient</Form.Label>
-              <div className="bhaInputWithUnit">
-                <Form.Control type="number" min="0" max="1" step="0.05"
-                  value={bha.frictionCoefficient ?? 0.25}
-                  onChange={(event) => updateBha({ frictionCoefficient: event.target.value })} />
-                <span>μ</span>
-              </div>
-            </Form.Group>
-            <Form.Group controlId="analysisRpm">
-              <Form.Label>RPM</Form.Label>
-              <div className="bhaInputWithUnit">
-                <Form.Control type="number" min="0" step="1"
-                  value={bha.rpm ?? ''}
-                  placeholder="120"
-                  onChange={(event) => updateBha({ rpm: event.target.value })} />
-                <span>rpm</span>
-              </div>
-            </Form.Group>
-            <Form.Group controlId="analysisRop" className="analysisWideNumber">
-              <Form.Label>ROP</Form.Label>
-              <div className="bhaInputWithUnit">
-                <Form.Control type="number" min="0" step="1"
-                  value={bha.rop ?? ''}
-                  placeholder="60"
-                  onChange={(event) => updateBha({ rop: event.target.value })} />
-                <span>ft/hr</span>
-              </div>
-            </Form.Group>
-            <Form.Group controlId="analysisWob" className="analysisWideNumber">
-              <Form.Label>WOB</Form.Label>
-
-              <div className="bhaInputWithUnit">
-                <Form.Control
-                  type="text"
-                  inputMode="decimal"
-                  value={bha.wob}
-                  placeholder="35"
-                  onChange={(event) =>
-                    updateBha({
-                      wob: event.target.value
-                    })
-                  }
-                />
-
-                <span>klbf</span>
-              </div>
-            </Form.Group>
-            <Form.Group controlId="analysisDrillingMode">
-              <Form.Label>Drilling Mode</Form.Label>
-              <Form.Select value={drillingMode} disabled={!setDrillingMode}
-                onChange={event => setDrillingMode(event.target.value)}>
-                <option value="slide">Slide</option>
-                <option value="rotate">Rotate</option>
-                <option value="reference">Reference</option>
-              </Form.Select>
-            </Form.Group>
+const AnalysisInputs = ({ bha = {}, updateBha }) => {
+  const selectedTrajectoryMode = bha.trajectoryMode;
+  const surveyState = bha.surveyState;
+  const trajectoryMode = React.useMemo(() => inferTrajectoryMode({ trajectoryMode: selectedTrajectoryMode, surveyState }), [selectedTrajectoryMode, surveyState]);
+  const directionalSurveyValid = React.useMemo(() => {
+    const source = resolveActiveSurvey({ trajectoryMode: 'directional', surveyState });
+    return Boolean(surveyGeometry(source)?.valid);
+  }, [surveyState]);
+  const wobRange = wobAnalysisInputs(bha);
+  const wobError = validateWobAnalysis(wobRange);
+  const updateWobRange = (key, value) => updateBha?.({
+    wobAnalysis: { ...bha.wobAnalysis, ...wobRange, [key]: value, source: 'user' }
+  });
+  return <Container fluid className="px-0">
+    <Card className="analysisInputsCard">
+      <Card.Body>
+        <div className="parameterTrajectoryRow">
+          <span className="parameterTrajectoryLabel">Well Trajectory:</span>
+          <div className="parameterTrajectorySelector" role="group" aria-label="Well Trajectory">
+            {['vertical', 'directional'].map(mode => <button key={mode} type="button" aria-pressed={trajectoryMode === mode}
+              disabled={!updateBha} onClick={() => updateBha?.(trajectorySelectionPatch(mode))}>
+              {mode === 'vertical' ? 'Vertical' : 'Directional'}
+            </button>)}
           </div>
-        </Card.Body>
-      </Card>
-    </Container>
-  );
+          {trajectoryMode === 'directional' && !directionalSurveyValid && <span className="parameterTrajectoryRequired" role="status">Survey required</span>}
+        </div>
+        <div className="analysisInputGrid parameterEntryGrid">
+          <Form.Group controlId="analysisMudWeight">
+            <Form.Label>Mud Weight (ppg)</Form.Label>
+            <Form.Control type="number" min="0" step="any" value={bha.mudWeight ?? ''}
+              onChange={event => updateBha?.({ mudWeight: event.target.value })} />
+          </Form.Group>
+          <Form.Group controlId="analysisLowWob">
+            <Form.Label>Low WOB (klbf)</Form.Label>
+            <Form.Control type="number" min="0" step="any" value={wobRange.minWobKlbf}
+              onChange={event => updateWobRange('minWobKlbf', event.target.value)} />
+          </Form.Group>
+          <Form.Group controlId="analysisHighWob">
+            <Form.Label>High WOB (klbf)</Form.Label>
+            <Form.Control type="number" min="0" step="any" value={wobRange.maxWobKlbf}
+              onChange={event => updateWobRange('maxWobKlbf', event.target.value)} />
+          </Form.Group>
+          <Form.Group controlId="analysisRpm">
+            <Form.Label>RPM</Form.Label>
+            <Form.Control type="number" min="0" step="1" value={bha.rpm ?? ''}
+              onChange={event => updateBha?.({ rpm: event.target.value })} />
+          </Form.Group>
+          <Form.Group controlId="analysisRop">
+            <Form.Label>ROP (ft/hr)</Form.Label>
+            <Form.Control type="number" min="0" step="1" value={bha.rop ?? ''}
+              onChange={event => updateBha?.({ rop: event.target.value })} />
+          </Form.Group>
+        </div>
+        {wobError && <p className="parameterEntryError" role="alert">{wobError}</p>}
+      </Card.Body>
+    </Card>
+  </Container>;
 };
 
-export default JarAnalysisInputs;
+export default AnalysisInputs;

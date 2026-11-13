@@ -1,83 +1,193 @@
-import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
-import { SURVEY_STORAGE_KEY, SURVEY_CHANGED_EVENT } from '../Survey/Survey';
+import React, { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { useActiveSurvey } from '../Survey/surveyAssociation';
 import { calcJarClearanceAcrossRun } from '../../engineering/jar/jarClearanceAcrossRun';
 import { importedGeometry, clearanceBounds, clearanceRequest, clearanceSummary, clearancePlot, selectedClearance, crossingDepthDescription, avoidanceDepthIntervals, comparisonClearances, comparisonPlot, sampledExposure, compressionDepthIntervals } from './clearanceData';
 import './JarClearance.css';
+import { curveKey, curveLabel, neutralPointChart } from './neutralPointChart';
 import WobOperatingRanges from './WobOperatingRanges';
+import CurrentDrillingSummary from './CurrentDrillingSummary';
+import { analysisDepth } from '../../engineering/bha/analysisDepth';
+import { wobAnalysisInputs, validateWobAnalysis } from '../../engineering/bha/wobAnalysisInputs';
+import { npInputContext, captureNpRequest, buildNpDiagnostics, downloadNpDiagnostics } from './npDiagnostics';
 
 const Plot = lazy(() => import('../JarConfiguration/ConfigurationPlot'));
-const readSource = () => { try { return JSON.parse(localStorage.getItem(SURVEY_STORAGE_KEY)); } catch { return null; } };
 const fmt = (n, digits = 3) => n === null || n === undefined ? 'Unavailable' : Number(n).toLocaleString(undefined, { maximumFractionDigits: digits });
 const text = value => value === undefined || value === null ? '' : String(value);
 
-export default function JarClearance({ bha }) {
-  const [source, setSource] = useState(readSource);
-  useEffect(() => {
-    const changed = event => setSource(event.detail);
-    const stored = event => { if (event.key === SURVEY_STORAGE_KEY || event.key === null) setSource(readSource()); };
-    window.addEventListener(SURVEY_CHANGED_EVENT, changed); window.addEventListener('storage', stored);
-    return () => { window.removeEventListener(SURVEY_CHANGED_EVENT, changed); window.removeEventListener('storage', stored); };
-  }, []);
+export default function JarClearance({ bha, updateBha, drillingMode = 'slide', analysisBitMdFt, surfaceReferenceMdFt = 0, surveyCoverage }) {
+  const [hiddenCurves, setHiddenCurves] = useState({});
+  useEffect(() => { setHiddenCurves({}); }, [bha?.id]);
+  const source = useActiveSurvey(bha);
+  const trajectoryDescription = source?.kind === 'generated-vertical'
+    ? 'Generated vertical fallback (0° inclination; not a measured survey).'
+    : source?.originalCsv ? `Associated survey: ${source.filename || source.origin || 'unnamed survey'}.`
+      : 'No confirmed survey or explicit vertical fallback is available.';
   const survey = useMemo(() => importedGeometry({ originalCsv: source?.originalCsv, confirmed: source?.confirmed }), [source?.originalCsv, source?.confirmed]);
-  const initialBounds = useMemo(() => clearanceBounds(bha, survey), [bha, survey]);
-  const [fields, setFields] = useState(() => ({ surface: '0', start: text(initialBounds?.covered ? initialBounds.start : ''), end: text(initialBounds?.covered ? initialBounds.end : ''), increment: '100', minWob: text(bha?.wob), maxWob: text(bha?.wob), samples: '5', modes: 'slide', friction: text(bha?.frictionCoefficient), avoidance: text(initialBounds?.defaultAvoidance), mud: text(bha?.mudWeight), rpm: text(bha?.rpm), rop: text(bha?.rop) }));
+  const initialBounds = useMemo(() => clearanceBounds(bha, survey, surfaceReferenceMdFt), [bha, survey, surfaceReferenceMdFt]);
+  const [localSettings, setLocalSettings] = useState({});
+  const settings = bha?.neutralPointAnalysis || localSettings;
+  const sharedWob = wobAnalysisInputs(bha), wobError = validateWobAnalysis(sharedWob);
+  const derivedDepth = analysisDepth(bha);
+  const bitDepth = analysisBitMdFt === undefined ? (derivedDepth.valid ? derivedDepth.bitMdFt : '') : analysisBitMdFt;
+  const fields = { start: text(initialBounds?.covered ? initialBounds.start : ''), end: text(bitDepth), increment: '100',
+    modes: 'both', avoidance: text(initialBounds?.defaultAvoidance), ...settings,
+    surface: text(surfaceReferenceMdFt), minWob: text(sharedWob.minWobKlbf), maxWob: text(sharedWob.maxWobKlbf), samples: text(sharedWob.samples),
+    friction: text(bha?.frictionCoefficient) + (text(settings.friction).trim() ? `,${settings.friction}` : ''), mud: text(bha?.mudWeight), rpm: text(bha?.rpm), rop: text(bha?.rop) };
   const bounds = useMemo(() => clearanceBounds(bha, survey, fields.surface), [bha, survey, fields.surface]);
-  const [view, setView] = useState(null), [friction, setFriction] = useState('');
-  const compare = view === null ? Number(fields.minWob) !== Number(fields.maxWob) : view === 'compare';
-  const [execution, setExecution] = useState(null), [error, setError] = useState(null);
+  const [friction, setFriction] = useState('');
+  const compare = settings.view !== 'single';
+  const [savedExecution, setExecution] = useState(null), [error, setError] = useState(null), [calculating, setCalculating] = useState(false);
+  const generation = useRef(0), revision = useRef(0), activeWorker = useRef(null), pending = useRef([]);
   const [depth, setDepth] = useState(''), [scenarioIndex, setScenarioIndex] = useState('0');
   const [jarIndex, setJarIndex] = useState('0');
-  useEffect(() => {
-    setExecution(null); setError(null);
-    if (initialBounds?.covered) setFields(f => ({ ...f, start: f.start || text(initialBounds.start), end: f.end || text(initialBounds.end), avoidance: f.avoidance || text(initialBounds.defaultAvoidance) }));
-  }, [bha, survey, initialBounds]);
-  const update = (key, value) => { setFields(f => ({ ...f, [key]: value })); setError(null); };
-  const prepared = useMemo(() => clearanceRequest(bha, survey, fields, compare), [bha, survey, fields, compare]);
-  const run = event => {
-    event.preventDefault();
-    if (!prepared.valid) { setError(prepared.error); return; }
-    const result = calcJarClearanceAcrossRun(prepared.request);
-    if (!result.valid) { setError(result.errors.join(' ')); return; }
-    setExecution({ result, request: prepared.request, fields: { ...fields }, compare, revision: (execution?.revision || 0) + 1 });
-    setFriction(previous => previous || String(result.frictionCoefficients[0])); setDepth(String(result.depthsFt[0])); setScenarioIndex('0'); setJarIndex('0'); setError(null);
+  const diagnosticRun = useRef(null);
+  const [exportStatus, setExportStatus] = useState('');
+  useEffect(() => { setFriction(text(bha?.frictionCoefficient)); }, [bha?.frictionCoefficient]);
+  const update = (key, value) => {
+    const next = { ...settings, [key]: value };
+    if (updateBha) updateBha({ neutralPointAnalysis: next }); else setLocalSettings(next);
   };
+  const basePrepared = clearanceRequest(bha, survey, fields, compare);
+  const prepared = wobError ? { valid: false, error: wobError } : String(bitDepth).trim() === '' || !Number.isFinite(Number(bitDepth)) || Number(bitDepth) <= 0
+    ? { valid: false, error: 'Enter a valid deployed bit depth in BHA Data Entry.' } : basePrepared;
+  // Exclude current drilling WOB and display metadata: neither changes the sweep.
+  // Full survey geometry and deployed-component properties remain in the identity.
+  const requestKey = JSON.stringify(prepared.valid ? { ...prepared.request, bha: { rows: bha?.rows, drillpipeReferenceBitMdFt: bha?.drillpipeReferenceBitMdFt }, compare, bitDepth, trajectoryMode: bha?.trajectoryMode } : { error: prepared.error, fields, bitDepth, trajectoryMode: bha?.trajectoryMode });
+  const execution = savedExecution?.key === requestKey ? savedExecution : null;
+  const calculate = () => {
+    if (!prepared.valid) { setError({ key: requestKey, message: prepared.error }); return; }
+    const token = ++generation.current;
+    activeWorker.current?.terminate(); activeWorker.current = null;
+    pending.current.forEach(clearTimeout); pending.current = [];
+    setCalculating(true);
+    const runDiagnostics = { key: requestKey, ownerId: bha?.id,
+      capture: captureNpRequest(prepared.request, npInputContext(bha, source, survey, fields, drillingMode), typeof Worker !== 'undefined' ? 'worker' : 'main-thread-fallback'),
+      state: 'running', response: null, error: null };
+    diagnosticRun.current = runDiagnostics;
+    const fail = message => {
+      if (token !== generation.current) return;
+      runDiagnostics.state = 'failed'; runDiagnostics.error = message;
+      setError({ key: requestKey, message: `Run calculation unavailable: ${message}` }); setCalculating(false);
+      activeWorker.current?.terminate(); activeWorker.current = null;
+    };
+    const publish = result => {
+      if (token !== generation.current) return;
+      runDiagnostics.response = result; runDiagnostics.state = 'completed';
+      if (!result?.valid) { fail(result?.errors?.join(' ') || 'No valid solver response.'); return; }
+      setExecution({ key: requestKey, result, request: prepared.request, compare, revision: ++revision.current, diagnostics: runDiagnostics });
+      setFriction(previous => result.frictionCoefficients.includes(Number(previous)) && previous !== '' ? previous : String(result.frictionCoefficients[0]));
+      setDepth(previous => result.depthsFt.includes(Number(previous)) ? previous : String(result.depthsFt[0])); setScenarioIndex('0'); setError(null);
+      setJarIndex(previous => result.scenarios.find(s => s.valid)?.jars.some(j => j.jarIndex === Number(previous)) ? previous : '0');
+      setCalculating(false); activeWorker.current?.terminate(); activeWorker.current = null;
+    };
+    try {
+      if (typeof Worker !== 'undefined') {
+        const worker = require('./createClearanceWorker').createClearanceWorker();
+        activeWorker.current = worker;
+        worker.onmessage = event => event.data.error ? fail(event.data.error) : publish(event.data.result);
+        worker.onerror = event => fail(event.message || 'Background worker failed.');
+        worker.postMessage({ request: prepared.request });
+      } else publish(calcJarClearanceAcrossRun(prepared.request));
+    } catch (e) { fail(e.message); }
+  };
+  useEffect(() => {
+    generation.current += 1; setError(null); setCalculating(false);
+    if (!prepared.valid) return;
+    let work;
+    const timer = setTimeout(() => {
+      setCalculating(true);
+      // Paint the indicator before starting a worker (or the non-worker fallback).
+      work = setTimeout(calculate, 0);
+      pending.current.push(work);
+    }, 450);
+    pending.current = [timer];
+    return () => { generation.current += 1; clearTimeout(timer); clearTimeout(work); activeWorker.current?.terminate(); activeWorker.current = null; };
+    // The serialized engineering request, not window resizing or current WOB, schedules runs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requestKey]);
+  const run = event => { event.preventDefault(); calculate(); };
   const summary = useMemo(() => execution ? clearanceSummary(execution.result) : null, [execution]);
   const scenarios = useMemo(() => execution?.result.scenarios.filter(s => s.bitMdFt === Number(depth)) || [], [execution, depth]);
   const selected = scenarios[Number(scenarioIndex)];
   const series = useMemo(() => execution ? selectedClearance(execution.result, selected, Number(jarIndex)) : null, [execution, selected, jarIndex]);
   const comparison = useMemo(() => execution ? comparisonClearances(execution.result, execution.request, Number(friction), Number(jarIndex)) : [], [execution, friction, jarIndex]);
   const mainPlot = useMemo(() => execution ? (compare ? comparisonPlot(execution.result, execution.request, execution.revision, comparison, Number(jarIndex)) : clearancePlot(execution.result, execution.request.avoidanceDistanceFt, execution.revision, selected, Number(jarIndex))) : null, [execution, selected, jarIndex, compare, comparison]);
+  const displayedPlot = useMemo(() => mainPlot ? neutralPointChart(mainPlot, execution.result, execution.request, compare ? hiddenCurves : {}, Number(jarIndex), compare ? comparison.map(s => s.selection) : [selected]) : null,
+    [mainPlot, execution, hiddenCurves, jarIndex, compare, comparison, selected]);
   const avoidanceIntervals = useMemo(() => series ? avoidanceDepthIntervals(series.samples, fmt) : [], [series]);
   const jars = execution?.result.scenarios.find(s => s.valid)?.jars || [];
-  const stale = execution && (JSON.stringify(fields) !== JSON.stringify(execution.fields) || (compare && !execution.compare));
   const numeric = (key, label, extra = {}) => <label key={key}>{label}<input type="number" step="any" value={fields[key]} onChange={e => update(key, e.target.value)} {...extra} /></label>;
-  return <section className="jarClearance" aria-label="Jar Clearance Across Run">
-    <h5>Jar Clearance Across Run</h5>
-    <p className="jarClearanceNotice">Results are based on sampled operating conditions and a preliminary soft-string model, not for operational use. Minimum clearance between samples may be smaller. Avoidance distance is a user-defined planning criterion, not a universal manufacturer limit.</p>
-    <p>Current BHA: {bha?.name || 'Unnamed'} · Survey: {source?.filename || 'not imported'}. Analysis inputs below do not change saved BHA or survey data.</p>
+  const exportDiagnostics = () => {
+    try {
+      // A mismatched run is never exported with the new selection (or another BHA).
+      const completed = execution?.diagnostics && execution.diagnostics.ownerId === bha?.id ? execution.diagnostics : null;
+      const latest = diagnosticRun.current?.key === requestKey && diagnosticRun.current?.ownerId === bha?.id ? diagnosticRun.current : null;
+      const run = completed || latest;
+      const state = completed ? 'current' : run?.state || (savedExecution || diagnosticRun.current ? 'stale-results-excluded' : 'no-results');
+      const diagnostics = buildNpDiagnostics({ current: npInputContext(bha, source, survey, fields, drillingMode),
+        capture: run?.capture, response: completed ? execution.result : run?.response, state,
+        error: prepared.valid ? run?.error || null : prepared.error,
+        plot: completed ? displayedPlot : null, selections: completed ? (compare ? comparison.map(s => s.selection) : [selected]) : [],
+        jarIndex: Number(jarIndex), compare, hiddenCurves: compare ? hiddenCurves : {} });
+      const filename = downloadNpDiagnostics(diagnostics);
+      setExportStatus(`Exported ${filename} (${state}).`);
+    } catch (e) { setExportStatus(`NP diagnostics export failed: ${e.message}`); }
+  };
+  return <section className="jarClearance" aria-label="Neutral Point Behaviour">
+    <h5>Neutral Point Behaviour</h5>
+    <p className="jarClearanceGraphCaption" role="status">Trajectory input: {trajectoryDescription}</p>
+    <section className="jarClearanceGraphArea" aria-label="Automatic neutral point analysis">
     {!survey.valid && <div role="alert">{survey.errors.map((e, i) => <p key={i}>{e.message}</p>)}</div>}
+    {!prepared.valid && survey.valid && <p role="alert">{prepared.error}</p>}
+    {error?.key === requestKey && <p role="alert">{error.message}</p>}
+    {prepared.valid && !execution && !error && <p role="status">{calculating ? 'Calculating neutral point sweep…' : 'Updating neutral point sweep…'}</p>}
+    {execution && compare && <div className="jarClearanceLegend" role="group" aria-label="Graph curve visibility">
+      {mainPlot.data.filter(trace => trace.showlegend).map(trace => {
+        const key = curveKey(trace);
+        const label = curveLabel(trace);
+        return <button key={key} type="button" aria-pressed={!hiddenCurves[key]} title={trace.name} onClick={() => setHiddenCurves(previous => ({ ...previous, [key]: !previous[key] }))}>
+          <span className="jarClearanceLineKey" aria-hidden="true" style={{ borderColor: trace.marker.color, borderTopStyle: key.endsWith('rotate') ? 'dashed' : 'solid' }} /> {label}
+        </button>;
+      })}
+      <button type="button" onClick={() => setHiddenCurves({})}>Show All Curves</button>
+    </div>}
+    {execution && <section className="jarClearanceGraph" aria-label="Depth-dependent neutral point graph">
+      {execution.result.status === 'no-valid-scenarios' ? <p role="alert">No valid scenarios. Graph unavailable; inspect scenario errors in Advanced Analysis Settings.</p> : displayedPlot.empty ? <div className="jarClearanceEmpty" role="status">{Object.values(hiddenCurves).some(Boolean) ? 'No visible NP data. Enable a curve or select Show All Curves.' : 'No NP data available for these scenarios. Inspect Advanced Analysis Settings.'}</div> : <Suspense fallback={<p>Loading clearance graph...</p>}><Plot data={displayedPlot.data} layout={displayedPlot.layout} responsiveHeight /></Suspense>}
+      {displayedPlot.threshold !== null && <p className="jarClearanceZoneLabel"><span aria-hidden="true" />NP Avoidance Zone (±{fmt(displayedPlot.threshold)} ft) <small>— user-defined screening tolerance</small></p>}
+      <p className="jarClearanceGraphCaption">Bit MD sweep · {fmt(execution.request.minWobLbf / 1000)}–{fmt(execution.request.maxWobLbf / 1000)} klbf · {execution.request.wobSamples} WOB samples · positive: NP above jar; negative: NP below jar; zero: NP at jar.</p>
+      <p className="jarClearanceGraphCaption">Sampled drilling conditions only — NP branches are not tracked. Missing NP means unavailable clearance, not safe. Not operational guidance.</p>
+      <p className="jarClearanceGraphCaption">Line guides connect adjacent valid unique NP samples, including component crossings. Gaps mark missing, invalid or nonunique results. Open diamonds show nonunique zeros or neutral-interval endpoints. Flat sections can occur when the bit-to-NP string remains in a constant-inclination survey section.</p>
+      {execution.result.invalidScenarios > 0 && <p role="alert">{execution.result.invalidScenarios} invalid scenario samples; inspect Advanced Analysis Settings for diagnostics.</p>}
+      {summary.compression && <p className="jarClearanceNotice">Jar compression occurs in at least one analysed drilling scenario.</p>}
+    </section>}
+    </section>
+    <CurrentDrillingSummary bha={bha} drillingMode={drillingMode} analysisBitMdFt={analysisBitMdFt} surfaceReferenceMdFt={surfaceReferenceMdFt} surveyCoverage={surveyCoverage} />
+    <details className="jarClearanceAdvanced"><summary>Advanced Analysis Settings</summary>
+    <button type="button" onClick={exportDiagnostics}>Export NP Diagnostics</button>
+    <p>Downloads the selected analysis inputs and captured results, including hidden scenarios. Stale results are excluded and identified; exporting does not run a calculation.</p>
+    {exportStatus && <p role="status">{exportStatus}</p>}
+    <details><summary>Run model and coverage</summary>
+    <p>Current BHA: {bha?.name || 'Unnamed'} · Survey: {source?.filename || 'not imported'}. Run settings are saved with this BHA; component lengths and survey data are unchanged.</p>
+    <p>Results are based on sampled operating conditions and a preliminary soft-string model, not for operational use. Minimum clearance between samples may be smaller. Avoidance distance is a user-defined planning criterion, not a universal manufacturer limit.</p>
     {survey.valid && <p>{bounds?.deployed ? 'Deployed-string' : 'Complete-BHA'} bit MD coverage: {bounds?.covered ? `${fmt(bounds.start)}–${fmt(bounds.end)} ft` : 'No covered interval'}. No extrapolation.</p>}
     {bounds?.deployed && <p>Depth-dependent drillpipe deployment is active. Saved/manual pipe length is unchanged; coverage and loads use the actual deployed string.</p>}
-    <label>Graph view<select value={compare ? 'compare' : 'single'} onChange={e => setView(e.target.value)}><option value="single">Single Scenario</option><option value="compare">Compare Four</option></select></label>
+    </details>
+    <label>Graph view<select value={compare ? 'compare' : 'single'} onChange={e => update('view', e.target.value)}><option value="single">Single Scenario</option><option value="compare">Compare Four</option></select></label>
     <form onSubmit={run} noValidate><div className="jarClearanceFields">
-      {bounds?.deployed && numeric('surface', 'Surface reference MD (ft)', { min: 0 })}
+      {bounds?.deployed && numeric('surface', 'Surface reference MD (ft)', { readOnly: true, min: 0 })}
       {numeric('start', 'Starting bit MD (ft)')}{numeric('end', 'Ending bit MD (ft)')}{numeric('increment', 'Depth increment (ft)', { min: 0 })}
-      {numeric('minWob', 'Minimum WOB (klbf)', { min: 0 })}{numeric('maxWob', 'Maximum WOB (klbf)', { min: 0 })}{numeric('samples', 'WOB samples', { min: 1, step: 1 })}
+      <p>WOB range and samples are controlled in Parameter Entry.</p>
       <label>Analysis modes<select value={fields.modes} onChange={e => update('modes', e.target.value)}><option value="slide">Slide</option><option value="rotate">Rotate</option><option value="both">Both</option></select></label>
-      <label>Friction coefficients<input value={fields.friction} placeholder="0.25, 0.30" onChange={e => update('friction', e.target.value)} /></label>
-      {numeric('avoidance', 'Avoidance distance (ft)', { min: 0 })}{numeric('mud', 'Mud weight (ppg)', { min: 0 })}
-      {(compare || fields.modes !== 'slide') && <>{numeric('rpm', 'BHA RPM', { min: 0 })}{numeric('rop', 'ROP (ft/hr)', { min: 0 })}</>}
+      <label>Additional friction coefficients<input value={settings.friction ?? ''} placeholder="Optional: 0.30, 0.35" onChange={e => update('friction', e.target.value)} /></label>
+      {numeric('avoidance', 'Avoidance distance (ft)', { min: 0 })}{numeric('mud', 'Mud weight (ppg)', { readOnly: true, min: 0 })}
+      {(compare || fields.modes !== 'slide') && <>{numeric('rpm', 'BHA RPM', { readOnly: true, min: 0 })}{numeric('rop', 'ROP (ft/hr)', { readOnly: true, min: 0 })}</>}
     </div><button type="submit">Analyse run</button></form>
-    {!prepared.valid && survey.valid && <p role="status">{prepared.error}</p>}
-    {error && <p role="alert">{error}</p>}
-    {stale && <p role="status">Inputs changed. Results show the previous run; select Analyse run to update.</p>}
     {execution && <>
       <div className="jarClearanceFields">
         <label style={compare ? { display: 'none' } : undefined}>Displayed operating scenario<select value={scenarioIndex} onChange={e => setScenarioIndex(e.target.value)}>{scenarios.map((s, i) => <option value={i} key={i}>WOB {fmt(s.wobLbf / 1000)} klbf | {s.mode} | friction {s.frictionCoefficient}</option>)}</select></label>
         {compare && <label>Comparison friction coefficient<select value={friction} onChange={e => setFriction(e.target.value)}>{!execution.result.frictionCoefficients.includes(Number(friction)) && <option value={friction}>{friction} (not in this run)</option>}{execution.result.frictionCoefficients.map(mu => <option value={mu} key={mu}>{mu}</option>)}</select></label>}
         <label>Displayed jar<select value={jarIndex} onChange={e => setJarIndex(e.target.value)}>{jars.map(j => <option value={j.jarIndex} key={j.jarIndex}>{j.name} ({j.jarIndex + 1})</option>)}</select></label>
       </div>
-      <Suspense fallback={<p>Loading clearance graph...</p>}><Plot {...mainPlot} /></Suspense>
       <WobOperatingRanges request={execution.request} depthsFt={execution.result.depthsFt} frictionCoefficient={compare ? Number(friction) : selected?.frictionCoefficient} jarIndex={Number(jarIndex)} revision={execution.revision} />
       {compare && <>
         {execution.request.minWobLbf === execution.request.maxWobLbf && <p>Minimum and maximum WOB are equal; two distinct mode traces replace four duplicate traces.</p>}
@@ -94,7 +204,7 @@ export default function JarClearance({ bha }) {
         <div><dt>Unavailable depth samples</dt><dd>{series.unavailable} / {series.samples.length}</dd></div>
       </dl>}
       <p>Positive: NP above jar. Negative: NP below jar. Zero: NP at jar. Shading: +/-{fmt(execution.request.avoidanceDistanceFt)} ft avoidance zone.</p>
-      <p>{compare ? 'Endpoint WOB scenarios at the selected friction coefficient and jar.' : 'Selected scenario and jar only.'} Samples are not joined because continuous NP branches are not identified. Missing NP is unavailable clearance, not safe. Entry/exit brackets are sampled transitions, not exact boundary depths; unsampled excursions may occur. Jar axial-load sign-change brackets require refinement and do not specify exact NP crossing depths; crossings between WOB scenarios are excluded.</p>
+      <p>{compare ? 'Endpoint WOB scenarios at the selected friction coefficient and jar.' : 'Selected scenario and jar only.'} Straight segments guide the eye between adjacent valid unique NP samples, including component crossings; gaps mark missing, invalid or nonunique samples. Segments do not establish continuous physical NP branches or uniqueness between samples. Missing NP is unavailable clearance, not safe. Entry/exit brackets are sampled transitions, not exact boundary depths; unsampled excursions may occur. Jar axial-load sign-change brackets require refinement and do not specify exact NP crossing depths; crossings between WOB scenarios are excluded.</p>
       {execution.result.status === 'no-valid-scenarios' && <p role="alert">No valid scenarios. Inspect scenario errors below.</p>}
       <details><summary>Sample details and run audit</summary>
       <p>All scenarios: {summary.evaluated} evaluated / {summary.invalid} invalid; {summary.violations} within avoidance zone.</p>
@@ -116,5 +226,6 @@ export default function JarClearance({ bha }) {
       </>}
       </details>
     </>}
+    </details>
   </section>;
 }

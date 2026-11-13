@@ -1,4 +1,4 @@
-# WellBench Roadmap
+# DrillFrame Roadmap
 
 ## Version 0.1 - Platform Foundation ✅
 

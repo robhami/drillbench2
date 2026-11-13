@@ -29,9 +29,6 @@ const BHASummary = ({ bha }) => {
   const hasMudWeight = summary.buoyancyFactor !== null;
 
   const neutralPointResult = calcNeutralPoint(engModel);
-
-
-
   return (
     <section className="bhaSummary">
 
@@ -103,7 +100,7 @@ const BHASummary = ({ bha }) => {
           />
 
           <SummaryItem
-            label="Neutral point"
+            label="Constant-Inclination NP (Frictionless)"
             value={
               neutralPointResult.neutralPointFound
                 ? `${formatNumber(

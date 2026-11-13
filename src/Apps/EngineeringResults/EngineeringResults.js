@@ -1,4 +1,5 @@
 import React from 'react';
+import { ComponentLabel } from '../../Components/DemoPresentation';
 import Table from 'react-bootstrap/Table';
 
 import { buildEngModel } from '../../engineering/models/buildEngModel.js';
@@ -19,8 +20,13 @@ const EngineeringResults = ({ bha, drillingMode }) => {
   const mode = drillingMode || 'slide';
   const axialResults = calcStraightDrag(engModel, mode);
 
+  if (!axialResults.valid) return <div id="engineeringResults" role="alert">
+    Constant-inclination drilling loads unavailable: {axialResults.error}
+  </div>;
+
   return (
     <div id="engineeringResults">
+      <strong>Constant-Inclination Drilling Reference — {mode === 'rotate' ? 'Rotate' : mode === 'reference' ? 'Reference' : 'Slide'}</strong>
       <Table
         bordered
         hover
@@ -46,7 +52,7 @@ const EngineeringResults = ({ bha, drillingMode }) => {
             <tr key={component.position}>
               <td className="centre">{component.position}</td>
               <td className="left">
-                {component.toolName || component.category}
+                <ComponentLabel component={component} />
               </td>
               <td className="num">{formatNumber(component.length, 1)}</td>
               <td className="num">{formatNumber(component.startFromBit, 1)}</td>

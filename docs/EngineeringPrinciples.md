@@ -1,6 +1,6 @@
 # Engineering Principles
 
-WellBench engineering calculations should be:
+DrillFrame engineering calculations should be:
 
 1. Transparent
 2. Documented

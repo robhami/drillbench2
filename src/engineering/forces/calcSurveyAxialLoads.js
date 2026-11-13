@@ -1,6 +1,8 @@
 import { calcComponentPositions } from '../bha/calcComponentPositions';
 import { calcBuoyancyFactor } from './calcBuoyancy';
 import { evaluateSurveyAtMd } from '../survey/surveyGeometry';
+import { validateSurveyCoverage } from '../survey/surveyCoverage';
+import { staticPropertyIssue } from '../bha/componentApplicability';
 
 const finite = value => (typeof value === 'number' || typeof value === 'string') && String(value).trim() !== '' && Number.isFinite(Number(value));
 const stateOf = force => force > 0 ? 'compression' : force < 0 ? 'tension' : 'neutral';
@@ -45,6 +47,8 @@ export function integrateElement(bottomForce, gravity, weightPerFt, local, lengt
 export function calcSurveyAxialLoads(input = {}) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return fail('Operating inputs must be supplied as an object.');
   const { bha, survey, mode } = input;
+  const propertyIssue = staticPropertyIssue(bha, { rotating: mode === 'rotate', vertical: survey?.stations?.every(s => s.inclinationDeg === 0) });
+  if (propertyIssue) return fail(propertyIssue, 'unsupported-properties');
   if (!survey?.valid || !survey.summary || !Array.isArray(survey.segments) || !survey.segments.length) return fail('A valid minimum-curvature survey geometry is required.');
   if (!['slide', 'rotate'].includes(mode)) return fail('Mode must be slide or rotate (downward drilling).');
   if (!finite(input.bitMdFt) || Number(input.bitMdFt) < 0) return fail('Bit MD must be explicitly supplied as a nonnegative depth in feet.');
@@ -76,7 +80,8 @@ export function calcSurveyAxialLoads(input = {}) {
   if (!Number.isFinite(positions.totalLength) || components.some(c => !Number.isFinite(c.airWeight))) return fail('BHA length or weight exceeds numerical range.', 'numerical-limit');
   const bitMd = Number(input.bitMdFt), wob = Number(input.wobLbf), mu = Number(input.frictionCoefficient);
   const topMd = bitMd - positions.totalLength;
-  if (!Number.isFinite(topMd) || topMd < survey.summary.startMdFt || bitMd > survey.summary.endMdFt) return fail('Entire BHA must lie within survey coverage; no extrapolation or partial-BHA substitution is supported.', 'outside-survey');
+  const coverage = validateSurveyCoverage(survey, { startMdFt: topMd, endMdFt: bitMd, calculations: ['survey drilling axial loads'] });
+  if (!coverage.covered) return { ...fail(coverage.message, 'outside-survey'), coverage };
   if (positions.totalLength / maxStep > MAX_ELEMENTS) return fail('Requested step size exceeds the 100,000-element safeguard.', 'numerical-limit');
   const profile = [{ fromBitFt: 0, mdFt: bitMd, axialForceLbf: wob, state: stateOf(wob) }], elements = [];
   let force = wob;
@@ -84,8 +89,15 @@ export function calcSurveyAxialLoads(input = {}) {
     const component = components[ci], weight = component.weightPerFoot * bf;
     const bottomMd = bitMd - component.startFromBit, componentTopMd = bitMd - component.endFromBit;
     if (!(bottomMd > componentTopMd)) return fail('Component length cannot be resolved at this measured depth.', 'numerical-limit');
-    const knots = [component.startFromBit, component.endFromBit, component.centreFromBit,
-      ...survey.stations.filter(s => s.mdFt > componentTopMd && s.mdFt < bottomMd).map(s => bitMd - s.mdFt)].sort((a, b) => a - b);
+    const anchors = [component.startFromBit, component.endFromBit, component.centreFromBit];
+    const knots = [...anchors,
+      ...survey.stations.filter(s => s.mdFt > componentTopMd && s.mdFt < bottomMd).map(s => {
+        // Reuse an exact structural anchor when it represents this same MD.
+        // Subtraction can otherwise produce distinct above-bit doubles for one
+        // measured location, creating a non-integrable, zero-MD sliver. Keep
+        // centres exact for jar-node lookup; do not merge resolvable MD spans.
+        return anchors.find(anchor => bitMd - anchor === s.mdFt) ?? bitMd - s.mdFt;
+      })].sort((a, b) => a - b);
     const unique = [...new Set(knots)];
     component.bottomAxialForce = force;
     for (let k = 1; k < unique.length; k += 1) {

@@ -5745,6 +5745,29 @@
       "grade": "",
       "sourceSheet": "Sheet1",
       "sourceRow": 186
+    },
+    {
+      "id": "bha-187",
+      "category": "BIT",
+      "name": "8.5-inch PDC Drill Bit",
+      "od": 8.5,
+      "idSize": null,
+      "weight": null,
+      "nominalWeight": null,
+      "connectionTop": "",
+      "connectionBottom": "",
+      "toolJointOd": null,
+      "toolJointId": null,
+      "stabilizerOd": null,
+      "stabilizerPosition": "",
+      "stabilizerType": "",
+      "crossoverTo": "",
+      "length": 1,
+      "totalWeight": null,
+      "manufacturer": "",
+      "grade": "",
+      "sourceSheet": "",
+      "sourceRow": null
     }
   ]
 }

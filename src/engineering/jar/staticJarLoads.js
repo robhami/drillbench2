@@ -2,6 +2,8 @@ import { deployDrillstring } from '../bha/deployDrillstring';
 import { calcComponentPositions } from '../bha/calcComponentPositions';
 import { calcBuoyancyFactor } from '../forces/calcBuoyancy';
 import { evaluateSurveyAtMd } from '../survey/surveyGeometry';
+import { validateSurveyCoverage } from '../survey/surveyCoverage';
+import { staticPropertyIssue } from '../bha/componentApplicability';
 
 const finite = v => (typeof v === 'number' || typeof v === 'string') && String(v).trim() !== '' && Number.isFinite(Number(v));
 const fail = (message, status = 'invalid-input') => ({ valid: false, status, errors: [message] });
@@ -72,6 +74,8 @@ function integrate(sections, survey, hookload, mu, directionSign, maxStepFt) {
 export function calcStaticJarLoads(input = {}) {
   if (!input || typeof input !== 'object' || Array.isArray(input)) return fail('Supply static jar inputs as an object.');
   const { bha, survey, direction } = input;
+  const propertyIssue = staticPropertyIssue(bha);
+  if (propertyIssue) return fail(propertyIssue, 'unsupported-properties');
   const loadMode = input.loadMode ?? 'absolute';
   if (!['pickup', 'slackoff'].includes(direction)) return fail('Select pickup or slack-off.');
   if (!['absolute', 'reference'].includes(loadMode)) return fail('Select absolute or reference hookload input.');
@@ -112,7 +116,8 @@ export function calcStaticJarLoads(input = {}) {
   const positions = calcComponentPositions(deployment.bha);
   const bitMd = Number(input.bitMdFt);
   if (!Number.isFinite(positions.totalLength) || Math.abs(positions.totalLength - (bitMd - surface)) > 1e-7) return fail('The complete deployed string must extend from the surface reference to the bit; add an uppermost DP section or supply matching fixed-string depth.', 'invalid-deployment');
-  if (surface < survey.summary.startMdFt || bitMd > survey.summary.endMdFt) return fail('Survey must cover the full deployed string from surface reference to bit; no extrapolation.', 'outside-survey');
+  const coverage = validateSurveyCoverage(survey, { startMdFt: surface, endMdFt: bitMd, calculations: ['static/inverse jar loads', 'buckling screening'] });
+  if (!coverage.covered) return { ...fail(coverage.message, 'outside-survey'), coverage };
   const jar = positions.components.filter(c => String(c.category).toUpperCase() === 'JAR')[jarIndex];
   if (!jar) return fail('Selected jar is unavailable.');
   const jarMd = bitMd - jar.centreFromBit;

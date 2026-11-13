@@ -1,4 +1,5 @@
 import React from 'react';
+import { ComponentLabel } from '../../Components/DemoPresentation';
 
 const EngineeringString = ({ engModel }) => {
     const components =
@@ -45,9 +46,7 @@ const EngineeringString = ({ engModel }) => {
                             className={`engStringComponent ${stateClass}`}
                         >
                             <div className="engStringLabel">
-                                {component.toolName ||
-                                    component.category ||
-                                    'Component'}
+                                <ComponentLabel component={component} />
                             </div>
 
                             <div className="engStringBody">

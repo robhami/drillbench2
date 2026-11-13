@@ -56,7 +56,7 @@ Initial assumptions to validate:
 
 ## 6. Equations
 
-The exact buoyancy equation used by WellBench must be confirmed against:
+The exact buoyancy equation used by DrillFrame must be confirmed against:
 
 - Existing Excel workbook
 - Accepted drilling engineering references
@@ -144,7 +144,7 @@ Compare:
 - Buoyancy factor
 - Total buoyed weight
 
-WellBench result must match the validated workbook within an agreed tolerance.
+DrillFrame result must match the validated workbook within an agreed tolerance.
 
 ## 10. Validation Tolerance
 

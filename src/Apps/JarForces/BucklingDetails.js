@@ -3,7 +3,7 @@ import { evaluateConfirmedDpBuckling } from '../../engineering/jar/confirmedDpBu
 
 const display = value => value.toLocaleString(undefined, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-export default function BucklingDetails({ bha, survey, bitMdFt, surfaceMdFt, jarIndex, jarDirection, loadingResult }) {
+export default function BucklingDetails({ bha, survey, bitMdFt, surfaceMdFt, jarIndex, jarDirection, loadingResult, onSummary }) {
   const pipes = (bha?.rows || []).map((row, index) => ({ row, index })).filter(({ row }) => row.category === 'DP');
   const [selection, setSelection] = useState('');
   const selected = pipes.length === 1 ? pipes[0] : pipes.find(({ row, index }) => String(row.rowId ?? index) === selection);
@@ -23,6 +23,11 @@ export default function BucklingDetails({ bha, survey, bitMdFt, surfaceMdFt, jar
       mudWeightPpg: bha?.mudWeight, frictionCoefficient: bha?.frictionCoefficient,
       selectedDpIndex: selected?.index, youngsModulusPsi: modulus, confirmed });
   }, [bha, survey, bitMdFt, surfaceMdFt, jarIndex, jarDirection, loadingResult, selected?.index, modulus, confirmed]);
+  // Publish the existing result for presentation; do not run a second screening.
+  useEffect(() => { if (onSummary) onSummary({ status: result.status, reason: result.reason,
+    evaluatedLengthFt: result.valid ? result.evaluatedCompressedLengthFt : null,
+    unevaluatedLengthFt: result.valid ? result.unevaluatedCompressedLengthFt : null,
+    source: loadingResult }); }, [result, loadingResult, onSummary]);
   const onset = key => {
     if (!result.valid || !result.summary.applicableIntervalCount) return 'Not Evaluated';
     const value = result.summary[key];

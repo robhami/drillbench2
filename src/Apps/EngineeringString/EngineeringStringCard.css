@@ -1,0 +1,60 @@
+.engineeringStringSurveyCard { display: flex; flex-direction: column; min-height: 0; gap: 3px; padding: 5px 7px 6px; color: #273640; }
+.engineeringStringSurveyCard > .engineeringStringSummary { display: flex; flex: 0 0 auto; flex-direction: column; min-height: 0; gap: 3px; padding: 0; overflow: visible; font-size: 11px; }
+.engineeringStringTitle { margin: 0; color: #293c49; font-size: 12px; line-height: 1.25; font-weight: 650; letter-spacing: .015em; }
+.engineeringStringControls { display: flex; align-items: center; flex-wrap: nowrap; gap: 10px; margin: 0; }
+.engineeringStringControls label { display: flex; align-items: center; gap: 5px; min-width: 0; color: #586771; font-size: 10px; white-space: nowrap; }
+.engineeringStringControls select { width: 91px; min-width: 0; height: 24px; padding: 2px 5px; border: 1px solid #cbd4d9; border-radius: 4px; color: #344651; background: #fff; font: inherit; }
+.engineeringStringControls input { width: 62px; min-width: 0; height: 24px; padding: 2px 5px; border: 1px solid #cbd4d9; border-radius: 4px; color: #344651; background: #fff; font: inherit; text-align: right; font-variant-numeric: tabular-nums; }
+.engineeringStringJarLoad { display: grid; gap: 2px; padding: 1px 0 2px; }
+.engineeringStringJarHeading { color: #65747c; font-size: 9px; }
+.engineeringStringPrimaryResult, .engineeringStringSecondaryResult { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; font-variant-numeric: tabular-nums; }
+.engineeringStringPrimaryResult { padding: 2px 0 3px; border-bottom: 1px solid #e6eaec; }
+.engineeringStringPrimaryResult span { color: #63717a; font-size: 10px; }
+.engineeringStringPrimaryResult strong { color: #174f67; font-size: 15px; font-weight: 650; text-align: right; }
+.engineeringStringSecondaryResult span { color: #687680; font-size: 10px; }
+.engineeringStringSecondaryResult strong { color: #344b57; font-size: 11px; font-weight: 600; }
+.engineeringStringUnavailable, .engineeringStringNpStatus { margin: 2px 0; padding: 4px 6px; border-left: 2px solid #bf6b42; background: #fbf5ef; color: #70391f; font-size: 10px; }
+.engineeringStringDetails { flex: 0 0 auto; margin-top: 1px; color: #52616b; font-size: 10px; }
+.engineeringStringDetails > summary { cursor: pointer; color: #53636c; font-size: 10px; font-weight: 600; }
+.engineeringStringDetails > div { margin-top: 3px; line-height: 1.35; }
+.engineeringStringReferenceDetails { margin-top: 5px; padding-top: 4px; border-top: 1px solid #e2e7e9; }
+.engineeringStringReferenceDetails > strong { display: block; margin-bottom: 2px; color: #52616b; font-size: 10px; }
+.engineeringStringDetails .engineeringStringCard { height: auto; overflow: visible; }
+.engineeringStringDisclaimer { flex: 0 0 auto; margin-top: 1px; color: #82755f; font-size: 8px; letter-spacing: .025em; }
+.engineeringStringSurveyCard > .engineeringStringViewer { display: flex; flex: 0 0 auto; flex-direction: column; min-height: 0; width: 100%; }
+.engineeringString3DToolbar { display: flex; flex: 0 0 auto; justify-content: flex-end; padding: 0 2px 3px; color: #78858c; font-size: 9px; }
+.engineeringString3DToolbar label { display: inline-flex; align-items: center; gap: 4px; }
+.engineeringString3DToolbar select { height: 22px; padding: 1px 4px; border: 1px solid #d5dce0; border-radius: 4px; background: #fff; color: #53636b; font: inherit; }
+.engineeringString3D { flex: 1 1 0; width: 100%; height: 100%; min-height: 260px; overflow: hidden; border: 1px solid #dce4e9; border-radius: 6px; background: #f4f7fb; }
+.engineeringStringViewerToolbar { display: flex; flex: 0 0 auto; align-items: center; justify-content: flex-end; gap: 8px; min-height: 23px; padding: 0 2px 3px; color: #78858c; font-size: 9px; }
+.engineeringStringViewChoice { display: inline-flex; align-items: center; gap: 4px; color: #68757c; }
+.engineeringStringViewChoice select { height: 22px; padding: 1px 4px; border: 1px solid #d5dce0; border-radius: 4px; background: #fff; color: #53636b; font: inherit; }
+.engineeringStringViewToggle { display: inline-flex; overflow: hidden; border: 1px solid #d5dce0; border-radius: 4px; background: #fff; }
+.engineeringStringViewToggle button { border: 0; border-right: 1px solid #e1e5e7; padding: 3px 7px; background: transparent; color: #65727a; font: inherit; cursor: pointer; }
+.engineeringStringViewToggle button:last-child { border-right: 0; }
+.engineeringStringViewToggle button[aria-pressed="true"] { background: #edf2f4; color: #31576a; font-weight: 600; }
+.bhaSchematicNotToScale { color: #849097; font-size: 9px; }
+.bhaSchematicScroll { flex: 0 0 auto; min-height: 0; overflow: hidden; border: 1px solid #e0e5e7; border-radius: 5px; background: linear-gradient(90deg,#f8fafb,#fff 24%,#fff 76%,#f8fafb); }
+.bhaSchematicScroll.isFullString { max-height: 52vh; overflow: auto; }
+.bhaSchematicSvg { display: block; width: 100%; height: auto; margin: 0 auto; }
+.bhaSchematicEndLabel, .bhaSchematicBreakLabel { display: none; }
+.bhaSchematicComponent { cursor: pointer; outline: none; }
+.bhaSchematicComponent:focus-visible > rect { stroke: #b4771d; stroke-width: 2; }
+.bhaSchematicMarker text { font: 650 11px sans-serif; letter-spacing: .035em; }
+.bhaSchematicOutsideNp { fill: #a96418; font: 600 9px sans-serif; }
+.engineeringStringDcReadouts { display: flex; flex: 0 0 auto; justify-content: center; align-items: center; flex-wrap: wrap; gap: 5px 17px; padding: 5px 2px 1px; color: #5b6971; font-size: 10px; font-variant-numeric: tabular-nums; }
+.engineeringStringDcReadouts span { display: inline-flex; align-items: baseline; gap: 5px; }
+.engineeringStringDcReadouts b { font-weight: 450; }
+.engineeringStringDcReadouts strong { color: #344f5d; font-weight: 650; }
+.bhaSchematicComponentDetails { display: flex; flex: 0 0 auto; flex-wrap: wrap; gap: 3px 12px; align-items: baseline; min-height: 0; padding: 4px 6px; border-top: 1px solid #e5e9eb; background: #f7f9fa; color: #43525c; font-size: 9px; font-variant-numeric: tabular-nums; }
+.bhaSchematicComponentDetails strong { flex-basis: 100%; color: #263c49; font-size: 10px; }
+.bhaSchematicComponentDetails > span { white-space: nowrap; }
+.engineeringStringEmpty { display: grid; min-height: 130px; place-items: center; padding: 10px; color: #77858c; text-align: center; font-size: 10px; }
+@media (max-width: 390px) {
+  .engineeringStringSurveyCard { padding-right: 5px; padding-left: 5px; }
+  .engineeringStringControls { gap: 6px; }
+  .engineeringStringControls label { gap: 3px; font-size: 9px; }
+  .engineeringStringControls select { width: 80px; }
+  .engineeringStringControls input { width: 55px; }
+  .engineeringStringPrimaryResult strong { font-size: 13px; }
+}

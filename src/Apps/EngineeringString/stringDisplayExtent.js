@@ -1,5 +1,7 @@
 // Presentation range only. Consume existing positions and selected-mode loads;
 // never modify component geometry or interpolate a new neutral point.
+export const hasBitComponent = components => components.some(component => String(component.category || '').toUpperCase() === 'BIT');
+
 export const getStringDisplayExtent = (components, neutralPointFt) => {
     const totalLength = Math.max(0, ...components.map(c => Number(c.endFromBit)));
     const bhaEnd = Math.max(0, ...components

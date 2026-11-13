@@ -1,0 +1,127 @@
+.realBhaJarWorkspace {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+  padding: 18px 22px 28px;
+  color: #183247;
+  background: #f5f8fa;
+}
+.jarConfigurationWorkspace { box-sizing: border-box; max-width: 100%; min-width: 0; padding: 12px; color: #183247; }
+.jarConfigurationHeader { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 10px; }
+.jarConfigurationHeader h1 { margin: 0; color: #173c56; font-size: 22px; }
+.jarConfigurationHeader p { margin: 3px 0 0; color: #667d8c; font-size: 12px; }
+.jarConfigurationNotice { flex: 0 0 auto; color: #76571b; background: #fff9ea; padding: 6px 9px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+.jarUpCustomerGrid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr); gap: 22px; }
+.jarUpCustomerGrid > section { min-width: 0; }
+.jarUpFields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(175px, 100%), 1fr)); gap: 10px 14px; align-items: end; }
+.jarUpFields label, .jarUpDiagnostics label { display: flex; min-width: 0; flex-direction: column; gap: 4px; color: #425e70; font-size: 12px; font-weight: 600; }
+.jarUpFields input, .jarUpFields select, .jarUpDiagnostics input, .jarUpDiagnostics textarea { width: 100%; min-width: 0; min-height: 36px; padding: 6px 8px; border: 1px solid #cbd8e1; border-radius: 5px; background: #fff; color: #173247; font: inherit; }
+.jarUpFields .wide { grid-column: 1 / -1; }
+.jarUpFieldError { margin: 0; color: #873a32; font-size: 11px; }
+.jarUpCompactNote { margin: 7px 0; color: #617787; font-size: 11px; }
+.jarUpActions { justify-content: flex-start; margin-top: 14px; padding: 10px 0; border-top: 1px solid #e0e8ed; border-bottom: 1px solid #e0e8ed; }
+.jarUpActions > button:first-child { border-color: #1e5f83; background: #1e5f83; color: #fff; font-weight: 650; }
+.jarUpActions > span { color: #536d7d; font-size: 12px; }
+.jarUpActions .textButton { margin-left: auto; padding-inline: 3px; border: 0; color: #1e5f83; text-decoration: underline; }
+.jarUpAcknowledgement { margin: 8px 0; color: #536b7a; font-size: 11px; }
+.jarUpAcknowledgement input { vertical-align: middle; }
+.jarUpResultActions { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 9px; }
+.jarUpResultActions label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: #526c7d; }
+.jarUpResultActions select { min-height: 34px; padding: 5px 7px; border: 1px solid #ccd9e1; border-radius: 4px; }
+.jarUpHighlights { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 8px 0; }
+.jarUpHighlights > div { padding: 10px 12px; border: 1px solid #dce5ea; border-radius: 6px; background: #fff; color: #526c7d; font-size: 11px; }
+.jarUpHighlights strong { display: block; margin-top: 3px; color: #173c56; font-size: 18px; font-variant-numeric: tabular-nums; }
+.jarUpCharts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.jarUpTableWrap { max-width: 100%; overflow-x: auto; border: 1px solid #dce5ea; border-radius: 6px; background: #fff; }
+.jarUpTableWrap table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 11px; }
+.jarUpTableWrap th { background: #edf3f6; color: #35546a; text-align: left; }
+.jarUpTableWrap td:not(:last-child), .jarUpTableWrap th:not(:last-child) { text-align: right; }
+.jarUpTableWrap td, .jarUpTableWrap th { padding: 8px; border-bottom: 1px solid #e7edf1; font-variant-numeric: tabular-nums; }
+.jarUpTableWrap .currentCandidate { background: #e9f4f5; box-shadow: inset 3px 0 #28779b; }
+.jarUpDiagnostics { max-width: 1050px; margin: 8px auto; padding: 16px; border: 1px solid #dce5ea; border-radius: 7px; background: #fff; }
+.jarUpDiagnostics fieldset { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; border: 1px solid #dce5ea; border-radius: 6px; padding: 14px; }
+.jarUpDiagnostics fieldset legend, .jarUpDiagnostics fieldset > p, .jarUpDiagnostics fieldset > label:has(textarea), .jarUpDiagnostics fieldset > label:has(input[type="checkbox"]) { grid-column: 1 / -1; }
+.jarUpDiagnostics textarea { min-height: 70px; }
+.jarUpHow { margin-top: 14px; color: #526c7d; font-size: 12px; }
+.realBhaJarTitle { margin: 0 0 12px; color: #173c56; font-size: 22px; font-weight: 650; letter-spacing: -.02em; }
+.realBhaJarSummary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 14px; }
+.realBhaJarSummary > div { display: flex; min-width: 0; flex-direction: column; gap: 3px; padding: 10px 13px; border: 1px solid #dbe5eb; border-radius: 7px; background: #fff; }
+.realBhaJarSummary span { color: #687d8c; font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+.realBhaJarSummary strong { overflow-wrap: anywhere; font-size: 14px; font-weight: 600; }
+.realBhaJarWorkspace > label { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; padding: 10px 13px; border: 1px solid #dbe5eb; border-radius: 7px; background: white; }
+.realBhaJarWorkspace > label select { min-width: 220px; }
+
+.jarUpAnalysis { min-width: 0; color: #1c3446; font: 14px/1.5 "Segoe UI", Arial, sans-serif; }
+.jarUpAnalysis *, .realBhaJarWorkspace * { box-sizing: border-box; }
+.jarUpNotice { margin: 0 0 12px; padding: 7px 11px; border-left: 3px solid #c08a2d; border-radius: 3px; background: #fff9ea; color: #76571b; font-size: 11px; letter-spacing: .035em; }
+.jarUpLead { margin: -4px 0 12px; color: #617888; font-size: 12px; }
+.jarUpSectionTitle { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; color: #173c56; font-size: 17px; font-weight: 650; }
+.jarUpSectionTitle > span, .jarUpSubheading > span { display: inline-grid; width: 25px; height: 25px; flex: 0 0 25px; place-items: center; border-radius: 50%; background: #e7f0f5; color: #35617e; font-size: 11px; }
+.jarUpInputs { display: grid; gap: 12px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.jarUpInputs > div:first-child { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(190px, 100%), 1fr)); gap: 13px 16px !important; align-items: end; min-width: 0; }
+.jarUpInputs label, .jarUpAssumptions label { display: flex; min-width: 0; flex-direction: column; gap: 5px; color: #425e70; font-size: 12px; font-weight: 600; }
+.jarUpInputs input, .jarUpInputs select, .jarUpAssumptions input, .jarUpAssumptions select, .jarUpAssumptions textarea,
+.realBhaJarWorkspace > label select { width: 100%; min-width: 0; min-height: 38px; padding: 7px 9px; border: 1px solid #cbd8e1; border-radius: 5px; background: #fff; color: #173247; font: inherit; }
+.jarUpInputs input:focus, .jarUpInputs select:focus, .jarUpAssumptions :is(input,select,textarea):focus, .realBhaJarWorkspace select:focus { outline: 3px solid #b7d8ec; outline-offset: 1px; border-color: #4b86a7; }
+.jarUpSubheading { display: flex; grid-column: 1 / -1; align-items: center; gap: 9px; margin: 7px 0 -2px; padding-top: 13px; border-top: 1px solid #e3ebef; color: #173c56; font-size: 15px; }
+.jarUpInputs > div:first-child > label { min-width: 0; }
+.jarUpInputs > div:first-child > label:has(select) { grid-column: span 2; }
+.jarUpInputs > div:first-child > label > input, .jarUpInputs > div:first-child > label > select { margin-top: 0; }
+.jarUpHelper { grid-column: 1 / -1; margin: -4px 0 0; color: #667d8c; font-size: 12px; }
+.jarUpFixedAnvil { grid-column: 1 / -1; min-width: 0; margin: 0; padding: 12px; border: 1px solid #dce6eb; border-radius: 6px; background: #f9fbfc; }
+.jarUpFixedAnvil legend { padding: 0 5px; color: #355a72; font-size: 12px; font-weight: 650; }
+.jarUpFixedAnvil > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(175px, 100%), 1fr)); gap: 12px; }
+.jarUpFixedAnvil > p { margin: 10px 0 0; color: #617787; font-size: 11px; }
+.jarUpInputs button, .jarUpAnalysis button { min-height: 36px; padding: 7px 12px; border: 1px solid #cbd8e1; border-radius: 5px; background: white; color: #26485f; font: inherit; cursor: pointer; }
+.jarUpInputs button:hover, .jarUpAnalysis button:hover { border-color: #7fa4ba; background: #f2f7fa; }
+.jarUpInputs button:focus-visible, .jarUpAnalysis button:focus-visible, .jarUpAnalysis summary:focus-visible { outline: 3px solid #b7d8ec; outline-offset: 2px; }
+.jarUpInputs .jarUpPrimary { min-height: 42px; padding: 9px 18px; border-color: #1e5f83; background: #1e5f83; color: #fff; font-size: 14px; font-weight: 650; }
+.jarUpInputs .jarUpPrimary:hover { background: #174b69; }
+.jarUpDetails, .jarUpAssumptions { color: #526c7d; }
+.jarUpDetails > summary, .jarUpAssumptions > summary { cursor: pointer; color: #355b73; font-size: 12px; font-weight: 650; }
+.jarUpDetails > p { max-width: 1000px; font-size: 12px; }
+.jarUpActions { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 4px; }
+.jarUpDot { margin: 0 10px; color: #9aabb6; }
+.jarUpMuted { color: #6d818e; font-size: 12px; }
+.jarUpResultsTitle { margin-top: 22px; padding-top: 18px; border-top: 1px solid #dce6eb; }
+.jarUpAnalysis > h4 { margin: 12px 0 8px; color: #425f72; font-size: 11px; letter-spacing: .1em; }
+.jarUpAnalysis > div[style*="overflowX"] { max-width: 100%; overflow-x: auto; border: 1px solid #dce5ea; border-radius: 6px; background: white; }
+.jarUpAnalysis table { width: 100%; min-width: 780px; margin: 0; border-collapse: collapse; color: #223d50; font-size: 12px; }
+.jarUpAnalysis th, .jarUpAnalysis td { padding: 10px 12px !important; border-bottom: 1px solid #e7edf1; vertical-align: middle; }
+.jarUpAnalysis th { background: #edf3f6; color: #35546a; font-size: 11px; font-weight: 650; text-align: left; }
+.jarUpAnalysis td { font-variant-numeric: tabular-nums; }
+.jarUpAnalysis table[aria-label="Jar Up iteration results"] th:not(:first-child), .jarUpAnalysis table[aria-label="Jar Up iteration results"] td:not(:first-child) { text-align: right; }
+.jarUpAnalysis table[aria-label="Jar Up iteration results"] td:first-child { white-space: nowrap; }
+.jarUpAnalysis tbody tr:last-child > * { border-bottom: 0; }
+.jarUpAnalysis tbody tr[style*="background"] { box-shadow: inset 3px 0 #28779b; }
+.jarUpResultsHeader { display: flex; justify-content: space-between; align-items: flex-end; gap: 18px; flex-wrap: wrap; }
+.jarUpResultsHeader p { margin: -8px 0 12px; color: #667c8b; font-size: 12px; }
+.jarUpUnits { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; color: #5b7282; font-size: 11px; }
+.jarUpUnits select { min-height: 34px; padding: 5px 8px; border: 1px solid #ccd9e1; border-radius: 5px; background: white; color: #234358; }
+.jarUpAssumptions { margin: 4px 0 12px; padding: 10px 12px; border: 1px solid #dce5ea; border-radius: 6px; background: #fbfcfd; }
+.jarUpAssumptions > summary span { float: right; color: #7a6b45; font-size: 10px; font-weight: 500; }
+.jarUpAssumptions fieldset { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; min-width: 0; margin-top: 12px; border: 0; }
+.jarUpAssumptions fieldset > p, .jarUpAssumptions fieldset > details, .jarUpAssumptions fieldset > label[style*="width:100%"] { flex-basis: 100%; }
+.jarUpPerformance { max-width: 100%; margin-top: 18px; padding: 14px; border: 1px solid #dce5ea; border-radius: 7px; background: #fff; }
+.jarUpPerformance > label { display: inline-flex; align-items: center; gap: 8px; color: #4e687a; font-size: 12px; }
+.jarUpPerformance select { min-height: 34px; padding: 5px 8px; border: 1px solid #ccd9e1; border-radius: 5px; background: white; color: #234358; }
+.jarUpAnalysis p[role="alert"] { padding: 9px 12px; border-left: 3px solid #b94242; background: #fff4f3; color: #833331; }
+.jarUpAnalysis p[role="status"] { color: #577183; font-size: 12px; }
+.realBhaJarWorkspace .table { table-layout: auto; }
+
+@media (max-width: 760px) {
+  .jarConfigurationHeader { align-items: flex-start; flex-direction: column; }
+  .jarUpCustomerGrid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .jarUpActions .textButton { margin-left: 0; }
+  .jarUpHighlights { grid-template-columns: minmax(0, 1fr); }
+  .jarUpCharts { grid-template-columns: minmax(0, 1fr); }
+  .realBhaJarWorkspace { padding: 12px; }
+  .realBhaJarSummary { grid-template-columns: 1fr; gap: 7px; }
+  .realBhaJarSummary > div { padding: 8px 10px; }
+  .jarUpInputs > div:first-child { grid-template-columns: repeat(auto-fit, minmax(min(150px, 100%), 1fr)); }
+  .jarUpInputs > div:first-child > label:has(select) { grid-column: auto; }
+  .jarUpSubheading { margin-top: 10px; }
+  .jarUpActions { align-items: stretch; }
+  .jarUpActions > button { width: 100%; }
+  .jarUpUnits { width: 100%; justify-content: space-between; }
+}

@@ -5,7 +5,7 @@ import { drillstringDeploymentStructure } from '../../engineering/bha/deployDril
 
 const finite = v => (typeof v === 'string' || typeof v === 'number') && String(v).trim() !== '' && Number.isFinite(Number(v));
 export function importedGeometry(source) {
-  if (!source?.originalCsv) return { valid: false, errors: [{ message: 'Import a directional survey in the Survey window first.' }] };
+  if (!source?.originalCsv) return { valid: false, errors: [{ message: 'Associate a survey in the Survey window first: import CSV, restore a preserved source, or generate a vertical survey.' }] };
   const parsed = parseSurveyCsv(source.originalCsv, source.confirmed === true ? { mdUnit: 'ft', angleUnit: 'deg' } : undefined);
   return parsed.valid ? calculateSurveyGeometry(parsed.stations) : parsed;
 }

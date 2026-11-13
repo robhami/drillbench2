@@ -17,7 +17,7 @@ const Selectlist2 = (props) => {
   const onChange=props.onChange
   const ddvalues2=props.widgets.map((x) => (
        {       
-        value: x.name,
+        value: x.value,
         label: x.name,
         id: x.id
        } 
@@ -39,4 +39,4 @@ const Selectlist2 = (props) => {
 
 
 
-export default SearchDrop ; 
+export default SearchDrop;

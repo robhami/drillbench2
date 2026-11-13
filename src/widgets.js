@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { buildEngModel } from './engineering/models/buildEngModel.js';
+import { assessBhaReadiness } from './Components/BHABuilder/bhaReadiness';
 
 import UnitCon from './Apps/UnitCon/UnitCon.js';
 import BHAEntry from './Apps/BHAEntry/BHAEntry.js';
@@ -10,6 +11,7 @@ import EngineeringResultsCard from './Apps/EngineeringResults/EngineeringResults
 import EngineeringStringCard from './Apps/EngineeringString/EngineeringStringCard.js';
 
 export const createWidgets = ({
+  developerPanels = false,
   bha,
   updateBha,
   updateRow,
@@ -17,7 +19,7 @@ export const createWidgets = ({
   removeRow,
   reorderRows
 }) => {
-  const engModel = buildEngModel(bha);
+  const engModel = assessBhaReadiness(bha).valid ? buildEngModel(bha) : null;
 
   return [
     {
@@ -48,7 +50,7 @@ export const createWidgets = ({
 
     {
       id: 2,
-      name: 'Analysis Inputs',
+      name: 'Parameter Entry',
       image:
         'https://cdn.iconscout.com/icon/premium/png-128-thumb/parameters-1980829-1672484.png',
       value: 'Analysis Inputs',
@@ -90,5 +92,5 @@ export const createWidgets = ({
         />
       )
     }
-  ];
+  ].filter(widget => developerPanels || ![3, 4].includes(widget.id));
 };

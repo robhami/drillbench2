@@ -406,17 +406,51 @@ dt {
 
 .analysisInputGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 120px);
+  grid-template-columns: repeat(auto-fit, minmax(min(132px, 100%), 1fr));
   justify-content: start;
-  gap: 6px 8px;
+  align-items: start;
+  gap: 7px 8px;
 }
+
+.analysisInputsCard .parameterEntryGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px 12px;
+}
+.parameterTrajectoryRow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 9px; margin-bottom: 8px; }
+.parameterTrajectoryLabel { font-size: .78rem; font-weight: 600; white-space: nowrap; }
+.parameterTrajectorySelector { display: inline-flex; border: 1px solid #aebbc5; border-radius: 4px; overflow: hidden; }
+.parameterTrajectorySelector button { border: 0; border-right: 1px solid #aebbc5; padding: 3px 10px; min-height: 27px; background: #f6f8fa; color: #364550; font: inherit; font-size: .78rem; cursor: pointer; }
+.parameterTrajectorySelector button:last-child { border-right: 0; }
+.parameterTrajectorySelector button[aria-pressed="true"] { background: #245975; color: #fff; font-weight: 600; }
+.parameterTrajectorySelector button:focus-visible { position: relative; z-index: 1; outline: 2px solid #e4a21b; outline-offset: -2px; }
+.parameterTrajectoryRequired { color: #92351b; font-size: .75rem; font-weight: 600; }
+.analysisInputsCard .parameterEntryGrid .form-label { white-space: nowrap; }
+.analysisInputsCard .parameterEntryGrid .form-control { width: 100%; max-width: 190px; text-align: left; }
+.parameterEntryError { margin: 5px 0 0; color: #92351b; font-size: .72rem; }
+@media (max-width: 260px) {
+  .analysisInputsCard .parameterEntryGrid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.analysisInputGrid > div { min-width: 0; }
+.analysisInputGrid.demoPresentationInputs { display: flex; flex-wrap: wrap; }
+.demoPresentationInputs > div { flex: 1 1 120px; }
+.demoPresentationInputs > .analysisNameField { flex-basis: 100%; }
+.demoPresentationInputs > .analysisCoverageWarning { flex-basis: 100%; }
+.analysisWobRange { margin-top: 14px; padding-top: 8px; border-top: 1px solid #dce3e8; }
+.analysisWobRange legend { float: none; width: auto; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+.analysisWobRange .analysisInputGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.analysisWobRange small { display: block; color: #667482; font-size: 10px; margin-top: 6px; }
+.analysisWobRange .analysisInputGrid .form-label { white-space: normal; line-height: 1.2; min-height: 2.4em; }
+.analysisCoverageWarning { grid-column: 1 / -1; margin: 0; font-size: 12px; overflow-wrap: anywhere; }
 
 .analysisNameField {
   grid-column: 1 / -1;
 }
 
 .analysisInputGrid .form-label {
+  display: block;
   margin-bottom: 2px;
+  white-space: nowrap;
 
   font-size: 0.78rem;
   font-weight: 600;
@@ -425,19 +459,25 @@ dt {
 .analysisInputGrid .form-control {
   float: none;
 
-  width: 60px;
+  width: 70px;
+  max-width: 100%;
   flex: 0 0 auto;
   height: 28px;
 
   padding: 3px 4px;
 
   font-size: 0.84rem;
+  text-align: center;
 }
 
 .analysisInputGrid .analysisNameField .form-control {
-  width: 200px;
+  width: 100%;
   max-width: 100%;
+  text-align: left;
 }
+
+.analysisInputGrid .analysisDepthDisplay { width: 90px; }
+.analysisInputGrid .form-control[readonly] { background-color: #e8edf1; color: #364550; }
 
 .analysisInputGrid .analysisWideNumber .form-control {
   width: 70px;
@@ -445,14 +485,18 @@ dt {
 
 .analysisInputGrid .bhaInputWithUnit {
   width: max-content;
+  max-width: 100%;
 }
 
 .analysisInputGrid .bhaInputWithUnit>span {
   padding: 0 4px;
+  white-space: nowrap;
+  font-size: 0.78rem;
 }
 
 .analysisInputGrid .form-select {
   width: 110px;
+  max-width: 100%;
   height: 28px;
   padding: 3px 24px 3px 4px;
   font-size: 0.84rem;
@@ -682,9 +726,9 @@ body {
 .form-control,
 .form-select,
 #bhaCard .numInput {
-  background: #fbfcfd;
-  border-color: #bfc9d2;
-  color: #27313b;
+  background: var(--wb-input, #fbfcfd);
+  border-color: var(--wb-border, #bfc9d2);
+  color: var(--wb-ink, #27313b);
 }
 
 .form-control:focus,
@@ -1295,13 +1339,6 @@ body {
   width: 280px;
   min-width: 280px;
   max-width: 280px;
-}
-
-.engineeringString3D {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
 }
 
 .engineeringStringCard {

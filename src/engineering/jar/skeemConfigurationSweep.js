@@ -12,7 +12,7 @@ const warnings = [
 const empty = error => ({
   valid: false, error, notice: SKEEM_PREIMPACT_NOTICE, warnings: [...warnings],
   samples: [], axes: null, validCount: 0, invalidCount: 0, invalidReasons: [],
-  maxima: { label: 'Maxima within the sampled domain', impulse: null, averageForce: null, impactForce: null }
+  maxima: { label: 'Maxima within the sampled domain', impulse: null, averageForce: null, impactForce: null, peakForce: null }
 });
 
 function sampleAxis(axis, name) {
@@ -47,6 +47,18 @@ export function calcSkeemConfigurationSweep(request, options = {}) {
   if (!isObject(request) || !isObject(request.constants) || !isObject(options)) return empty('Provide request, constants and options objects.');
   if (!['fixed-total', 'independent'].includes(request.mode)) return empty('mode must be fixed-total or independent.');
   const constants = request.constants;
+  if (request.relocation) {
+    const p = request.relocation;
+    const expectedTransition = p.stuckPointAboveBitFt + p.collarInventoryFt + p.jarLengthFt;
+    if (!isObject(p) || p.kind !== 'fixed-endpoint-uniform-collar' || request.mode !== 'fixed-total' ||
+        !(p.jarLengthFt > 0) || p.stuckPointAboveBitFt !== 0 ||
+        p.collarInventoryFt !== request.totalCollarLengthFt || p.l3Ft !== constants.freePipeLengthFt ||
+        !Number.isFinite(p.transitionAboveBitFt) || !Number.isFinite(p.freeTopAboveBitFt) ||
+        Math.abs(p.transitionAboveBitFt - expectedTransition) > 64 * Number.EPSILON * Math.max(1, Math.abs(expectedTransition)) ||
+        p.freeTopAboveBitFt !== p.transitionAboveBitFt + p.l3Ft) {
+      return empty('Relocation must preserve the verified collar inventory, jar length, fixed transition, stuck point and actual free-pipe length; moving-transition placements are unsupported.');
+    }
+  }
   if (!(Number.isFinite(constants.materialWeightDensityLbfIn3) && constants.materialWeightDensityLbfIn3 > 0)) {
     return empty('materialWeightDensityLbfIn3 must be finite and positive; no default density is assumed.');
   }
@@ -94,14 +106,20 @@ export function calcSkeemConfigurationSweep(request, options = {}) {
     const valid = error === null;
     samples.push({
       index: samples.length, l1Index, l2Index, l1Ft,
+      l3Ft: Number.isFinite(constants.freePipeLengthFt) ? constants.freePipeLengthFt : null,
+      constructibility: request.relocation ? 'Continuous-inventory geometry; assembly unverified' : 'Independent research; placement not assessed',
       l2Ft: Number.isFinite(l2Ft) ? l2Ft : null,
       totalCollarLengthFt: Number.isFinite(total) ? total : null,
       lowerCollarAirWeightLbf: Number.isFinite(lowerWeight) && lowerWeight >= 0 ? lowerWeight : null,
       upperCollarAirWeightLbf: Number.isFinite(upperWeight) && upperWeight >= 0 ? upperWeight : null,
       valid, error, warnings: [...warnings, ...(valid ? [] : [error])],
       impactVelocityFtS: valid ? result.preImpact.hammerVelocityFtS : null,
+      impactTimeS: valid ? result.preImpact.impactTimeS : null,
+      reflectionPeriodS: valid ? result.preImpact.reflectionPeriodS : null,
       impactForceLbf: valid ? result.impactForceLbf : null,
       impactForceKlbf: valid ? result.impactForceKlbf : null,
+      peakStuckPointForceLbf: valid ? Math.max(...result.forceHistory.map(interval => interval.tensileForceLbf)) : null,
+      peakStuckPointForceKlbf: valid ? Math.max(...result.forceHistory.map(interval => interval.tensileForceLbf)) / 1000 : null,
       averageStuckPointForceLbf: valid ? result.averageStuckPointForceLbf : null,
       averageStuckPointForceKlbf: valid ? result.averageStuckPointForceKlbf : null,
       impulseLbfS: valid ? result.impulseLbfS : null,
@@ -113,13 +131,13 @@ export function calcSkeemConfigurationSweep(request, options = {}) {
     if (request.mode === 'fixed-total') add(value, l2.values[i], i, null);
     else l2.values.forEach((upper, j) => add(value, upper, i, j));
   });
-  const maxima = { label: 'Maxima within the sampled domain', impulse: null, averageForce: null, impactForce: null };
+  const maxima = { label: 'Maxima within the sampled domain', impulse: null, averageForce: null, impactForce: null, peakForce: null };
   const invalidReasons = [];
   let validCount = 0;
   for (const sample of samples) {
     if (sample.valid) {
       validCount += 1;
-      for (const [name, metric] of [['impulse', 'impulseLbfS'], ['averageForce', 'averageStuckPointForceLbf'], ['impactForce', 'impactForceLbf']]) {
+      for (const [name, metric] of [['impulse', 'impulseLbfS'], ['averageForce', 'averageStuckPointForceLbf'], ['impactForce', 'impactForceLbf'], ['peakForce', 'peakStuckPointForceLbf']]) {
         // Exact ties retain the first sample in the documented output order.
         if (!maxima[name] || sample[metric] > maxima[name][metric]) maxima[name] = sample;
       }
@@ -133,6 +151,8 @@ export function calcSkeemConfigurationSweep(request, options = {}) {
   return {
     valid: true, error: null, notice: SKEEM_PREIMPACT_NOTICE, warnings: [...warnings], mode: request.mode,
     axes: { l1Ft: l1.values, l2Ft: l2.values.map(value => Number.isFinite(value) ? value : null), ordering: request.mode === 'fixed-total' ? 'ascending L1, paired L2' : 'ascending L1 outer, ascending L2 inner' },
-    samples, maxima, validCount, invalidCount: samples.length - validCount, invalidReasons
+    samples, maxima, validCount, invalidCount: samples.length - validCount, invalidReasons,
+    analysisKind: request.relocation ? 'geometry-constrained-relocation' : 'independent-research',
+    relocation: request.relocation ? { ...request.relocation } : null
   };
 }

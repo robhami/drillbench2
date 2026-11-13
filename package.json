@@ -15,6 +15,7 @@
     "bootstrap-icons": "^1.13.1",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
+    "dockview-react": "8.7.0",
     "knex": "^2.5.1",
     "pg": "^8.11.3",
     "plotly.js": "npm:plotly.js-gl3d-dist-min@^4.1.2",

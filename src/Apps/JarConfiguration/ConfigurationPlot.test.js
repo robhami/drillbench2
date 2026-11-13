@@ -89,3 +89,30 @@ test('metric and size updates preserve live camera including wheel zoom; a new r
   rerender(<ConfigurationPlot data={data} layout={{ ...initial, uirevision: 2 }} />);
   expect(mockPlotProps[mockPlotProps.length - 1].layout.scene.camera).toEqual(initial.scene.camera);
 });
+
+test('neutral point graph responds to module width and height changes', () => {
+  const { container } = render(<section className="jarClearance"><ConfigurationPlot data={[]} layout={{}} responsiveHeight /></section>);
+  const module = container.firstChild, host = module.firstChild;
+  Object.defineProperty(module, 'clientHeight', { value: 700, configurable: true });
+  Object.defineProperty(host, 'clientWidth', { value: 900, configurable: true });
+  act(() => window.dispatchEvent(new Event('resize')));
+  expect(screen.getByTestId('plot')).toHaveAttribute('data-height', '510');
+  expect(screen.getByTestId('plot')).toHaveAttribute('data-width', '900');
+  Object.defineProperty(module, 'clientHeight', { value: 500, configurable: true });
+  Object.defineProperty(host, 'clientWidth', { value: 520, configurable: true });
+  act(() => window.dispatchEvent(new Event('resize')));
+  expect(screen.getByTestId('plot')).toHaveAttribute('data-height', '340');
+  expect(screen.getByTestId('plot')).toHaveAttribute('data-width', '520');
+});
+
+test('selection-only data updates preserve the live 3D camera', () => {
+  const camera = { eye: { x: 0.5, y: -1.2, z: 0.8 }, center: { x: 0.1, y: 0.2, z: 0 } };
+  const layout = { scene: { camera: { eye: { x: 1.45, y: 1.45, z: 1.1 } } }, uirevision: 'survey' };
+  mockGraph = { layout: { uirevision: 'survey' }, _fullLayout: { scene: { _scene: { getCamera: () => camera } } } };
+  const { container, rerender } = render(<ConfigurationPlot data={[]} layout={layout} plotHeight={280} />);
+  Object.defineProperty(container.firstChild, 'clientWidth', { value: 700 });
+  act(() => window.dispatchEvent(new Event('resize')));
+  rerender(<ConfigurationPlot data={[{ type: 'scatter3d', name: 'Selected station' }]} layout={layout} plotHeight={280} />);
+  expect(mockPlotProps.at(-1).layout.scene.camera).toBe(camera);
+  expect(screen.getByTestId('plot')).toHaveAttribute('data-height', '280');
+});

@@ -1,0 +1,28 @@
+.wb2.wbHybrid { overflow: hidden; min-width: 0; }
+.wbHybrid .wbDockMain { min-width: 0; flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--wb-canvas, #f4f6f8); }
+.wbDockHost { position: relative; flex: 1; min-height: 0; min-width: 0; padding: 8px; overflow: hidden; }
+.wbDockHost > .dockview-theme-light { width: 100%; height: 100%; }
+.wbDockHost .dockview-theme-light { --dv-background-color: #f4f6f8; --dv-paneview-header-border-color: #dce3e8; --dv-group-view-background-color: white; --dv-activegroup-visiblepanel-tab-background-color: white; --dv-inactivegroup-visiblepanel-tab-background-color: white; --dv-activegroup-hiddenpanel-tab-background-color: #edf1f4; --dv-inactivegroup-hiddenpanel-tab-background-color: #edf1f4; --dv-tabs-and-actions-container-background-color: #edf1f4; --dv-tabs-and-actions-container-height: 36px; --dv-tab-font-size: 12px; --dv-separator-border: #dce3e8; --dv-sash-color: #315f7355; --dv-floating-box-shadow: 0 8px 32px #25344430; }
+.wbDockPanel { height: 100%; width: 100%; min-width: 0; min-height: 0; overflow: auto; padding: 12px; background: white; }
+.wbDockPanel > :is(.jarForces,.jarClearance,.jarConfiguration,.surveyPanel) { height: 100%; }
+.wbDockPanel .engineeringStringSurveyCard { min-height: 400px; height: 100%; }
+.wbDockActions { display: flex; align-items: center; gap: 3px; padding: 0 4px; }
+.wbDockActions button { height: 28px; width: 28px; border: 0; border-radius: 4px; background: transparent; color: #315f73; }
+.wbDockActions button:hover { background: #dce6eb; }
+.wbDockActions select { width: 66px; height: 26px; min-width: 0; font-size: 11px; border: 1px solid #dce3e8; border-radius: 3px; background: white; color: #425466; }
+.wbDockGroupLabel { display: inline-flex; align-items: center; height: 100%; padding: 0 8px; font: 600 9px 'Segoe UI', sans-serif; letter-spacing: .8px; color: #667482; }
+.wbDockMessage { display: flex; justify-content: space-between; align-items: center; padding: 7px 12px; font-size: 11px; border-bottom: 1px solid #dce3e8; background: #edf2f5; }
+.wbDockMessage button { background: transparent; border: 0; font-size: 18px; }
+.wb2.wbHybrid .wb2Sidebar { gap: 2px; overflow-x: hidden; }
+.wbDockNavLabel { padding: 12px 10px 4px; font-size: 9px; font-weight: 600; letter-spacing: 1px; color: #667482; }
+.wbDockNavFooter { margin-top: auto; padding-top: 12px; }
+.wb2.wbHybrid .wbDockNavFooter button { width: 100%; font-size: 11px; min-height: 34px; }
+.wb2.wbHybrid.wbRailCollapsed .wb2Sidebar { flex-basis: 58px; width: 58px; padding-left: 7px; padding-right: 7px; }
+.wbRailCollapsed .wb2Sidebar button > span, .wbRailCollapsed .wbDockNavLabel { display: none; }
+.wb2.wbHybrid.wbRailCollapsed .wb2Sidebar button { justify-content: center; padding: 10px 6px; }
+.wbRailCollapsed .wbDockNavFooter button { margin-top: 4px; }
+.wbDockHost .dv-tab { max-width: 245px; }
+.wbDockHost .dv-tab-content { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wbDockHost .dv-groupview { border: 1px solid #dce3e8; }
+.wbDockHost .dv-resize-container { background: white; }
+@media(max-width: 1100px) { .wbDockGroupLabel { display: none; } .wbDockHost { padding: 5px; } }

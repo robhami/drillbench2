@@ -1,0 +1,41 @@
+import React from 'react';
+import {render,screen,fireEvent,within} from '@testing-library/react';
+import frozen from '../../../docs/ValidationStudies/OES8p5Stage6C2.fixture.v1.json';
+import RealBhaComparison from './RealBhaComparison';
+const bha=frozen.workingCopy;
+const change=(label,value)=>fireEvent.change(screen.getByLabelText(label),{target:{value}});
+const openAdvanced=async()=>{fireEvent.click(screen.getByRole('button',{name:'Engineering Settings / Diagnostics'}));await screen.findByLabelText('Advanced static analysis');};
+const staticStatus=()=>within(screen.getByLabelText('Advanced static analysis')).getByRole('status');
+test('OES two-alternative workflow is non-destructive, gated, removable and reset on input/saved-BHA changes',async()=>{
+ const original=JSON.stringify(bha), {rerender}=render(<RealBhaComparison bha={bha} drillingMode="slide"/>);
+ await openAdvanced();
+ await screen.findByLabelText('Movement from current jar (ft)');
+ expect(screen.getByText(/16.069 klbf tension/)).toBeInTheDocument();
+ for(const delta of ['-30','30']){change('Movement from current jar (ft)',delta);fireEvent.click(screen.getByText('Add alternative'));}
+ fireEvent.click(screen.getByText('Calculate alternatives'));
+ const table=screen.getByRole('table',{name:'Real BHA static comparison'});
+ expect(within(table).getByText('Alternative 1 / difference from current')).toBeInTheDocument();
+ expect(within(table).getByText('Alternative 2 / difference from current')).toBeInTheDocument();
+ expect(screen.getAllByRole('img')).toHaveLength(3);
+ expect(screen.getByText(/^Dynamic impact comparison unavailable/)).toBeInTheDocument();
+ expect(screen.queryByText('Maximum stuck-point force')).not.toBeInTheDocument();
+ fireEvent.click(screen.getByText('Remove alternative 1'));
+ expect(screen.queryByText('Alternative 2 / difference from current')).not.toBeInTheDocument();
+ fireEvent.click(screen.getByText('Reset comparison'));
+ expect(staticStatus()).toHaveTextContent('Add alternatives');
+ change('Movement mode','B');expect(screen.getByText(/Mode B is unsupported/)).toBeInTheDocument();expect(screen.getByText('Add alternative')).toBeDisabled();
+ change('Movement mode','A');change('Movement from current jar (ft)','30');fireEvent.click(screen.getByText('Add alternative'));fireEvent.click(screen.getByText('Calculate alternatives'));
+ rerender(<RealBhaComparison bha={{...bha,wob:'35'}} drillingMode="slide"/>);
+ expect(screen.queryByText('Alternative 1 / difference from current')).not.toBeInTheDocument();
+ rerender(<RealBhaComparison bha={JSON.parse(original)} drillingMode="slide"/>);
+ await openAdvanced();expect(staticStatus()).toHaveTextContent('Add alternatives');
+ expect(JSON.stringify(bha)).toBe(original);
+});
+test('multiple jars start without implicit selection; invalid moves produce adjacent diagnostics',async()=>{
+ const multiple=JSON.parse(JSON.stringify(bha));multiple.rows.splice(8,0,{...multiple.rows[6],rowId:'second',toolName:'Second jar'});
+ render(<RealBhaComparison bha={multiple} drillingMode="slide"/>);
+ expect(screen.getByLabelText('Selected jar')).toHaveValue('');
+ change('Selected jar','0'); await openAdvanced();
+ change('Movement from current jar (ft)','1000');fireEvent.click(screen.getByText('Add alternative'));
+ expect(screen.getByRole('alert')).toHaveTextContent('Movement must leave');
+});

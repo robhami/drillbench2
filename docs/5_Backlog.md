@@ -34,3 +34,10 @@ Workspace V2
 - Calculate local radial clearance using the applicable hole diameter and tubular OD.
 - Integrate variable hole geometry with buckling and torque-and-drag models.
 - Do not infer enlarged intervals solely from the current underreamer position.
+
+## Future — Static Stiff-String BHA Model
+
+**Deferred — not implemented**
+
+- Static stiff-string BHA model: stabilizer contact forces, bit side force, bending moments, deflection and directional-behaviour inputs.
+- Reuse shared deployed BHA geometry, explicit material properties, survey, borehole geometry and axial boundary conditions; validate the new contact/bending model independently.

@@ -1,6 +1,44 @@
 .jarPerformance {
   container-type: inline-size;
 }
+.jarDownResearch { min-width: 0; font-size: 12px; }
+.jarCompressionAssessment { border: 1px solid #becbd6; background: #f6f8fa; padding: 9px; margin: 12px 0; }
+.jarCompressionAssessment button { margin: 4px 7px 4px 0; }
+.jarCompressionAssessment details label { display: flex; flex-direction: column; margin: 5px 0; }
+.jarCompressionAssessment input, .jarCompressionAssessment select { max-width: 100%; width: 280px; }
+.jarCompressionAssessment table { width: 100%; font-size: 11px; }
+.jarCompressionAssessment th, .jarCompressionAssessment td { padding: 4px; border-bottom: 1px solid #d8dfe5; overflow-wrap: anywhere; }
+.jarResearchCandidate { background: #fff0ce; padding: 7px; }
+.jarResearchBanner { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; padding: 9px; margin-top: 8px; background: #fff0ce; border: 1px solid #ba862d; color: #6d4512; }
+.jarResearchToggles { display: flex; flex-wrap: wrap; gap: 5px 14px; margin: 8px 0; }
+.jarResearchToggles label { display: flex; align-items: center; gap: 5px; }
+.jarResearchToggles .muted { color: #7b8188; }
+.jarResearchGraph { width: 100%; min-width: 0; }
+.jarResearchTimeline select, .jarResearchInputs select { width: 100%; max-width: 100%; padding: 5px; }
+.jarResearchEvents { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0; }
+.jarResearchEvents button { font-size: 11px; }
+.jarResearchEvents button[aria-pressed="true"] { background: #ffe7a5; border-color: #a96a10; }
+.jarResearchInputs { margin-top: 14px; }
+.jarResearchInputs fieldset { min-width: 0; padding: 7px; border: 1px solid #d4dee6; margin: 6px 0; }
+.jarResearchInputs legend { font-size: 12px; width: auto; margin: 0; }
+.jarResearchRods { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 7px; }
+.jarResearchRods label { display: flex; flex-direction: column; }
+.jarResearchRods input { width: 100%; }
+.jarResearchWarnings { margin-top: 12px; padding: 8px; background: #fff7e8; border: 1px solid #dbc391; }
+.jarResearchComparison table { width: 100%; font-size: 11px; }
+.jarResearchComparison th, .jarResearchComparison td { padding: 4px; border-bottom: 1px solid #d4dee6; }
+.jarImpactDirection { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+.jarImpactDirection select { padding: 4px 8px; border: 1px solid #bdcbd7; border-radius: 4px; background: white; }
+.jarImpactGraph { min-width: 0; margin-top: 8px; }
+.jarImpactGraph h6 { font-size: 13px; font-weight: 600; margin: 4px 0; }
+.jarImpactToggle { display: flex; gap: 6px; align-items: center; font-size: 12px; }
+.jarImpactCaption { font-size: 11px; color: #667482; line-height: 1.45; }
+.jarImpactEmpty { min-height: 230px; display: grid; align-items: center; padding: 14px; background: #f4f7f9; color: #855125; border: 1px solid #e1e7ed; border-radius: 4px; }
+.jarPerformance:has(.jarDownPreparation) .jarImpactEmpty { min-height: 80px; }
+.jarDownPreparation { margin-top: 10px; font-size: 12px; }
+.jarDownPreparation h6 { font-size: 13px; font-weight: 600; }
+.jarDownPreparation .jarPerformanceStuckPoint input { width: 100%; }
+.jarDownPreparation select { width: 100%; max-width: 100%; padding: 4px; }
 
 .jarPerformance p {
   margin: 6px 0;
@@ -42,4 +80,90 @@
   .jarPerformanceResults {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.jarResearchStatus { padding: 7px 9px; background: #eef5f8; border-left: 3px solid #3a7189; margin: 6px 0; }
+.jarResearchStatus p { margin: 4px 0 0; }
+.jarResearchResults { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px 12px; margin: 8px 0; }
+.jarResearchResults dd { font-size: 14px; font-weight: 600; }
+.jarCompressionSummary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 12px; margin: 6px 0; }
+.jarResearchWorkflow { color: #526575; font-size: 11px; }
+.jarDownResearch summary { cursor: pointer; font-weight: 600; padding: 5px 0; }
+@container (max-width: 600px) { .jarResearchResults { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.jarDownLoadingSummary { border: 1px solid #bed0dd; background: #f5f9fb; padding: 7px 9px; margin: 6px 0; }
+.jarLoadingGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px 12px; margin: 5px 0; }
+.jarDownLoadingSummary label { display: inline-flex; flex-direction: column; max-width: 100%; margin: 4px 12px 4px 0; }
+@container (max-width: 600px) { .jarLoadingGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.jarTargetControls { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: flex-end; margin: 10px 0; }
+.jarTargetControls label { display: flex; flex-direction: column; font-size: 12px; flex: 1 1 185px; }
+.jarTargetControls input { width: 100%; padding: 6px; }
+.jarTargetControls button { padding: 7px 12px; }
+.jarTargetResults { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px 12px; }
+.jarTargetResults dd { font-weight: 600; margin: 1px 0; }
+.jarTargetStatus { font-size: 12px; border-left: 3px solid #b38a36; padding: 4px 8px; margin: 8px 0; background: #fff8e9; }
+.jarTargetAdvanced { margin-top: 10px; border-top: 1px solid #d5dee5; padding-top: 7px; }
+.jarTargetAdvanced > summary { cursor: pointer; font-weight: 600; }
+.jarTargetAdvanced fieldset { margin-top: 8px; padding: 7px; border: 1px solid #d5dee5; }
+.jarTargetAdvanced legend { font-size: 12px; }
+.jarTargetGraph { min-width: 0; }
+.jarTargetResearchStatus { position: sticky; top: 0; z-index: 2; display: flex; flex-wrap: wrap; gap: 5px; padding: 5px 8px; background: #fff4d9; border-left: 3px solid #b48b35; font-size: 12px; }
+.jarTargetControls select { max-width: 100%; width: 100%; padding: 6px; }
+.jarTargetControls label { min-width: 0; }
+.jarTargetWhy { font-size: 12px; margin: 5px 0; }
+.jarTargetWhy summary { cursor: pointer; font-weight: 600; }
+.jarTargetTimings { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 12px; }
+.jarTargetImpactTime { border-left: 3px dashed #217a50; padding-left: 6px; }
+.jarTargetReactionTime { border-left: 3px dotted #355ea0; padding-left: 6px; }
+.jarTargetStatus:empty { display: none; }
+.jarTargetAdvanced > label { display: flex; flex-direction: column; max-width: 100%; }
+.jarTargetAdvanced > label select { max-width: 100%; }
+.jarModelNotice { position: sticky; top: 0; z-index: 2; padding: 5px 8px; background: #fff4d9; border-left: 3px solid #b48b35; font-size: 12px; }
+.jarPrimaryInputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; gap: 8px 12px; margin: 8px 0; }
+.jarPrimaryInputs label { display: flex; flex-direction: column; min-width: 0; font-size: 12px; }
+.jarPrimaryInputs input { width: 100%; max-width: 100%; padding: 6px; }
+.jarPrimaryInputs .jarPerformanceStuckPoint { grid-column: auto; }
+.jarTargetControls.jarPrimaryInputs { grid-template-columns: minmax(160px, 1fr) auto; }
+.jarUnifiedResults { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; }
+.jarUnifiedResults dt { font-size: 12px; font-weight: 500; }
+.jarUnifiedResults dd { font-size: 14px; font-weight: 600; margin: 1px 0; }
+.jarEngineeringDetails { margin-top: 10px; padding-top: 7px; border-top: 1px solid #d5dee5; font-size: 12px; }
+.jarEngineeringDetails > summary { cursor: pointer; font-weight: 600; }
+.jarEngineeringDetails > label input[type="number"] { width: 100%; max-width: 280px; padding: 6px; }
+@container (max-width: 520px) {
+  .jarPrimaryInputs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .jarPrimaryInputs .jarPerformanceStuckPoint { grid-column: 1 / -1; }
+}
+@container (max-width: 340px) { .jarTargetControls.jarPrimaryInputs { grid-template-columns: minmax(0, 1fr); } }
+.jarDirectionTabs { display: flex; gap: 4px; border-bottom: 1px solid #d5dee5; margin-bottom: 8px; }
+.jarDirectionTabs [role="tab"] { padding: 7px 18px; background: transparent; color: #526575; border: 0; border-bottom: 3px solid transparent; font-size: 13px; font-weight: 600; }
+.jarDirectionTabs [role="tab"][aria-selected="true"] { border-bottom-color: #196b9a; color: #145d83; background: #edf5fa; }
+.jarDirectionTabs [role="tab"]:focus-visible { outline: 2px solid #196b9a; outline-offset: -2px; }
+.jarPerformance [role="tabpanel"][hidden] { display: none; }
+.jarGraphInstruction { min-height: 100px; padding: 12px; display: flex; flex-direction: column; justify-content: center; background: #f4f7f9; border-left: 2px solid #bdcbd7; }
+.jarModeLayout > .jarHistoryArea { min-width: 0; margin-top: 8px; }
+.jarModeLayout > .jarHistoryArea { height: 400px; min-height: 400px; }
+.jarHistoryArea:has(> .jarGraphInstruction) { display: flex; flex-direction: column; justify-content: center; }
+.jarHistoryArea > .jarGraphInstruction { margin: 0; }
+.jarHistoryArea > .jarImpactEmpty { height: 350px; min-height: 0; }
+.jarUnifiedResults { min-height: 135px; align-content: start; grid-auto-rows: minmax(41px, auto); }
+.jarResultPlaceholder { color: #7b8793; }
+.jarPrimaryInputs:not(form) { grid-template-columns: repeat(3, minmax(0, 1fr)) auto; }
+.jarTargetControls.jarPrimaryInputs { grid-template-columns: minmax(160px, 1fr) auto auto; }
+.jarPrimaryInputs { min-height: 64px; }
+.jarPrimaryInputs label { min-height: 64px; justify-content: flex-end; }
+.jarPrimaryInputs button { padding: 7px 12px; white-space: nowrap; }
+.jarInitialConfirmation { display: flex; align-items: center; gap: 6px; }
+@container (max-width: 520px) {
+  .jarPrimaryInputs:not(form), .jarTargetControls.jarPrimaryInputs { grid-template-columns: repeat(2, minmax(0, 1fr)); min-height: 136px; }
+  .jarPrimaryInputs .jarPerformanceStuckPoint { grid-column: auto; }
+  .jarTargetControls.jarPrimaryInputs > label { grid-column: 1 / -1; }
+}
+@container (max-width: 420px) { .jarModeLayout > .jarHistoryArea { height: 440px; min-height: 440px; } }
+
+.jarTargetControls.jarPrimaryInputs { grid-template-columns: repeat(3, minmax(0, 1fr)) auto; }
+.jarDownActions { display: flex; gap: 8px; align-items: flex-end; }
+@container (max-width: 520px) {
+ .jarTargetControls.jarPrimaryInputs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .jarTargetControls.jarPrimaryInputs > label { grid-column: auto; }
+ .jarDownActions { flex-wrap: wrap; }
 }

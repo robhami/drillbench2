@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { SURVEY_STORAGE_KEY, SURVEY_CHANGED_EVENT } from '../Survey/Survey';
+import { useDemoPresentation, componentDisplayLabel } from '../../Components/DemoPresentation';
+import { useActiveSurvey } from '../Survey/surveyAssociation';
 import { importedGeometry } from '../JarClearance/clearanceData';
 import { calcComponentPositions } from '../../engineering/bha/calcComponentPositions';
 import { solveStaticJarHookload } from '../../engineering/jar/inverseStaticJarLoads';
@@ -9,8 +10,10 @@ import { directionSettings, operatingAvailability } from './directionalJarConfig
 import { calcHookloadLimits, readMaximumHookload } from '../../engineering/jar/hookloadLimits';
 import './JarForces.css';
 import BucklingDetails from './BucklingDetails';
+import { manufacturerLimitFields, readManufacturerLimit, compareManufacturerJarLimits } from '../../engineering/jar/manufacturerJarLimits';
+import { validateSurveyCoverage } from '../../engineering/survey/surveyCoverage';
+import { jarLoadingKey } from './jarLoadingInputs';
 
-const readSurvey = () => { try { return JSON.parse(localStorage.getItem(SURVEY_STORAGE_KEY)); } catch { return null; } };
 const text = v => v === undefined || v === null ? '' : String(v);
 const finite = v => (typeof v === 'number' || typeof v === 'string') && String(v).trim() !== '' && Number.isFinite(Number(v));
 // Suppress a displayed minus-zero below half the final klbf digit; raw loads stay unchanged.
@@ -33,7 +36,7 @@ const operatingRows = [
   ['Rotating Off Bottom', 'rotatingHookload', null, 'Rotation only', 'Rotation at fixed depth with zero axial movement. The current model assumes zero axial frictional drag during pure rotation.'],
   ['Slack-Off', 'slackOffHookload', 'slackOffDrag', 'Downward', 'Nonrotating off-bottom lowering with fully mobilised axial friction. Slack-off drag equals rotating minus slack-off hookload; resistance acts uphole.']
 ];
-const outputValue = output => <>{output.valid ? klbf(output.valueLbf) : 'Unavailable'}{!output.valid && output.reason && <small className="jarForcesUnavailable">{output.reason}</small>}</>;
+const outputValue = output => output.valid ? klbf(output.valueLbf) : 'Unavailable';
 
 function Parameter({ label, definition }) {
   return <th scope="row"><span>{label}</span>{' '}<span className="jarForcesInfo" tabIndex="0" role="note" aria-label={label + ': ' + definition} title={definition}>i</span></th>;
@@ -47,22 +50,23 @@ function ResultsTable({ title, children, columns = ['Parameter', 'Value (klbf)']
   </table>;
 }
 
-export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha, rigLimits, updateRigLimits }) {
-  const [source, setSource] = useState(readSurvey);
-  useEffect(() => {
-    const changed = e => setSource(e.detail);
-    const stored = e => { if (e.key === SURVEY_STORAGE_KEY || e.key === null) setSource(readSurvey()); };
-    window.addEventListener(SURVEY_CHANGED_EVENT, changed); window.addEventListener('storage', stored);
-    return () => { window.removeEventListener(SURVEY_CHANGED_EVENT, changed); window.removeEventListener('storage', stored); };
-  }, []);
+export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha, rigLimits, updateRigLimits, surveyCoverage, surfaceReferenceMdFt, setSurfaceReferenceMdFt }) {
+  const demoPresentation = useDemoPresentation();
+  const source = useActiveSurvey(bha);
+  const trajectoryDescription = source?.kind === 'generated-vertical'
+    ? 'Generated vertical fallback (0° inclination; not a measured survey).'
+    : source?.originalCsv ? `Associated survey: ${source.filename || source.origin || 'unnamed survey'}.`
+      : 'No confirmed survey or explicit vertical fallback is available.';
   const survey = useMemo(() => importedGeometry(source), [source]);
   const jars = useMemo(() => calcComponentPositions(bha).components.filter(c => String(c.category).toUpperCase() === 'JAR'), [bha]);
-  const [fields, setFields] = useState(() => ({ surface: '0', jar: '0',
+  const [fields, setFields] = useState(() => ({ surface: surfaceReferenceMdFt ?? '0', jar: '0',
     direction: 'pickup', loadMode: 'absolute', hookload: '', reference: '', applied: '', jarDirection: 'up' }));
+  const surface = surfaceReferenceMdFt === undefined ? fields.surface : surfaceReferenceMdFt;
   const jarRows = (bha?.rows || []).map((row, index) => ({ row, index })).filter(({ row }) => String(row.category).toUpperCase() === 'JAR' && Number(row.length) > 0);
   const selectedRow = jarRows[Number(fields.jar)];
   const settings = directionSettings(selectedRow?.row, fields.jarDirection);
   const availability = operatingAvailability(settings);
+  const manufacturerLimits = selectedRow?.row.jarManufacturerLimits || {};
   const editable = Boolean(selectedRow && ((selectedRow.row.rowId != null && updateRow) || updateBha));
   const changeConfiguration = (direction, changes) => {
     if (!editable) return;
@@ -70,30 +74,62 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha, 
     const jarDirections = { ...row.jarDirections, [direction]: { ...row.jarDirections?.[direction], ...changes } };
     if (row.rowId != null && updateRow) updateRow(row.rowId, { jarDirections });
     else updateBha({ rows: bha.rows.map((r, index) => index === selectedRow.index ? { ...r, jarDirections } : r) });
-    setLoadingResult(null); setLoadingError(''); setResult(null); setError('');
+    setResult(null); setError('');
   };
   const [result, setResult] = useState(null), [error, setError] = useState('');
-  const [loadingResult, setLoadingResult] = useState(null), [loadingError, setLoadingError] = useState('');
-  const dragSummary = useMemo(() => calcOffBottomRotatingSummary({ bha, survey, bitMdFt: analysisBitMdFt, surfaceMdFt: fields.surface,
+  const [loadingSnapshot, setLoadingSnapshot] = useState(null);
+  const [bucklingSummary, setBucklingSummary] = useState(null);
+  const changeManufacturerLimits = changes => {
+    if (!editable) return;
+    const patch = { jarManufacturerLimits: { ...manufacturerLimits, ...changes } };
+    if (selectedRow.row.rowId != null && updateRow) updateRow(selectedRow.row.rowId, patch);
+    else updateBha({ rows: bha.rows.map((row, index) => index === selectedRow.index ? { ...row, ...patch } : row) });
+  };
+  const coverage = useMemo(() => surveyCoverage || validateSurveyCoverage(survey, {
+    startMdFt: finite(surface) ? Number(surface) : NaN,
+    endMdFt: finite(analysisBitMdFt) ? Number(analysisBitMdFt) : NaN,
+    calculations: ['string-weight projection', 'off-bottom hookloads', 'static/inverse jar loads', 'buckling screening']
+  }), [surveyCoverage, survey, surface, analysisBitMdFt]);
+  const dragSummary = useMemo(() => !coverage.covered ? {
+    weights: { valid: false, errors: [] }, ...Object.fromEntries(['pickupHookload', 'rotatingHookload', 'slackOffHookload', 'pickupDrag', 'slackOffDrag'].map(key => [key, { valid: false }]))
+  } : calcOffBottomRotatingSummary({ bha, survey, bitMdFt: analysisBitMdFt, surfaceMdFt: surface,
     mudWeightPpg: bha?.mudWeight, jarIndex: Number(fields.jar), frictionCoefficient: bha?.frictionCoefficient,
     rpm: bha?.rpm }),
-  [bha, survey, analysisBitMdFt, fields.surface, fields.jar]);
+  [bha, survey, analysisBitMdFt, surface, fields.jar, coverage]);
+  const loadingKey = jarLoadingKey({ bha, survey, bitMdFt: analysisBitMdFt, surfaceMdFt: surface,
+    jarIndex: Number(fields.jar), jarDirection: fields.jarDirection, targetForceKlbf: settings.targetForceKlbf,
+    available: availability.enabled, covered: coverage.covered,
+    rotatingHookloadLbf: dragSummary.rotatingHookload.valid ? dragSummary.rotatingHookload.valueLbf : null });
+  // Gate results during render, before any effect: stale loads must never reach comparisons or buckling.
+  const loadingCurrent = loadingSnapshot?.key === loadingKey;
+  const loadingResult = loadingCurrent ? loadingSnapshot.result : null;
+  const loadingError = loadingCurrent ? loadingSnapshot.error : '';
+  const loadingDirty = Boolean(loadingSnapshot && (!loadingCurrent || loadingSnapshot.dirty));
+  useEffect(() => {
+    setLoadingSnapshot(previous => previous && previous.key !== loadingKey ? { key: loadingKey, result: null, error: '', dirty: true } : previous);
+  }, [loadingKey]);
+  const manufacturerChecks = compareManufacturerJarLimits({ limits: manufacturerLimits, direction: fields.jarDirection,
+    targetForceLbf: finite(settings.targetForceKlbf) ? Number(settings.targetForceKlbf) * 1000 : null,
+    calculatedJarAxialLoadLbf: loadingResult?.jarAxialLoadLbf, calculationToleranceLbf: loadingResult?.residualToleranceLbf, operationAvailable: availability.enabled });
   const weightSummary = dragSummary.weights;
+  const supportingIssues = [...new Set([...(weightSummary.errors || []), ...['pickupHookload', 'rotatingHookload', 'slackOffHookload', 'pickupDrag', 'slackOffDrag'].map(key => dragSummary[key].reason).filter(Boolean)])];
   const maximumHookload = readMaximumHookload(rigLimits?.maximumAllowableHookloadKlbf);
   const limitCheck = calcHookloadLimits({ jarDirection: fields.jarDirection,
     maximumHookloadKlbf: rigLimits?.maximumAllowableHookloadKlbf,
     pickupHookloadLbf: dragSummary.pickupHookload.valid ? dragSummary.pickupHookload.valueLbf : null,
     requiredHookloadLbf: loadingResult?.requiredSurfaceHookloadLbf });
-  useEffect(() => { setResult(null); setError(''); setLoadingResult(null); setLoadingError(''); }, [bha, survey, analysisBitMdFt]);
+  useEffect(() => { setResult(null); setError(''); }, [bha, survey, analysisBitMdFt, coverage, surface]);
   useEffect(() => { if (jars.length === 1 || Number(fields.jar) >= jars.length) setFields(f => ({ ...f, jar: '0' })); }, [jars, fields.jar]);
-  const update = (key, value) => { setFields(f => ({ ...f, [key]: value })); setResult(null); setError(''); setLoadingResult(null); setLoadingError(''); };
-  const numeric = (key, label) => <label>{label}<input type="number" min="0" step="any" value={fields[key]} onChange={e => update(key, e.target.value)} /></label>;
+  const update = (key, value) => { if (key === 'surface' && setSurfaceReferenceMdFt) setSurfaceReferenceMdFt(value); setFields(f => ({ ...f, [key]: value })); setResult(null); setError(''); };
+  const numeric = (key, label) => <label>{label}<input type="number" min="0" step="any" value={key === 'surface' ? surface : fields[key]}
+    readOnly={key === 'surface' && surfaceReferenceMdFt !== undefined && !setSurfaceReferenceMdFt} onChange={e => update(key, e.target.value)} /></label>;
   const calculate = e => {
     e.preventDefault();
+    if (!coverage.covered) { setResult(null); setError(''); return; }
     if (!survey.valid) { setError(survey.errors.map(v => v.message).join(' ')); return; }
     const required = ['surface', ...(fields.loadMode === 'absolute' ? ['hookload'] : ['reference', 'applied'])];
-    if (!finite(analysisBitMdFt) || required.some(key => !finite(fields[key])) || !finite(bha?.mudWeight) || !finite(bha?.frictionCoefficient)) { setError('Enter explicit finite values for all selected inputs; blank loads are not zero.'); return; }
-    const calculated = calcStaticJarLoads({ bha, survey, bitMdFt: Number(analysisBitMdFt), surfaceMdFt: Number(fields.surface), jarIndex: Number(fields.jar),
+    if (!finite(analysisBitMdFt) || required.some(key => !finite(key === 'surface' ? surface : fields[key])) || !finite(bha?.mudWeight) || !finite(bha?.frictionCoefficient)) { setError('Enter explicit finite values for all selected inputs; blank loads are not zero.'); return; }
+    const calculated = calcStaticJarLoads({ bha, survey, bitMdFt: Number(analysisBitMdFt), surfaceMdFt: Number(surface), jarIndex: Number(fields.jar),
       mudWeightPpg: Number(bha?.mudWeight), frictionCoefficient: Number(bha?.frictionCoefficient), direction: fields.direction, loadMode: fields.loadMode,
       ...(fields.loadMode === 'absolute' ? { surfaceHookloadLbf: Number(fields.hookload) * 1000 } :
         { referenceHookloadLbf: Number(fields.reference) * 1000, appliedLoadLbf: Number(fields.applied) * 1000 }) });
@@ -102,48 +138,78 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha, 
   };
   const calculateLoading = e => {
     e.preventDefault();
-    if (!availability.enabled) { setLoadingResult(null); setLoadingError(availability.message); return; }
-    const solved = solveStaticJarHookload({ bha, survey, bitMdFt: analysisBitMdFt, surfaceMdFt: fields.surface,
+    if (!coverage.covered) { setLoadingSnapshot({ key: loadingKey, result: null, error: '', dirty: loadingDirty }); return; }
+    if (!availability.enabled) { setLoadingSnapshot({ key: loadingKey, result: null, error: availability.message, dirty: false }); return; }
+    const solved = solveStaticJarHookload({ bha, survey, bitMdFt: analysisBitMdFt, surfaceMdFt: surface,
       mudWeightPpg: bha?.mudWeight, frictionCoefficient: bha?.frictionCoefficient, jarIndex: Number(fields.jar),
       jarDirection: fields.jarDirection, desiredJarForceLbf: finite(settings.targetForceKlbf) ? Number(settings.targetForceKlbf) * 1000 : settings.targetForceKlbf,
       rotatingHookloadLbf: dragSummary.rotatingHookload.valid ? dragSummary.rotatingHookload.valueLbf : null });
-    if (!solved.valid) { setLoadingResult(null); setLoadingError(solved.errors.join(' ')); return; }
-    setLoadingResult(solved); setLoadingError('');
+    setLoadingSnapshot({ key: loadingKey, result: solved.valid ? solved : null, error: solved.valid ? '' : solved.errors.join(' '), dirty: false });
   };
-  return <section className="jarForces" aria-label="Jar Forces">
-    <h5>Jar Forces — static transfer</h5>
+  return <section className="jarForces" aria-label="Hookload Calculations">
+    {!coverage.covered && <p role="alert">{coverage.message}</p>}
+    <h5>Hookload Calculations</h5>
     <p className="jarForcesNotice">Preliminary quasi-static screening, not operational guidance. Calculated static axial loads are not jar firing forces or manufacturer operating limits.</p>
-    <p className="jarForcesDepthStatus" aria-live="polite">Analysis bit MD: {finite(analysisBitMdFt) ? decimal(Number(analysisBitMdFt)) + ' ft' : 'Required in Analysis Inputs'} | Surface reference: {finite(fields.surface) ? decimal(Number(fields.surface)) + ' ft' : 'Unavailable'} | {weightSummary.valid ? 'Deployed string ready' : 'Incomplete / invalid inputs'}</p>
-    <p className="jarForcesSharedStatus">Shared Analysis Inputs: mud {finite(bha?.mudWeight) ? text(bha.mudWeight) + ' ppg' : 'Unavailable'}, friction {finite(bha?.frictionCoefficient) ? text(bha.frictionCoefficient) : 'Unavailable'}, RPM {finite(bha?.rpm) ? text(bha.rpm) : 'Unavailable'}.</p>
-    <section className="jarForcesWeights" aria-label="String Weight & Drag Summary">
-      <ResultsTable title="String Weight" columns={['Component', ...weightColumns.map(([label, definition]) => <span title={definition}>{label}<small>(klbf)</small></span>)]}>
-        {weightRows.map(([label, key, definition]) => <tr key={key}><Parameter label={label} definition={definition} />
-          {['airWeightLbf', 'buoyedWeightLbf', 'axialWeightLbf'].map(field => <td key={field}>{weightSummary.valid ? klbf(weightSummary.weightPartitions[key][field]) : 'Unavailable'}</td>)}
-        </tr>)}
-      </ResultsTable>
-      <ResultsTable title="Operating Hookloads" columns={['Operation', <span title="Predicted surface load accounting for buoyancy, well inclination and frictional resistance under the selected operating condition.">Hookload<small>(klbf)</small></span>, <span title="Additional axial resistance generated by friction acting at wellbore contact points. Calculated relative to rotating off-bottom hookload.">Drag<small>(klbf)</small></span>, 'Direction']}>
-        {operatingRows.map(([label, key, dragKey, direction, definition]) => {
-          const load = dragSummary[key];
-          const drag = dragKey ? dragSummary[dragKey] : load.valid ? { valid: true, valueLbf: load.axialDragLbf } : load;
-          return <tr key={key}><Parameter label={label} definition={definition} /><td>{outputValue(load)}</td><td>{outputValue(drag)}</td><td>{direction}</td></tr>;
-        })}
-      </ResultsTable>
-      {!weightSummary.valid && <p role="status">{weightSummary.errors.join(' ')}</p>}
-      <p>Model predictions, not measured rig hookloads. Definitions: focus or hover over an information icon.</p>
-    </section>
+    <p className="jarForcesDepthStatus" aria-live="polite">Analysis bit MD: {finite(analysisBitMdFt) ? decimal(Number(analysisBitMdFt)) + ' ft' : 'Required in Parameter Entry'} | Surface reference: {finite(surface) ? decimal(Number(surface)) + ' ft' : 'Unavailable'} | {weightSummary.valid ? 'Deployed string ready' : 'Incomplete / invalid inputs'}</p>
+    <p className="jarForcesSharedStatus" role="status">Trajectory input: {trajectoryDescription}</p>
+
     {!jars.length && <p role="alert">No jar exists in the BHA. Add a jar before calculating jar loads.</p>}
-    {jars.length === 1 && <p className="jarForcesSharedStatus">Selected jar: {jars[0].toolName || 'JAR'} (only jar in BHA).</p>}
-    {jars.length > 1 && <label className="jarForcesJarSelect">Selected jar<select value={fields.jar} onChange={e => update('jar', e.target.value)}>{jars.map((jar, i) => <option key={i} value={i}>{jar.toolName || 'JAR'} {i + 1}</option>)}</select></label>}
-    <details><summary>Rig Limits</summary>
-      <div className="jarForcesFields"><label>Maximum Allowable Hookload (klbf)<input type="number" min="0" step="any"
-        value={rigLimits?.maximumAllowableHookloadKlbf ?? ''} disabled={!updateRigLimits}
-        onChange={e => updateRigLimits({ maximumAllowableHookloadKlbf: e.target.value })} /></label></div>
-      <p>User-defined rig-level surface limit; no rig rating is inferred.</p>
-    </details>
+    {jars.length === 1 && <p className="jarForcesSharedStatus">Selected jar: {componentDisplayLabel(jars[0], demoPresentation) || 'JAR'} (only jar in BHA).</p>}
+    {jars.length > 1 && <label className="jarForcesJarSelect">Selected jar<select value={fields.jar} onChange={e => update('jar', e.target.value)}>{jars.map((jar, i) => <option key={i} value={i}>{componentDisplayLabel(jar, demoPresentation) || 'JAR'} {i + 1}</option>)}</select></label>}
     {!maximumHookload.valid && <p role="alert">{maximumHookload.reason}</p>}
     {limitCheck.insufficientPickupCapacity && <p role="alert">Insufficient pickup capacity: Maximum Allowable Hookload is below calculated Pickup Hookload.</p>}
     {fields.jarDirection === 'up' && maximumHookload.valid && !maximumHookload.configured && <p className="jarForcesSharedStatus">Rig hookload limit: Not Configured.</p>}
+    <section aria-label="Jar Loading">
+      <h6>Jar Operation</h6>
+      <form onSubmit={calculateLoading} noValidate>
+        <div className="jarForcesFields">
+          <label>Target Force at Jar (klbf)<input type="number" min="0" step="any" value={settings.targetForceKlbf} disabled={!editable || settings.mechanism === 'unavailable'}
+            onChange={e => changeConfiguration(fields.jarDirection, { targetForceKlbf: e.target.value })} /></label>
+          <label>Jar direction<select value={fields.jarDirection} onChange={e => update('jarDirection', e.target.value)}><option value="up">Jar Up (tension)</option><option value="down">Jar Down (compression)</option></select></label>
+        </div>
+        <button className="jarForcesCalculate" type="submit" disabled={!finite(analysisBitMdFt) || !jars.length || !availability.enabled}>Calculate required hookload</button>
+      </form>
+      <p className="jarForcesSharedStatus" aria-live="polite">{availability.message}</p>
+      {loadingError && <p role="alert">{loadingError}</p>}
+      {!loadingResult && !loadingError && <p className="jarForcesPending" role="status">{loadingDirty ? 'Inputs changed — recalculate required hookload.' : 'Enter a target force and calculate the required surface hookload.'}</p>}
+      {loadingResult && <ResultsTable title="Jar Loading Results" columns={['Parameter', 'Value']}>
+        <tr><Parameter label="Desired jar force" definition="User-requested positive static force magnitude and direction, not a manufacturer firing threshold." /><td>{klbf(Math.abs(loadingResult.targetJarAxialLoadLbf))} klbf {loadingResult.jarDirection === 'up' ? 'Jar Up (tension)' : 'Jar Down (compression)'}</td></tr>
+        <tr className="jarForcesPrimaryLoad"><Parameter label="Required surface hookload" definition="Nonnegative surface support verified through the forward static model; not a firing or equipment limit." /><td>{klbf(loadingResult.requiredSurfaceHookloadLbf)} klbf</td></tr>
+      </ResultsTable>}
+      <div className="jarForcesFields"><label>Maximum Allowable Rig Hookload (klbf)<input type="number" min="0" step="any"
+        title="User-defined rig-level surface limit, separate from manufacturer jar limits; no rig rating is inferred."
+        value={rigLimits?.maximumAllowableHookloadKlbf ?? ''} disabled={!updateRigLimits}
+        onChange={e => updateRigLimits({ maximumAllowableHookloadKlbf: e.target.value })} /></label></div>
+      {loadingResult && fields.jarDirection === 'up' && <ResultsTable title="Overpull & Hookload Limit" columns={['Parameter', 'Value']}>
+        <tr><Parameter label="Required overpull" definition="Required surface hookload minus calculated pickup hookload; negative values are retained." /><td>{limitCheck.requiredOverpullLbf === null ? 'Unavailable' : klbf(limitCheck.requiredOverpullLbf) + ' klbf'}</td></tr>
+        {maximumHookload.valid && maximumHookload.configured && <tr><Parameter label="Available overpull" definition="Maximum Allowable Hookload minus calculated pickup hookload." /><td>{limitCheck.availableOverpullLbf === null ? 'Unavailable' : klbf(limitCheck.availableOverpullLbf) + ' klbf'}</td></tr>}
+        <tr><Parameter label="Remaining margin" definition="Maximum Allowable Hookload minus required surface hookload; negative means the surface limit is exceeded." /><td>{limitCheck.remainingMarginLbf === null ? 'Unavailable' : klbf(limitCheck.remainingMarginLbf) + ' klbf'}</td></tr>
+        <tr><Parameter label="Surface limit status" definition="Comparison to the user-defined surface hookload limit only, not drillstring tensile safety or jar firing success." /><td>{limitCheck.status || 'Unavailable'}{limitCheck.reason && <small className="jarForcesUnavailable">{limitCheck.reason}</small>}</td></tr>
+      </ResultsTable>}
+      {fields.jarDirection === 'down' && <p className="jarForcesSharedStatus">Jar Down: no minimum hookload limit is applied. Buckling screening does not evaluate post-buckling force transmission.</p>}
+      <ResultsTable title="Manufacturer Operating Status" columns={['Entered limit', 'Comparison']}>
+        <tr><th scope="row">{fields.jarDirection === 'up' ? 'Upward jar load' : 'Requested compression'}</th><td>{manufacturerChecks.operating.status}</td></tr>
+        <tr><th scope="row">Tensile through-load</th><td>{manufacturerChecks.tensile.status}</td></tr>
+      </ResultsTable>
+      {(manufacturerChecks.operating.status === 'Exceeds entered limit' || manufacturerChecks.tensile.status === 'Exceeds entered limit') && <p role="alert">Calculated jar load or requested target exceeds an entered manufacturer limit. Review Manufacturer Comparison Details.</p>}
+      {[manufacturerChecks.operating, manufacturerChecks.tensile].some(check => check.status === 'Near entered limit — unresolved') && <p role="alert">Manufacturer-limit comparison is within numerical resolution; compliance is unresolved. No rating allowance is applied. Review Manufacturer Comparison Details.</p>}
+      {loadingResult && fields.jarDirection === 'up' && limitCheck.status === 'Exceeds Limit' && !limitCheck.insufficientPickupCapacity && <p role="alert">Required surface hookload exceeds the entered rig maximum.</p>}
+      {fields.jarDirection === 'down' && <div className="jarForcesBucklingStatus" role="status">
+        <strong>Buckling evaluation: {bucklingSummary?.source === loadingResult ? bucklingSummary.status : 'Not Evaluated'}</strong>
+        {bucklingSummary?.source === loadingResult && bucklingSummary.evaluatedLengthFt !== null && <span>Evaluated compressed length: {decimal(bucklingSummary.evaluatedLengthFt)} ft; unevaluated: {decimal(bucklingSummary.unevaluatedLengthFt)} ft.</span>}
+        <span>Review Engineering Details for supported intervals, assumptions and exclusions. A target comparison does not establish transmission or stability.</span>
+      </div>}
+      <details><summary>Manufacturer Comparison Details</summary>
+      <ResultsTable title="Manufacturer Limit Comparisons" columns={['Check', 'Load (klbf)', 'Limit (klbf)', 'Comparison']}>
+        {[[fields.jarDirection === 'up' ? 'Upward jar load' : 'Requested compression', manufacturerChecks.operating], ['Tensile load at jar centre', manufacturerChecks.tensile]].map(([label, check]) =>
+          <tr key={label}><th scope="row">{label}</th><td>{check.loadLbf === null ? 'Unavailable' : klbf(check.loadLbf)}</td><td>{check.valueLbf === null ? check.configured ? 'Invalid' : 'Not provided' : klbf(check.valueLbf)}</td><td>{check.status}{check.reason && <small className="jarForcesUnavailable">{check.reason}</small>}</td></tr>)}
+      </ResultsTable>
+      </details>
+      <p className="jarForcesSharedStatus">Entered manufacturer limits only; no overall safety or firing assessment. A compression target comparison does not establish force transmission or buckling stability.</p>
+      {loadingResult && <ul className="jarForcesWarnings">{loadingResult.warnings.filter(w => w.startsWith('The surface reference is inclined') || w.startsWith('Compression is propagated')).map(w => <li key={w}>{w}</li>)}</ul>}
+    </section>
     <section aria-label="Jar Configuration">
+      {coverage.covered && supportingIssues.length > 0 && <p role="status">Supporting calculations unavailable: {supportingIssues.join(' ')}</p>}
       <h6>Jar Configuration</h6>
       <div className="jarForcesFields">
         {['up', 'down'].map(direction => {
@@ -158,33 +224,43 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha, 
           </div>;
         })}
       </div>
+      <details><summary>Manufacturer Limits</summary>
+        <div className="jarForcesFields">
+          {manufacturerLimitFields.map((key, index) => <label key={key}>{[
+            'Maximum upward jar-centre load (lbf)', 'Maximum downward jar-centre compression (lbf)', 'Maximum tensile load through jar (lbf)'
+          ][index]}<input type="number" min="0" step="any" value={manufacturerLimits[key] ?? ''} disabled={!editable}
+            onChange={e => changeManufacturerLimits({ [key]: e.target.value })} /></label>)}
+        </div>
+        {manufacturerLimits.maximumTensileLoadLbf !== undefined && manufacturerLimits.maximumTensileLoadLbf !== '' && <label>
+          <input type="checkbox" checked={manufacturerLimits.tensileLoadBasis === 'jar-centre'} disabled={!editable}
+            onChange={e => changeManufacturerLimits({ tensileLoadBasis: e.target.checked ? 'jar-centre' : '' })} />
+          Manufacturer tensile limit explicitly applies at jar centre
+        </label>}
+        <p>Optional documented values for this jar only. Upward limit means total tensile axial load at jar centre, not an incremental surface overpull. Enter downward compression only when explicitly documented. Trip settings and rig hookload limits are separate.</p>
+        <p>For a tensile rating covering the whole tool or an unspecified cross-section, leave the confirmation unchecked: the full through-jar load profile is unavailable.</p>
+      </details>
+      {manufacturerLimitFields.map(key => { const limit = readManufacturerLimit(manufacturerLimits[key]);
+        return !limit.valid && <p role="alert" key={key}>{key}: {limit.reason}</p>;
+      })}
       {selectedRow && !editable && <p role="status">Configuration is read-only: BHA update controls are unavailable.</p>}
     </section>
-    <section aria-label="Jar Loading">
-      <h6>Jar Operation</h6>
-      <form onSubmit={calculateLoading} noValidate>
-        <div className="jarForcesFields">
-          <label>Target Force at Jar (klbf)<input type="number" min="0" step="any" value={settings.targetForceKlbf} disabled={!editable || settings.mechanism === 'unavailable'}
-            onChange={e => changeConfiguration(fields.jarDirection, { targetForceKlbf: e.target.value })} /></label>
-          <label>Jar direction<select value={fields.jarDirection} onChange={e => update('jarDirection', e.target.value)}><option value="up">Jar Up (tension)</option><option value="down">Jar Down (compression)</option></select></label>
-        </div>
-        <button type="submit" disabled={!finite(analysisBitMdFt) || !jars.length || !availability.enabled}>Calculate required hookload</button>
-      </form>
-      <p className="jarForcesSharedStatus" aria-live="polite">{availability.message}</p>
-      {loadingError && <p role="alert">{loadingError}</p>}
-      {loadingResult && <ResultsTable title="Jar Loading Results" columns={['Parameter', 'Value']}>
-        <tr><Parameter label="Desired jar force" definition="User-requested positive static force magnitude and direction, not a manufacturer firing threshold." /><td>{klbf(Math.abs(loadingResult.targetJarAxialLoadLbf))} klbf {loadingResult.jarDirection === 'up' ? 'Jar Up (tension)' : 'Jar Down (compression)'}</td></tr>
-        <tr className="jarForcesPrimaryLoad"><Parameter label="Required surface hookload" definition="Nonnegative surface support verified through the forward static model; not a firing or equipment limit." /><td>{klbf(loadingResult.requiredSurfaceHookloadLbf)} klbf</td></tr>
-      </ResultsTable>}
-      {loadingResult && fields.jarDirection === 'up' && <ResultsTable title="Overpull & Hookload Limit" columns={['Parameter', 'Value']}>
-        <tr><Parameter label="Required overpull" definition="Required surface hookload minus calculated pickup hookload; negative values are retained." /><td>{limitCheck.requiredOverpullLbf === null ? 'Unavailable' : klbf(limitCheck.requiredOverpullLbf) + ' klbf'}</td></tr>
-        <tr><Parameter label="Available overpull" definition="Maximum Allowable Hookload minus calculated pickup hookload." /><td>{limitCheck.availableOverpullLbf === null ? 'Unavailable' : klbf(limitCheck.availableOverpullLbf) + ' klbf'}</td></tr>
-        <tr><Parameter label="Remaining margin" definition="Maximum Allowable Hookload minus required surface hookload; negative means the surface limit is exceeded." /><td>{limitCheck.remainingMarginLbf === null ? 'Unavailable' : klbf(limitCheck.remainingMarginLbf) + ' klbf'}</td></tr>
-        <tr><Parameter label="Surface limit status" definition="Comparison to the user-defined surface hookload limit only, not drillstring tensile safety or jar firing success." /><td>{limitCheck.status || 'Unavailable'}{limitCheck.reason && <small className="jarForcesUnavailable">{limitCheck.reason}</small>}</td></tr>
-      </ResultsTable>}
-      {fields.jarDirection === 'down' && <p className="jarForcesSharedStatus">Jar Down: compression and buckling limits are not yet evaluated. No minimum hookload limit is applied.</p>}
-      {loadingResult && <ul className="jarForcesWarnings">{loadingResult.warnings.map(w => <li key={w}>{w}</li>)}</ul>}
-    </section>
+    <details className="jarForcesWeights"><summary>String Weight &amp; Operating Hookloads</summary>
+    <section aria-label="String Weight & Drag Summary">
+      <ResultsTable title="String Weight" columns={['Component', ...weightColumns.map(([label, definition]) => <span title={definition}>{label}<small>(klbf)</small></span>)]}>
+        {weightRows.map(([label, key, definition]) => <tr key={key}><Parameter label={label} definition={definition} />
+          {['airWeightLbf', 'buoyedWeightLbf', 'axialWeightLbf'].map(field => <td key={field}>{weightSummary.valid ? klbf(weightSummary.weightPartitions[key][field]) : 'Unavailable'}</td>)}
+        </tr>)}
+      </ResultsTable>
+      <ResultsTable title="Operating Hookloads" columns={['Operation', <span title="Predicted surface load accounting for buoyancy, well inclination and frictional resistance under the selected operating condition.">Hookload<small>(klbf)</small></span>, <span title="Additional axial resistance generated by friction acting at wellbore contact points. Calculated relative to rotating off-bottom hookload.">Drag<small>(klbf)</small></span>, 'Direction']}>
+        {operatingRows.map(([label, key, dragKey, direction, definition]) => {
+          const load = dragSummary[key];
+          const drag = dragKey ? dragSummary[dragKey] : load.valid ? { valid: true, valueLbf: load.axialDragLbf } : load;
+          return <tr key={key}><Parameter label={label} definition={definition} /><td>{outputValue(load)}</td><td>{outputValue(drag)}</td><td>{direction}</td></tr>;
+        })}
+      </ResultsTable>
+      {!weightSummary.valid && <p role="status">{weightSummary.errors.join(' ')}</p>}
+      <p>Model predictions, not measured rig hookloads. Definitions: focus or hover over an information icon.</p>
+    </section></details>
     <details><summary>Advanced - forward static calculator</summary>
     <form onSubmit={calculate} noValidate>
       <h6>Forward Static Inputs</h6>
@@ -219,6 +295,8 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha, 
     {error && <p role="alert">{error}</p>}
     {result && <ul className="jarForcesWarnings">{result.warnings.map(w => <li key={w}>{w}</li>)}</ul>}
     <details><summary>Engineering Assumptions</summary>
+    <p className="jarForcesSharedStatus">Shared Parameter Entry: mud {finite(bha?.mudWeight) ? text(bha.mudWeight) + ' ppg' : 'Unavailable'}, friction {finite(bha?.frictionCoefficient) ? text(bha.frictionCoefficient) : 'Unavailable'}, RPM {finite(bha?.rpm) ? text(bha.rpm) : 'Unavailable'}.</p>
+      {loadingResult && <ul className="jarForcesWarnings">{loadingResult.warnings.map(w => <li key={w}>{w}</li>)}</ul>}
       <p>The rig limit check compares calculated surface hookload with a user-defined maximum only. Within Limit or At Limit does not establish drillstring tensile safety, component capacity, buckling stability, a safe operating envelope or jar firing success. Overpull is referenced to calculated pickup hookload, never rotating hookload. Negative overpull and margin are retained. Jar Down has no lower surface-load check.</p>
       <p>Directional mechanisms and mechanical trip settings are user-supplied manufacturer data. Meeting a static mechanical setting does not guarantee release. Hydraulic targets are applied loads, not fixed activation thresholds.</p>
       <p>Stage 4A does not predict hydraulic delay, impact force or energy, guaranteed release, rig maximum overpull, component tensile yield, sinusoidal or helical buckling limits, or a safe operating envelope.</p>
@@ -248,8 +326,8 @@ export default function JarForces({ bha, analysisBitMdFt, updateRow, updateBha, 
 </>}
     </details>
     <details><summary>Engineering Details</summary>
-      <BucklingDetails bha={bha} survey={survey} bitMdFt={analysisBitMdFt} surfaceMdFt={fields.surface}
-        jarIndex={Number(fields.jar)} jarDirection={fields.jarDirection} loadingResult={loadingResult} />
+      <BucklingDetails bha={bha} survey={survey} bitMdFt={analysisBitMdFt} surfaceMdFt={surface}
+        jarIndex={Number(fields.jar)} jarDirection={fields.jarDirection} loadingResult={loadingResult} onSummary={setBucklingSummary} />
     </details>
   </section>;
 }

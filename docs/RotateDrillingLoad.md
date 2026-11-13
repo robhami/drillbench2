@@ -1,7 +1,7 @@
 # Rotate Drilling Load — v1 screening model
 
 ## Purpose
-WellBench Rotate estimates the **axial drilling-load profile and neutral point while rotating on bottom with WOB applied**. It is intentionally a transparent first-pass model that can be explained and independently checked.
+DrillFrame Rotate estimates the **axial drilling-load profile and neutral point while rotating on bottom with WOB applied**. It is intentionally a transparent first-pass model that can be explained and independently checked.
 
 ## Boundary condition
 The bit starts in compression at the entered weight on bit:
@@ -38,7 +38,7 @@ and, moving upward through the BHA:
 At zero RPM this reduces to the Slide equation. As rotational surface speed becomes large compared with ROP, the axial component of friction approaches zero.
 
 ## Neutral point and jar placement
-WellBench calculates the load from the bit upward and linearly interpolates within the component where axial force crosses zero. That location is the Rotate neutral point. Jar position is then compared with that neutral point using the same compression-positive convention as Slide.
+DrillFrame calculates the load from the bit upward and linearly interpolates within the component where axial force crosses zero. That location is the Rotate neutral point. Jar position is then compared with that neutral point using the same compression-positive convention as Slide.
 
 ## Inputs
 Rotate requires WOB, mud weight, inclination, friction coefficient, RPM, ROP and a valid OD for each BHA component.

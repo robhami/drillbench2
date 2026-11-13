@@ -47,3 +47,16 @@
 .jarForcesDirectionConfig { display: grid; gap: 6px; min-width: 0; }
 .jarForcesBucklingConfirmation { display: flex; align-items: flex-start; gap: 6px; }
 .jarForcesBucklingConfirmation input { flex: none; margin-top: 3px; }
+
+/* Operation first; supporting calculations remain in native collapsed details. */
+.jarForces [aria-label="Jar Loading"] { margin: 8px 0; }
+.jarForces [aria-label="Jar Loading"] .jarForcesFields { margin: 5px 0; align-items: end; }
+.jarForcesPending { padding: 8px; background: #f0f3f6; color: #52616d; }
+.jarForcesCalculate { display: block; width: 100%; padding: 8px 12px; border: 1px solid #245975; border-radius: 4px; background: #245975; color: #fff; font-weight: 600; line-height: 1.3; cursor: pointer; }
+.jarForcesCalculate:hover:not(:disabled) { background: #19455e; }
+.jarForcesCalculate:focus-visible { outline: 2px solid #245975; outline-offset: 3px; }
+.jarForcesCalculate:disabled { opacity: .55; cursor: default; }
+.jarForcesBucklingStatus { display: grid; gap: 3px; margin: 6px 0; padding: 6px; background: #fff3cd; color: #534108; font-size: 12px; }
+.jarForces [aria-label="Jar Loading Results"] .jarForcesPrimaryLoad td { font-size: 19px; }
+.jarForces [aria-label="Manufacturer Operating Status"] td { font-size: 12px; }
+.jarForces details > section { min-width: 0; }

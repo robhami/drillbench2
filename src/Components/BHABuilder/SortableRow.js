@@ -1,21 +1,30 @@
 import React from 'react';
+import ComponentNumberInput from './ComponentNumberInput';
+import { useDemoPresentation, componentDisplayLabel } from '../DemoPresentation';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import componentLibraryData from '../../data/components.json';
 import { toolType } from '../../Apps/BHAEntry/toolType.js';
+import { cloneDefinition, definitionRowPatch } from '../../engineering/bha/componentDefinition';
 
-const componentLibrary = componentLibraryData.components;
 const SortableRow = ({
     row,
+    standardComponents = [],
+    customComponents = [],
     nominalClearance,
+    validation,
+    deferValidation = false,
+    onNumericFocus,
+    onNumericBlur,
     autoDeployment,
+    cumulativeLengthFt,
     index,
     rowsLength,
     updateRow,
     removeRow
 }) => {
+    const demoPresentation = useDemoPresentation();
     const {
         attributes,
         listeners,
@@ -34,14 +43,25 @@ const SortableRow = ({
         backgroundColor: isDragging ? '#f8f9fa' : undefined
     };
 
-    const availableTools = componentLibrary.filter(
+    const library = [...standardComponents, ...customComponents];
+    const availableTools = library.filter(
         (tool) => tool.category === row.category
     );
-    const showClearanceError = nominalClearance && !nominalClearance.valid && nominalClearance.diameterIn !== null;
+    // A missing OD is an unfinished edit, not a row-level message. Keep the
+    // engineering result untouched; only mark an explicitly supplied bad OD.
+    const hasOd = row.od !== null && row.od !== undefined && String(row.od).trim() !== '';
+    const showClearanceError = Boolean(row.category && hasOd && nominalClearance && !nominalClearance.valid && nominalClearance.diameterIn !== null);
+    const librarySpec = row.librarySpecification || library.find(tool => String(tool.id) === String(row.selectedToolId)) || row.componentDefinition;
+    const differsFromLibrary = row.category === 'STB' && librarySpec && ['od', 'idSize', 'weight', 'length'].some(field =>
+        Number.isFinite(Number(row[field])) && Number.isFinite(Number(librarySpec[field]))
+            ? Number(row[field]) !== Number(librarySpec[field]) : String(row[field] ?? '') !== String(librarySpec[field] ?? ''));
 
     const handleCategoryChange = (category) => {
         updateRow(row.rowId, {
             category,
+            componentDefinition: undefined,
+            componentSchemaVersion: undefined,
+            librarySpecification: undefined,
             selectedToolId: '',
             od: '',
             idSize: '',
@@ -52,7 +72,7 @@ const SortableRow = ({
     };
 
     const handleToolChange = (toolId) => {
-        const selectedTool = componentLibrary.find(
+        const selectedTool = library.find(
             (tool) =>
                 tool.category === row.category &&
                 String(tool.id) === toolId
@@ -61,6 +81,9 @@ const SortableRow = ({
         if (!selectedTool) {
             updateRow(row.rowId, {
                 selectedToolId: '',
+                componentDefinition: undefined,
+                componentSchemaVersion: undefined,
+                librarySpecification: undefined,
                 od: '',
                 idSize: '',
                 weight: '',
@@ -70,18 +93,25 @@ const SortableRow = ({
             return;
         }
 
+        const patch = definitionRowPatch(selectedTool);
+        const sameSizeBit = row.category === 'BIT' &&
+            Number(row.od) === Number(selectedTool.od) &&
+            Number(row.length) === Number(selectedTool.length);
+        const retainedBitInstance = sameSizeBit ? {
+            od: row.od,
+            idSize: row.idSize,
+            weight: row.weight,
+            length: row.length
+        } : {};
         updateRow(row.rowId, {
-            selectedToolId: toolId,
-            od: selectedTool.od ?? '',
-            idSize: selectedTool.idSize ?? '',
-            weight: selectedTool.weight ?? '',
-            length: selectedTool.length ?? '',
-            toolName: selectedTool.name ?? ''
+            ...patch,
+            ...retainedBitInstance,
+            ...(row.category === 'STB' ? { librarySpecification: cloneDefinition(patch.componentDefinition) } : {})
         });
     };
 
     return (
-        <tr ref={setNodeRef} style={style}>
+        <tr ref={setNodeRef} style={style} data-row-state={validation?.state}>
             <td>
                 <button
                     type="button"
@@ -107,12 +137,13 @@ const SortableRow = ({
                 >
                     <option value="">Select Type</option>
 
-                    {toolType.map((type) => (
-                        <option key={type.id} value={type.name}>
-                            {type.name}
+                    {[...new Set([...toolType.map(t => t.name), ...library.map(t => t.category)])].map((type) => (
+                        <option key={type} value={type}>
+                            {type}
                         </option>
                     ))}
                 </Form.Select>
+                {differsFromLibrary && <small className="bhaLibraryOverrideNotice">Edited from library specification; changes apply to this BHA only.</small>}
             </td>
 
             <td>
@@ -120,6 +151,7 @@ const SortableRow = ({
                 <Form.Select
                     size="sm"
                     aria-label={`Component ${index + 1} tool`}
+                    title={demoPresentation && componentDisplayLabel(row, true) !== componentDisplayLabel(row, false) ? `Original catalogue: ${row.toolName} · ID ${row.selectedToolId}` : undefined}
                     value={row.selectedToolId}
                     disabled={!row.category}
                     onChange={(event) =>
@@ -134,9 +166,10 @@ const SortableRow = ({
 
                     {availableTools.map((tool) => (
                         <option key={tool.id} value={tool.id}>
-                            {tool.name}
+                            {componentDisplayLabel(String(tool.id) === String(row.selectedToolId) && row.toolName ? row : tool, demoPresentation && String(tool.id) === String(row.selectedToolId))}
                         </option>
                     ))}
+                    {row.selectedToolId && !availableTools.some(t => String(t.id) === String(row.selectedToolId)) && <option value={row.selectedToolId}>{row.toolName} (saved snapshot)</option>}
                 </Form.Select>
                 </div>
             </td>
@@ -148,29 +181,39 @@ const SortableRow = ({
                 ['length', row.length]
             ].map(([field, value]) => (
                 <td key={field}>
-                    {field === 'length' && row.category === 'DP' && row.lengthMode === 'auto' ? <input
+                    {field === 'length' && row.category === 'DP' && row.lengthMode === 'auto' ? <ComponentNumberInput maximumFractionDigits={1}
                         className="numInput" aria-label={`Calculated drillpipe length ${index + 1}`} readOnly
                         value={autoDeployment?.valid ? autoDeployment.metadata.deployedDpLengthFt : ''} placeholder="Unavailable" /> :
-                    <input
+                    <ComponentNumberInput maximumFractionDigits={field === 'length' ? 2 : field === 'weight' ? 2 : undefined}
                         aria-label={`Component ${index + 1} ${field}`}
                         className="numInput"
                         type="text"
                         inputMode="decimal"
                         value={value}
+                        readOnly={row.category !== 'STB' && row.componentDefinition?.geometry?.kind === 'segmented'}
+                        aria-invalid={!deferValidation && (validation?.errors[field] || (field === 'od' && showClearanceError)) ? true : undefined}
+                        title={deferValidation ? undefined : field === 'od' && showClearanceError ? nominalClearance.message : validation?.errors[field]}
                         placeholder={
                             field === 'length'
                                 ? 'Enter ft'
                                 : ''
                         }
+                        onFocus={onNumericFocus}
+                        onBlur={onNumericBlur}
                         onChange={(event) =>
                             updateRow(row.rowId, {
-                                [field]: event.target.value
+                                [field]: event.target.value,
+                                ...(row.componentDefinition ? { componentDefinition: { ...row.componentDefinition, [field]: event.target.value } } : {})
                             })
                         }
                     />}
-                    {field === 'od' && row.category && showClearanceError && <small className="bhaRowError" role="alert">{nominalClearance.message}</small>}
                 </td>
             ))}
+
+            <td>
+                <ComponentNumberInput minimumFractionDigits={2} maximumFractionDigits={2} className="numInput bhaCumulativeInput" aria-label={`Cumulative length ${index + 1}`} readOnly
+                    value={cumulativeLengthFt ?? ''} placeholder={cumulativeLengthFt == null ? '—' : ''} />
+            </td>
 
             <td>
                 <Button

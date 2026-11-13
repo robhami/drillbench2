@@ -1,5 +1,8 @@
 import { calcComponentPositions } from '../../engineering/bha/calcComponentPositions';
 import { calcSkeemPostImpact } from '../../engineering/jar/skeemDynamics';
+import { analysisDepth } from '../../engineering/bha/analysisDepth';
+import { deployDrillstring } from '../../engineering/bha/deployDrillstring';
+import { dynamicSectionIssue, populatedComponent, rowLabel } from '../../engineering/bha/componentApplicability';
 
 const numeric = value => value !== '' && value !== null && value !== undefined && Number.isFinite(Number(value));
 const category = row => String(row.category || '').toUpperCase();
@@ -12,9 +15,20 @@ export function calculateJarPerformance(bha, operating) {
   if (!numeric(operating.strokeIn) || Number(operating.strokeIn) <= 0) return fail('Jar stroke must be greater than zero.');
   if (!numeric(operating.overpullKlbf) || Number(operating.overpullKlbf) <= 0) return fail('Overpull at jar must be greater than zero.');
   if (!numeric(operating.stuckPointFt) || Number(operating.stuckPointFt) < 0) return fail('Stuck-point position must be zero or greater.');
-  const activeRows = (bha?.rows || []).filter(r => r.category || r.selectedToolId || r.toolName || r.length);
-  if (activeRows.some(r => !numeric(r.length) || Number(r.length) <= 0 || !r.category)) return fail('Complete component categories and positive lengths before calculating.');
+  for (const [i, row] of (bha?.rows || []).entries()) {
+    if (!populatedComponent(row)) continue;
+    if (!String(row.category || '').trim()) return fail(`${rowLabel(row, i)}: Missing component category.`);
+    if (!(category(row) === 'DP' && row.lengthMode === 'auto') && (!numeric(row.length) || Number(row.length) <= 0)) return fail(`${rowLabel(row, i)}: Missing or invalid component length; positive lengths (ft) are required.`);
+  }
+  if (bha?.rows?.some(r => category(r) === 'DP' && r.lengthMode === 'auto')) {
+    const depth = analysisDepth(bha);
+    if (!depth.valid) return fail(`DP Auto deployment: ${depth.error}`);
+    const deployed = deployDrillstring(bha, depth.bitMdFt);
+    if (!deployed.valid) return fail(`DP Auto deployment: ${deployed.errors.join(' ')}`);
+    bha = deployed.bha; // Temporary deployed rows only; saved input is never rewritten.
+  }
   const { components } = calcComponentPositions(bha);
+  const sourceIndices = (bha?.rows || []).map((r, i) => ({ r, i })).filter(({ r }) => Number(r.length) > 0 && (r.selectedToolId || r.toolName || r.category)).map(({ i }) => i);
   const jars = components.filter(r => category(r) === 'JAR');
   if (jars.length !== 1) return fail('Skeem integration requires exactly one jar.');
   const jar = jars[0];
@@ -27,11 +41,19 @@ export function calculateJarPerformance(bha, operating) {
   const upper = above.slice(0, firstPipe);
   const pipes = above.slice(firstPipe);
   const collars = [...lower, ...upper];
-  if (collars.some(r => category(r) !== 'DC') || pipes.some(r => category(r) !== 'DP')) return fail('Unsupported geometry: only uniform DC sections and a contiguous uniform DP section are supported; HWDP, stabilisers and other tools cannot be approximated.');
-  if ([...collars, ...pipes].some(r => !dimensions(r))) return fail('Missing or invalid tubular OD/ID; dimensions will not be invented.');
-  if (collars.some(r => !sameSection(r, collars[0])) || pipes.some(r => !sameSection(r, pipes[0]))) return fail('Mixed collar or drillpipe dimensions are unsupported by the uniform-section Skeem model.');
-  if (lower.some(r => !numeric(r.weight) || Number(r.weight) <= 0)) return fail('Enter a positive lower-collar air weight per foot; weight will not be inferred from dimensions.');
-  if (lower.some(r => Number(r.weight) !== Number(lower[0].weight))) return fail('Mixed lower-collar weights are unsupported by the uniform-section model.');
+  for (const row of [...collars, ...pipes]) {
+    const index = sourceIndices[components.indexOf(row)];
+    if ((collars.includes(row) && category(row) !== 'DC') || (pipes.includes(row) && category(row) !== 'DP')) return fail(`Dynamic Jar Up: ${rowLabel(row, index)} (${category(row)}): Unsupported geometry in the uniform-section wave model. HWDP, stabilizers and other tools cannot be approximated as DC or DP. Static BHA validity is separate.`);
+    const issue = dynamicSectionIssue(row, index, 'Dynamic Jar Up');
+    if (issue) return fail(issue);
+    if (!dimensions(row)) return fail(`Dynamic Jar Up: ${rowLabel(row, index)}: Missing or invalid tubular OD/ID; dimensions will not be invented.`);
+  }
+  const mixed = collars.find(r => !sameSection(r, collars[0])) || pipes.find(r => !sameSection(r, pipes[0]));
+  if (mixed) return fail(`Dynamic Jar Up: ${rowLabel(mixed, sourceIndices[components.indexOf(mixed)])}: Mixed collar or drillpipe dimensions are unsupported by the uniform-section Skeem model. Actual sections are preserved; static calculations may still be available.`);
+  const missingWeight = lower.find(r => !numeric(r.weight) || Number(r.weight) <= 0);
+  if (missingWeight) return fail(`Dynamic Jar Up: ${rowLabel(missingWeight, sourceIndices[components.indexOf(missingWeight)])}: Enter a positive lower-collar air weight per foot; weight will not be inferred from dimensions.`);
+  const mixedWeight = collars.find(r => numeric(r.weight) && Number(r.weight) !== Number(lower[0].weight));
+  if (mixedWeight) return fail(`Dynamic Jar Up: ${rowLabel(mixedWeight, sourceIndices[components.indexOf(mixedWeight)])}: Mixed collar linear weights are unsupported by the current uniform-section wave model. No uniform mass distribution is substituted.`);
   const input = {
     overpullLbf: Number(operating.overpullKlbf) * 1000,
     strokeIn: Number(operating.strokeIn),

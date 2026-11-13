@@ -1,3 +1,5 @@
+> Product naming: DrillFrame is the application; JarFrame contains Jar Position Analysis and Impact & Impulse. Legacy WellBench wording below describes the same application. Engineering evidence and equations are unchanged.
+
 # Jar Placement: Skeem performance integration
 
 The Jar Performance section calls the existing `calcSkeemPostImpact` solver.
@@ -40,12 +42,17 @@ Errors suppress the summary/chart. Assumptions and available geometry remain
 auditable in collapsible details. Results remain preliminary and not for
 operational use, especially when L2 approaches actual jar length.
 
-The compact interface displays impact force, average stuck-point force,
-impulse and impact velocity. Impact time and primary pulse duration are in
-engineering details, collapsed by default. No axial-load or force-time chart
-is rendered in Jar Placement. Solver force-history data remains unchanged.
-Positive Skeem force is tensile, distinct from compression-positive drilling
-loads in the existing placement calculation.
+Stage 5C.6 displays the existing primary stuck-point force history first,
+with numerical quadrature and an optional cumulative-impulse trace. The summary
+retains incident impact force FI, average stuck-point force, analytical impulse
+and impact velocity; FI is not the plotted stuck-point peak. Impact time and
+primary pulse duration remain available in collapsed engineering details.
+Solver force-history data and equations remain unchanged. Positive Skeem force
+is tensile, distinct from compression-positive drilling loads. Jar Down is an
+explicit unvalidated state, not an upward result with its sign reversed.
+See the [source audit](ValidationStudies/JarImpactStage5C6Audit.md) and
+[validation report](ValidationStudies/JarImpactStage5C6.md) for derivation,
+integration checks and limitations.
 
 A demonstration BHA of 60 ft DC / 10 ft JAR / 180 ft DC / 3000 ft DP gives
 jar centre 65 ft, L1 = 60 ft and L2 = 180 ft. Using the published example

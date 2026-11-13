@@ -1,4 +1,7 @@
 export const toolType = [
+    { id: 'bit', name: 'BIT' },
+    { id: 'bit', name: 'BIT' },
+    { id: 'heavyweight_drillpipe', name: 'HWDP' },
     { id: "jar", name: "JAR" },
 
 	{

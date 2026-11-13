@@ -16,9 +16,13 @@ export function componentNominalClearance(bha, component) {
   if (!hole.valid) return { ...hole, radialClearanceIn: null };
   if (!finite(component?.od) || Number(component.od) <= 0) return { valid: false, status: 'invalid-input', radialClearanceIn: null, diameterIn: hole.diameterIn, message: 'Component OD must be a finite positive diameter.' };
   const radialClearanceIn = (hole.diameterIn - Number(component.od)) / 2;
-  return { valid: radialClearanceIn > 0, diameterIn: hole.diameterIn, radialClearanceIn,
-    status: radialClearanceIn > 0 ? 'calculated' : radialClearanceIn < 0 ? 'oversize' : 'no-clearance',
-    message: radialClearanceIn < 0 ? 'Component OD exceeds nominal hole.' : radialClearanceIn === 0 ? 'No positive radial clearance.' : 'Nominal radial clearance; not a passability or safety check.' };
+  const isBit = String(component?.category || '').toUpperCase() === 'BIT';
+  const valid = isBit ? radialClearanceIn >= 0 : radialClearanceIn > 0;
+  return { valid, diameterIn: hole.diameterIn, radialClearanceIn,
+    status: radialClearanceIn < 0 ? 'oversize' : radialClearanceIn === 0 ? isBit ? 'nominal-gauge-bit' : 'no-clearance' : 'calculated',
+    message: radialClearanceIn < 0 ? (isBit ? 'Bit OD exceeds nominal hole.' : 'Component OD exceeds nominal hole.')
+      : radialClearanceIn === 0 ? isBit ? 'Bit OD equals nominal hole diameter; zero radial clearance is expected for the bit.' : 'No positive radial clearance.'
+        : 'Nominal radial clearance; not a passability or safety check.' };
 }
 
 export function calcDeployedNominalClearances(bha, bitMdFt, { surfaceMdFt = 0 } = {}) {

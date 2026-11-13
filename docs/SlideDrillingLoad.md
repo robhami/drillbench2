@@ -2,7 +2,7 @@
 
 ## Purpose
 
-WellBench uses this model to estimate the BHA axial-load profile and neutral point **while slide drilling with WOB applied at the bit**. It is intentionally transparent and limited so the calculation can be reviewed and independently validated before more advanced torque-and-drag behaviour is added.
+DrillFrame uses this model to estimate the BHA axial-load profile and neutral point **while slide drilling with WOB applied at the bit**. It is intentionally transparent and limited so the calculation can be reviewed and independently validated before more advanced torque-and-drag behaviour is added.
 
 ## Sign convention
 
@@ -26,11 +26,11 @@ For each BHA component, using buoyed component weight `Wb` and inclination `thet
 - Simplified normal contact force: `N = Wb sin(theta)`
 - Coulomb sliding drag: `F_drag = mu N`
 
-During slide drilling the BHA progresses downhole, so friction acts uphole. With WellBench's compression-positive convention, moving upward through the BHA:
+During slide drilling the BHA progresses downhole, so friction acts uphole. With DrillFrame's compression-positive convention, moving upward through the BHA:
 
 `C_top = C_bottom - W_axial + F_drag`
 
-The neutral point is where the calculated axial load crosses zero. WellBench linearly interpolates the crossing within a constant-weight component.
+The neutral point is where the calculated axial load crosses zero. DrillFrame linearly interpolates the crossing within a constant-weight component.
 
 ## Interpretation
 

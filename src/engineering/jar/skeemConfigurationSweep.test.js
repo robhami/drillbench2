@@ -1,5 +1,7 @@
 import { calcSkeemConfigurationSweep, MAX_SWEEP_SAMPLES } from './skeemConfigurationSweep';
 import { calcSkeemPostImpact } from './skeemDynamics';
+import independentReference from '../../../docs/ValidationStudies/Skeem1979IndependentVerificationStage5C6A.json';
+import positionReference from '../../../docs/ValidationStudies/JarPositionForceImpulseAmendment.independent.json';
 
 const constants = {
   overpullKlbf: 165, strokeIn: 4, collarOdIn: 6.25, collarIdIn: 2.75,
@@ -10,6 +12,24 @@ const axis = (minFt = 60, maxFt = 180, samples = 3) => ({ minFt, maxFt, samples 
 const fixed = { mode: 'fixed-total', constants, totalCollarLengthFt: 240, l1: axis() };
 const independent = { mode: 'independent', constants, l1: axis(), l2: axis() };
 const near = (actual, expected) => expect(Math.abs(actual - expected)).toBeLessThan(1e-8);
+
+test.each(Object.entries(independentReference.cases).filter(([, fixture]) => fixture.input.lowerCollarWeightLbf > 0))('%s sweep retains five quantities independently verified in Stage 5C.6A', (name, { input: p, expected: e }) => {
+  // Unit/weight adapter only; expected wave physics comes from the separate Decimal implementation.
+  const area = Math.PI / 4 * (p.collarOdIn ** 2 - p.collarIdIn ** 2);
+  const result = calcSkeemConfigurationSweep({ mode: 'independent', constants: { ...p,
+    overpullKlbf: p.overpullLbf / 1000,
+    materialWeightDensityLbfIn3: p.lowerCollarWeightLbf / (p.lowerCollarLengthFt * area * 12) },
+    l1: { minFt: p.lowerCollarLengthFt, maxFt: p.lowerCollarLengthFt, samples: 1 },
+    l2: { minFt: p.upperCollarLengthFt, maxFt: p.upperCollarLengthFt, samples: 1 } });
+  const sample = result.samples[0]; expect(sample.valid).toBe(true);
+  const pairs = [[sample.impactForceKlbf, e.impactForceLbf / 1000],
+    [sample.peakStuckPointForceKlbf, e.peakForceLbf / 1000],
+    [sample.averageStuckPointForceKlbf, e.averageStuckPointForceLbf / 1000],
+    [sample.impulseLbfS, e.impulseLbfS], [sample.impactVelocityFtS, e.hammerVelocityFtS]];
+  pairs.forEach(([actual, expected]) => expect(Math.abs(actual - expected)).toBeLessThan(1e-8));
+  expect(result.maxima.peakForce).toBe(sample); expect(result.maxima.impulse).toBe(sample);
+  expect(sample.peakStuckPointForceKlbf).not.toBe(sample.impactForceKlbf);
+});
 
 test('fixed total preserves collar length and recovers independent published-example references', () => {
   const result = calcSkeemConfigurationSweep(fixed);
@@ -25,7 +45,11 @@ test('fixed total preserves collar length and recovers independent published-exa
   ];
   result.samples.forEach((s, i) => {
     ['impactVelocityFtS', 'impactForceLbf', 'averageStuckPointForceLbf', 'impulseLbfS', 'primaryPulseDurationS', 'reflectionCount'].forEach((key, j) => near(s[key], expected[i][j]));
+    near(s.peakStuckPointForceLbf, positionReference[i].expected.peakForceLbf);
+    near(s.impulseLbfS, positionReference[i].expected.impulseLbfS);
   });
+  expect(result.maxima.peakForce.index).toBe(2);
+  expect(result.maxima.impulse.index).toBe(0);
 });
 
 test('independent sweep is a reproducible Cartesian product in L1-major order', () => {

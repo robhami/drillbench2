@@ -11,6 +11,7 @@
 /* Sidebar */
 
 .wb2Sidebar {
+    overflow-y: auto;
     flex: 0 0 72px;
 
     width: 72px;
@@ -46,6 +47,8 @@
 }
 
 .wb2Sidebar button {
+    overflow-wrap: anywhere;
+    flex-shrink: 0;
     min-height: 38px;
 
     padding: 6px 4px;
