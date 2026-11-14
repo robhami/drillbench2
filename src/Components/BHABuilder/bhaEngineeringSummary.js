@@ -20,7 +20,7 @@ const sameDimension = (a, b) => a != null && b != null && Math.abs(a - b) <= 1e-
 
 // Component order is bit-to-surface. A section is grouped by matching collar OD/ID;
 // stored mating connection labels, when present on both sides, must also agree.
-function adjacentDcSection(components, jarIndex, direction) {
+export function adjacentDcSection(components, jarIndex, direction) {
   if (jarIndex < 0) return { lengthFt: null, startFt: null, endFt: null, connectionUnverified: false, components: [] };
   const step = direction === 'below' ? -1 : 1;
   const firstIndex = jarIndex + step;

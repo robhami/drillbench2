@@ -65,16 +65,15 @@
 .jarV6LegendFixture { background: #fff; }
 .jarV6LegendCandidate { border-color: #bd873d !important; background: #bd873d; }
 .jarV6SchematicNote { margin: 3px 0 0; color: #695c43; font-size: 8px; }
+.jarV6LiveStatic { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3px; margin-top: 3px; padding-top: 3px; border-top: 1px solid #edf1f3; color: #536b78; font-size: 8px; line-height: 1.18; overflow-wrap: anywhere; }
+.jarV6LiveStatic b { color: #294a5e; }
+.jarV6StaticProvenance { color: #71838b; font-size: 7px; }
 .jarV6Provenance { margin: 0 0 4px; padding: 3px 6px; border-left: 2px solid #bd873d; background: #fffaf0; color: #695c43; font-size: 8px; overflow-wrap: anywhere; }
 .jarV6ResearchEmpty { margin-top: 4px; color: #617580; font-size: 8px; }
 .jarV6LoadedSchematic .engineeringStringViewer { min-width: 0; }
 .jarV6LoadedSchematic .engineeringStringViewerToolbar { min-height: 19px; }
 .jarV6LoadedSchematic .bhaSchematicSvg { max-width: 100%; }
 .jarV6LoadedSchematic .jarV6SchematicGrid { min-height: 208px; }
-.jarV6LoadedSchematic .jarV6ComponentLabels { height: 208px; overflow: hidden; }
-.jarV6LoadedSchematic .jarV6ComponentLabels > div { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.jarV6LoadedSchematic .jarV6ComponentLabels b { overflow: hidden; font-size: 7.5px; text-overflow: ellipsis; white-space: nowrap; }
-.jarV6LoadedSchematic .jarV6Dp { fill: #bdcbd1; stroke: #738b97; }
 .jarV6SelectedLoadedJar { fill: #d5ad6e; stroke: #895e24; stroke-width: 1.8; }
 .jarV6DetailedSchematic { margin-top: 4px; border-top: 1px solid #edf1f3; }
 .jarV6DetailedSchematic summary { padding: 3px 0; color: #536b78; cursor: pointer; font-size: 8px; }
@@ -94,6 +93,19 @@
 .jarV6ExistingWorkflows { margin-top: 7px; border-top: 1px solid #d8e2e8; color: #294a5e; }
 .jarV6ExistingWorkflows summary { padding: 6px 2px; cursor: pointer; font-size: 11px; font-weight: 650; }
 .jarV6WorkflowBody { min-width: 0; }
+/* Loaded BHA uses the original prototype's 61 x 208 slim drawing scale.
+   Section slots are visual only; engineering lengths come from the geometry provider. */
+.jarV6LoadedSchematic .jarV6SchematicGrid { grid-template-columns: 61px minmax(0, 1fr); gap: 4px; }
+.jarV6LoadedSchematic .jarV6SchematicSvg { width: 61px; height: 208px; }
+.jarV6LoadedSchematic .jarV6LoadedLabels { position: relative; display: block; height: 208px; overflow: visible; }
+.jarV6LoadedSchematic .jarV6LoadedLabels > div { position: absolute; left: 0; right: 0; min-height: 0; overflow: hidden; white-space: normal; transform: translateY(-50%); }
+.jarV6LoadedSchematic .jarV6ComponentLabels b { color: #294a5e; font-size: 8.8px; font-weight: 700; white-space: nowrap; }
+.jarV6LoadedSchematic .jarV6ComponentLabels span { display: block; color: #536b78; font-size: 7.3px; line-height: 1.12; }
+.jarV6LoadedSchematic .jarV6BoundaryUnavailable { color: #8a5b25; font-size: 7.5px; }
+.jarV6LoadedSchematic .jarV6Other { fill: #718a96; stroke: #4f6976; }
+.jarV6LoadedSchematic .jarV6UnknownOd { fill: #d0d8dc; stroke: #8b9ca3; stroke-dasharray: 2 1; }
+.jarV6LoadedSchematic .jarV6SelectedLoadedJar { fill: #d5ad6e; stroke: #95682c; stroke-width: 1.4; }
+.jarV6SectionGuide { stroke: #9aaab1; stroke-width: .6; stroke-dasharray: 1 1; }
 @container (max-width: 750px) {
   .jarV6Toolbar { grid-template-columns: 1.1fr .8fr .75fr 1fr; }
 }
@@ -102,20 +114,29 @@
   .jarV6SchematicGrid { grid-template-columns: clamp(61px, calc(4.4cqi + 21px), 87px) minmax(0, 1fr); }
   .jarV6SchematicSvg { width: 100%; height: var(--jar-v6-schematic-height); max-height: 298px; aspect-ratio: 61 / 208; }
   .jarV6ComponentLabels { height: var(--jar-v6-schematic-height); min-height: 208px; }
-  .jarV6LoadedSchematic .jarV6ComponentLabels { height: var(--jar-v6-schematic-height); }
+  .jarV6LoadedSchematic .jarV6LoadedLabels { height: var(--jar-v6-schematic-height); }
   .jarV6ResearchDemo .jarV6ChartSvg { flex-basis: var(--jar-v6-chart-height); height: var(--jar-v6-chart-height); }
+  .jarV6LoadedSchematic .jarV6SchematicGrid { grid-template-columns: calc(var(--jar-v6-schematic-height) * 61 / 208) minmax(0, 1fr); }
+  .jarV6LoadedSchematic .jarV6SchematicSvg { width: 100%; height: var(--jar-v6-schematic-height); max-height: 298px; }
+  .jarV6LoadedSchematic .jarV6LoadedLabels { height: var(--jar-v6-schematic-height); }
 }
 @container (max-width: 650px) {
   .jarV6Visuals { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .jarV6Schematic { grid-column: 1 / -1; }
   .jarV6SchematicGrid { grid-template-columns: 55px minmax(0, 1fr); }
   .jarV6SchematicSvg { width: 55px; height: 188px; }
+  .jarV6LoadedSchematic .jarV6SchematicGrid { grid-template-columns: 55px minmax(0, 1fr); }
+  .jarV6LoadedSchematic .jarV6SchematicSvg { width: 55px; height: 188px; }
   .jarV6ComponentLabels { height: 208px; min-height: 208px; display: flex; flex-direction: column; }
   .jarV6ComponentLabels b { font-size: 9px; }
   .jarV6SchematicStatus, .jarV6Legend { display: inline-flex; margin-right: 10px; }
   .jarV6Toolbar { grid-template-columns: 1.1fr .8fr .75fr 1fr; }
   .jarV6ModeContext { display: none; }
   .jarV6Velocity { grid-column: 1 / 2; }
+}
+@container (max-width: 650px) {
+  .jarV6LoadedSchematic .jarV6LoadedLabels { height: 188px; }
+  .jarV6LoadedSchematic .jarV6ComponentLabels span { font-size: 7px; }
 }
 @container (max-width: 590px) {
   .jarV6Visuals { grid-template-columns: minmax(0, 1fr); }

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import EngineeringStringSchematic from '../EngineeringString/EngineeringStringSchematic';
+import React, { useEffect, useState } from 'react';
+import EngineeringStringSchematic, { schematicComponentHeight, schematicToolType } from '../EngineeringString/EngineeringStringSchematic';
 import STAGE8_FIXTURE from './Stage8OesResearchFixture.v1.json';
+import { buildLoadedBhaSchematicSections, loadedJarRowKey, validateLoadedBhaWob } from './loadedBhaPresentation';
 import '../EngineeringString/EngineeringStringCard.css';
 import './JarFrameV6Presentation.css';
 
@@ -102,65 +103,173 @@ function ResearchChart({ title, unit, field, ticks, domainMax, selectedIndex, on
   </article>;
 }
 
-function loadedSchematicRows(rows, selectedJarId) {
-  const drawable = rows.filter(row => Number(row?.length) > 0 || row?.category || row?.toolName);
-  const jars = drawable.filter(row => String(row.category).toUpperCase() === 'JAR');
-  const selectedJar = jars.find(row => row.rowId === selectedJarId) || (jars.length === 1 ? jars[0] : null);
-  const segments = drawable.slice().reverse();
-  const usableHeight = 178;
-  const weights = segments.map(row => Math.max(0.7, Math.sqrt(Math.max(0, Number(row.length) || 0))));
-  const totalWeight = weights.reduce((sum, value) => sum + value, 0) || 1;
-  let cursor = 10;
-  const laidOut = segments.map((row, index) => {
-    const height = usableHeight * weights[index] / totalWeight;
-    const item = { row, top: cursor, bottom: cursor + height, selected: row === selectedJar };
-    cursor += height;
-    return item;
-  });
-  return { laidOut, selectedJar };
+function V6ContinuousAssemblyDrawing({ segments, markers = [], sectionGuides = [], slimStabilizerBlades = false, showHeadFittings = false, showBitTip = false, ariaLabel, testId }) {
+  const rail = 31, yTop = 7, yBottom = 189;
+  return <svg className="jarV6SchematicSvg" viewBox="0 0 61 208" preserveAspectRatio="xMidYMid meet"
+    role="img" aria-label={ariaLabel} data-testid={testId}>
+    <line x1={rail} y1={yTop} x2={rail} y2={yBottom} className="jarV6Rail" />
+    {showHeadFittings && <>
+      <rect x={rail - 6} y="2" width="12" height="7" rx="2" className="jarV6SchematicShape jarV6Pipe" />
+      <rect x={rail - 8} y="10" width="16" height="9" rx="2" className="jarV6SchematicShape jarV6Hwdp" />
+    </>}
+    {segments.map(segment => <g key={segment.key} data-testid={segment.testId} data-row-key={segment.key} data-selected={segment.selected ? 'true' : undefined}
+      data-blade-envelope-width={segment.bladeWidth || undefined}
+      data-section={segment.section} data-component-category={segment.category}>
+      <rect x={rail - segment.width / 2} y={segment.y1} width={segment.width} height={Math.max(1.5, segment.y2 - segment.y1)}
+        className={`jarV6SchematicShape ${segment.className}${segment.unknownOd ? ' jarV6UnknownOd' : ''}${segment.selected ? ' jarV6SelectedLoadedJar' : ''}`} />
+      {segment.bladeWidth > segment.width && (slimStabilizerBlades ? [-1, 1].map(side => {
+        const tubeEdge = rail + side * (segment.width / 2 - .35);
+        const bladeEdge = rail + side * segment.bladeWidth / 2;
+        const endInset = Math.min(1.5, (segment.y2 - segment.y1) * .2);
+        return <path key={side} d={`M${tubeEdge} ${segment.y1 + endInset} L${bladeEdge} ${segment.y1 + endInset + .7} L${bladeEdge} ${segment.y2 - endInset - .7} L${tubeEdge} ${segment.y2 - endInset} Z`} className="jarV6Blade" />;
+      }) : <rect x={rail - segment.bladeWidth / 2} y={segment.y1 + 1} width={segment.bladeWidth}
+        height={Math.max(1, segment.y2 - segment.y1 - 2)} className="jarV6Blade" />)}
+    </g>)}
+    {sectionGuides.map(guide => <line key={guide.key} x1="43" y1={guide.y} x2="61" y2={guide.y} className="jarV6SectionGuide" aria-hidden="true" />)}
+    {markers.map(marker => <g key={marker.key}>
+      {marker.guide && <line x1={marker.x - marker.guide / 2} y1={marker.y} x2={marker.x + marker.guide / 2} y2={marker.y} className={marker.guideClass} />}
+      <circle cx={marker.x} cy={marker.y} r={marker.radius} className={marker.className} data-testid={marker.testId} />
+    </g>)}
+    {showBitTip && <path d={`M${rail - 9} ${yBottom - 1}l9 8 9-8z`} className="jarV6BitTip" />}
+  </svg>;
 }
 
-function LoadedBhaSchematic({ bha, rows }) {
-  const { laidOut, selectedJar } = loadedSchematicRows(rows, bha?.selectedJarId);
-  const jarSegment = laidOut.find(item => item.selected);
-  const jarY = jarSegment ? (jarSegment.top + jarSegment.bottom) / 2 : null;
-  const componentClass = row => {
-    const type = String(row.category || '').toUpperCase();
-    return ['BIT', 'JAR', 'STB', 'DC', 'HWDP', 'DP'].includes(type) ? `jarV6${type[0]}${type.slice(1).toLowerCase()}` : 'jarV6Dc';
-  };
-  const rowLabel = row => `${row.category || row.toolName || 'Component'} · ${row.length || '—'} ft · OD ${row.od || '—'} in${row.idSize || row.id ? ` · ID ${row.idSize || row.id} in` : ''}`;
+const finitePositive = value => value !== null && value !== '' && Number.isFinite(Number(value)) && Number(value) > 0;
+const odWidth = row => finitePositive(row?.od) ? Math.max(8, Math.min(22, Number(row.od) * 2)) : 11;
+const formatDimension = value => finitePositive(value) ? format(Number(value), 2) : '—';
+const range = values => {
+  const valid = [...new Set(values.filter(finitePositive).map(value => Number(value)))].sort((a, b) => a - b);
+  if (!valid.length) return '—';
+  return valid.length === 1 ? format(valid[0], 2) : `${format(valid[0], 2)}–${format(valid[valid.length - 1], 2)}`;
+};
+const stabilizerBladeOd = row => {
+  const definition = row.librarySpecification || row.componentDefinition || {};
+  const bladeSection = definition.geometry?.segments?.find(segment => segment.externalGeometry === 'blade-envelope');
+  return row.stabilizer?.bladeOd ?? row.maximumOd ?? definition.maximumOd ?? definition.stabilizer?.bladeOd ?? bladeSection?.od;
+};
+
+function loadedGroupDetails(group) {
+  const rows = group.items.map(item => item.row);
+  const totalLength = rows.reduce((sum, row) => sum + (finitePositive(row.length) ? Number(row.length) : 0), 0);
+  if (rows.length === 1) {
+    const row = rows[0];
+    return `OD ${formatDimension(row.od)} · ID ${formatDimension(row.idSize || row.id)} in · ${finitePositive(row.length) ? `${format(Number(row.length), 2)} ft` : 'length unavailable'}`;
+  }
+  const countByType = {};
+  rows.forEach(row => { const type = schematicToolType(row); countByType[type] = (countByType[type] || 0) + 1; });
+  const types = Object.entries(countByType).map(([type, count]) => `${type}${count > 1 ? ` ×${count}` : ''}`).join(', ');
+  return `${rows.length} tools · ${types} · OD ${range(rows.map(row => row.od))} in · ID ${range(rows.map(row => row.idSize || row.id))} in · ${totalLength > 0 ? `${format(totalLength, 2)} ft` : 'length unavailable'}`;
+}
+
+function LoadedBhaSchematic({ rows, positions, selectedJarKey, schematicSectionsByJarKey, straight, surveyLoads, drillingMode }) {
+  const sourceRows = Array.isArray(rows) ? rows.filter(row => row && (row.category || row.toolName || row.selectedToolId || row.length)) : [];
+  const components = positions?.components || [];
+  const componentFor = (row, index) => components.find(component => row.rowId && component.rowId === row.rowId) || components[index] || null;
+  const { groups: schematicGroups, selectedKey, selectedComponentIndex } = buildLoadedBhaSchematicSections({
+    rows: sourceRows, components, selectedJarKey, sectionData: schematicSectionsByJarKey?.[selectedJarKey]
+  });
+  const laidOut = sourceRows.map((row, index) => ({ row, index, key: loadedJarRowKey(row, index), component: componentFor(row, index) })).reverse();
+  const jars = sourceRows.map((row, index) => ({ row, index, key: loadedJarRowKey(row, index), component: componentFor(row, index) }))
+    .filter(item => String(item.row.category).toUpperCase() === 'JAR');
+  const selected = jars.find(item => item.key === selectedKey) || null;
+  const selectedJar = selected?.row || null;
+  const selectedPosition = selected?.component;
+  const totalLength = Number(positions?.totalLength) || 0;
+  // Compress each source component into a continuous visual interval. These
+  // coordinates are illustrative only; numeric geometry stays provider-owned.
+  const assemblyItems = schematicGroups.flatMap(group => group.items.map(item => ({ ...item, section: group.label })));
+  const availableHeight = 182;
+  // Use explicit visual bands: long collar sections receive most of the
+  // drawing height, while the protected directional assembly stays clustered
+  // near the bit. This is schematic-only compression, never a length scale.
+  const sectionVisualShares = { DP: 0.04, HWDP: 0.06, 'Upper DC': 0.25, Jar: 0.08, 'Lower DC': 0.40, 'Lower BHA': 0.13, Bit: 0.04 };
+  const sectionShareTotal = schematicGroups.reduce((sum, group) => sum + (sectionVisualShares[group.label] || 0.05), 0);
+  const segmentHeights = new Map();
+  schematicGroups.forEach(group => {
+    const groupItems = group.items.map(item => assemblyItems.find(candidate => candidate.key === item.key)).filter(Boolean);
+    if (!groupItems.length) return;
+    const budget = availableHeight * (sectionVisualShares[group.label] || 0.05) / sectionShareTotal;
+    const weights = groupItems.map(item => Math.max(4, schematicComponentHeight(item.row)));
+    const minimumHeight = Math.min(1.5, budget / groupItems.length);
+    const remainingHeight = Math.max(0, budget - minimumHeight * groupItems.length);
+    const weightTotal = weights.reduce((sum, value) => sum + value, 0) || 1;
+    groupItems.forEach((item, index) => {
+      segmentHeights.set(item.key, minimumHeight + remainingHeight * weights[index] / weightTotal);
+    });
+  });
+  let cursorY = 7;
+  const segments = assemblyItems.map((item, index) => {
+    const y1 = cursorY;
+    const segmentHeight = segmentHeights.get(item.key) || availableHeight / Math.max(assemblyItems.length, 1);
+    cursorY = index === assemblyItems.length - 1 ? 189 : cursorY + segmentHeight;
+    const toolType = schematicToolType(item.row);
+    const className = toolType === 'JAR' && item.key !== selectedKey ? 'jarV6Dc'
+      : ({ DP: 'jarV6Pipe', HWDP: 'jarV6Hwdp', DC: 'jarV6Dc', JAR: 'jarV6Jar', STB: 'jarV6Stb', BIT: 'jarV6Bit', PDC: 'jarV6Bit', TCI: 'jarV6Bit', OTHER: 'jarV6Other' })[toolType] || 'jarV6Other';
+    const width = odWidth(item.row);
+    const bladeOd = Number(stabilizerBladeOd(item.row));
+    const bodyOd = Number(item.row.od);
+    const bladeOdVisualWidth = finitePositive(bladeOd) ? odWidth({ od: bladeOd }) : width;
+    return { ...item, y1, y2: cursorY, width, className,
+      unknownOd: !finitePositive(item.row.od),
+      bladeWidth: item.section === 'Lower BHA' && toolType === 'STB' && finitePositive(bladeOd) && finitePositive(bodyOd)
+        ? Math.min(30, width + Math.max(0, bladeOdVisualWidth - width) * 0.35) : 0 };
+  });
+  const sectionLayouts = schematicGroups.map(group => {
+    const groupSegments = group.items.map(item => segments.find(segment => segment.key === item.key)).filter(Boolean);
+    const first = groupSegments[0];
+    const last = groupSegments[groupSegments.length - 1];
+    return { group, y: first && last ? (first.y1 + last.y2) / 2 : 7 };
+  });
+  const selectedSegment = segments.find(segment => segment.key === selectedKey);
+  const jarY = selectedSegment ? (selectedSegment.y1 + selectedSegment.y2) / 2 : null;
+  const straightComponent = straight?.loadProfile?.valid && selectedComponentIndex >= 0
+    ? straight.loadProfile.components[selectedComponentIndex] : null;
+  const jarOrdinal = selected ? jars.indexOf(selected) : -1;
+  const surveyJar = surveyLoads?.valid && jarOrdinal >= 0 ? surveyLoads.jars?.[jarOrdinal] : null;
+  const formatNeutral = result => !result?.valid ? 'Unavailable'
+    : result.neutralPoints?.length === 1 && !result.neutralIntervals?.length ? `${format(result.neutralPoints[0].fromBitFt)} ft above bit`
+      : result.neutralIntervals?.length ? 'Neutral interval · no unique point'
+        : result.neutralPoints?.length > 1 ? 'Multiple crossings · no unique point' : 'No neutral point within deployed BHA';
   return <aside className="jarV6Panel jarV6Schematic jarV6LoadedSchematic" aria-label="Loaded BHA schematic">
-    <header className="jarV6SchematicHeader"><h2>Loaded BHA · schematic</h2><span>Current BHA rows · not to scale</span></header>
+    <header className="jarV6SchematicHeader"><h2>Loaded BHA · Schematic · not to scale</h2><span>{totalLength > 0 ? `${format(totalLength)} ft deployed` : 'Deployment unavailable'}</span></header>
     <div className="jarV6SchematicGrid">
-      <svg className="jarV6SchematicSvg" viewBox="0 0 61 208" preserveAspectRatio="xMidYMid meet" role="img"
-        aria-label={`Complete loaded BHA assembly${selectedJar ? `; selected jar ${selectedJar.toolName || selectedJar.category} highlighted` : '; no jar row available'}`} data-testid="loaded-bha-assembly">
-        <line x1="31" y1="8" x2="31" y2="189" className="jarV6Rail" />
-        {laidOut.map(({ row, top, bottom, selected }, index) => {
-          const category = String(row.category || '').toUpperCase();
-          const width = category === 'JAR' ? 20 : category === 'BIT' ? 18 : category === 'STB' ? 17 : category === 'HWDP' ? 16 : category === 'DP' ? 12 : 13;
-          const height = Math.max(1.5, bottom - top);
-          return <g key={row.rowId || `${category}-${index}`}>
-            <rect x={31 - width / 2} y={top} width={width} height={height} rx={category === 'BIT' ? 2 : 1}
-              className={`jarV6SchematicShape ${componentClass(row)}${selected ? ' jarV6SelectedLoadedJar' : ''}`} />
-            {selected && <><line x1="13" y1={jarY} x2="50" y2={jarY} className="jarV6CandidateGuide" />
-              <circle cx="31" cy={jarY} r="4" className="jarV6CandidateMarker" data-testid="loaded-selected-jar-marker" /></>}
-          </g>;
+      <V6ContinuousAssemblyDrawing segments={segments.map((segment, index) => ({
+        key: segment.key, y1: segment.y1, y2: segment.y2, width: segment.width, className: segment.className,
+        section: segment.section, category: segment.row.category,
+        unknownOd: segment.unknownOd, selected: segment.key === selectedKey, testId: `loaded-component-${index}`,
+        bladeWidth: segment.bladeWidth
+      }))} sectionGuides={sectionLayouts.map((layout, index) => ({ key: index, y: layout.y }))} slimStabilizerBlades
+      markers={jarY == null ? [] : [{ key: selectedKey, x: 31, y: jarY, guide: 20, guideClass: 'jarV6CandidateGuide', radius: 3.8, className: 'jarV6CandidateMarker', testId: 'loaded-selected-jar-marker' }]}
+      showBitTip={assemblyItems.some(item => item.section === 'Bit')}
+      ariaLabel={`Complete loaded BHA assembly${selectedJar ? `; selected jar ${selectedJar.toolName || selectedJar.category} highlighted` : '; no jar row available'}`} testId="loaded-bha-assembly" />
+      <div className="jarV6ComponentLabels jarV6LoadedLabels" aria-label="Loaded BHA component labels">
+        {sectionLayouts.map(({ group, y }) => {
+          const details = loadedGroupDetails(group);
+          const connectionNote = group.label === 'Lower DC' && schematicSectionsByJarKey?.[selectedJarKey]?.lowerConnectionUnverified
+            ? ' Lower DC section follows matching entered OD/ID; mating connection compatibility is unverified.' : '';
+          return <div key={group.items[0].key} data-section={group.label} style={{ top: `${y / 208 * 100}%` }} title={`${group.label} · ${details}.${connectionNote}`} aria-label={`${group.label} · ${details}${connectionNote}`}>
+            <b>{group.label}</b><span>{details}</span></div>;
         })}
-        <path d="M22 188l9 8 9-8z" className="jarV6BitTip" />
-      </svg>
-      <div className="jarV6ComponentLabels" aria-label="Loaded BHA component labels">
-        {laidOut.map(({ row }, index) => <div key={row.rowId || `label-${index}`} title={`${row.toolName || row.category || 'Component'} · ${rowLabel(row)}`}>
-          <b>{rowLabel(row)}</b></div>)}
         {!laidOut.length && <div><b>No BHA components</b>Load rows to view the assembly.</div>}
       </div>
     </div>
-    <div className="jarV6SchematicStatus"><span className="jarV6CandidateLabel">{selectedJar ? `Selected jar · ${selectedJar.toolName || selectedJar.category}` : 'No selected jar row'}</span><span className="jarV6NpState">NP unavailable</span></div>
+      <div className="jarV6LiveStatic" aria-label="Loaded BHA geometry and static results">
+      <div className="jarV6CandidateLabel">{selectedJar ? `Selected jar · ${selectedJar.toolName || selectedJar.category}` : 'No jar selected'}</div>
+      {schematicSectionsByJarKey?.[selectedJarKey]?.lowerBoundaryUnresolved
+        ? <div className="jarV6BoundaryUnavailable" role="note">Lower DC / fixed Lower BHA boundary unavailable: {schematicSectionsByJarKey[selectedJarKey].lowerBoundaryReason}</div>
+        : schematicSectionsByJarKey?.[selectedJarKey]?.lowerConnectionUnverified && <div className="jarV6BoundaryUnavailable" role="note">Lower DC uses matching entered OD/ID; one or more mating connections are unverified, so the fixed Lower BHA transition cannot be confirmed from connection data.</div>}
+      {selectedPosition && <div>Centre {format(selectedPosition.centreFromBit)} ft · bottom {format(selectedPosition.startFromBit)} ft · top {format(selectedPosition.endFromBit)} ft above bit; {format(totalLength - selectedPosition.endFromBit)} ft above / {format(selectedPosition.startFromBit)} ft below.</div>}
+      {straight?.loadProfile?.valid ? <div><b>Straight-hole · {straight.drillingMode}:</b> {straightComponent ? `jar bottom/top ${format(straightComponent.bottomAxialForce, 0)} / ${format(straightComponent.topAxialForce, 0)} lbf` : 'jar load unavailable'}; NP {Number.isFinite(straight.neutralPointFt) ? `${format(straight.neutralPointFt)} ft above bit` : 'not found'}.</div>
+        : <div><b>Straight-hole · {drillingMode}:</b> unavailable · {straight?.loadProfile?.error || straight?.errors?.join(' ') || 'valid deployed-BHA inputs required'}.</div>}
+      {surveyLoads?.valid ? <div><b>Survey · {surveyLoads.mode}:</b> {surveyJar ? `${format(surveyJar.axialForceLbf, 0)} lbf (+ compression)` : 'selected-jar load unavailable'}; NP {formatNeutral(surveyLoads)}.</div>
+        : <div><b>Survey · {drillingMode}:</b> unavailable · {surveyLoads?.errors?.join(' ') || 'valid covered survey inputs required'}.</div>}
+      <div className="jarV6StaticProvenance">Straight-hole calcStraightDrag is constant-inclination screening; survey calcSurveyAxialLoads is preliminary soft-string screening without buckling or contact redistribution. Positive force is compression; negative force is tension. Dynamic results remain unavailable.</div>
+    </div>
     <details className="jarV6DetailedSchematic"><summary>Optional detailed tool illustration</summary>
-      <EngineeringStringSchematic components={rows} neutralPointFt={null} jars={[]} dcSections={{}} />
+      <EngineeringStringSchematic components={rows} neutralPointFt={null} jars={[]} dcSections={{}} showNotToScaleLabel={false} />
     </details>
   </aside>;
 }
-
 function ResearchFixtureSchematic({ selectedPositionFt }) {
   const rail = 31, yTop = 7, yBottom = 189, topMd = 748.29;
   const scale = (yBottom - yTop) / topMd, y = feet => yBottom - feet * scale;
@@ -168,34 +277,26 @@ function ResearchFixtureSchematic({ selectedPositionFt }) {
   const fixedTop = y(115.56), step = (yBottom - fixedTop) / 6;
   const lowerStack = ['stb', 'dc', 'stb', 'dc', 'stb', 'bit'];
   const widths = [17, 11, 17, 11, 17, 18];
-  const rect = (a, b, width, className, key) => <rect key={key} x={rail - width / 2} y={a} width={width} height={Math.max(1.5, b - a)} className={`jarV6SchematicShape ${className}`} />;
+  const segments = [
+    { key: 'upper-dc', y1: yTop, y2: y(jarTop), width: 13, className: 'jarV6Dc' },
+    { key: 'hypothetical-jar', y1: y(jarTop), y2: y(jarBottom), width: 20, className: 'jarV6Jar' },
+    { key: 'lower-dc', y1: y(jarBottom), y2: fixedTop, width: 13, className: 'jarV6Dc' },
+    ...lowerStack.map((type, index) => ({
+      key: `stack-${index}`, y1: fixedTop + index * step, y2: index === 5 ? yBottom : fixedTop + (index + 1) * step,
+      width: widths[index], className: `jarV6${type[0].toUpperCase()}${type.slice(1)}`, bladeWidth: type === 'stb' ? 26 : 0
+    }))
+  ];
   const fixtureY = y(fixtureReferenceFt), candidateY = y(selectedPositionFt);
   const coincident = Math.abs(selectedPositionFt - fixtureReferenceFt) < 0.005;
   const fixtureX = coincident ? rail - 5 : rail, candidateX = coincident ? rail + 5 : rail;
   return <aside className="jarV6Panel jarV6Schematic" aria-label="Stage 8 OES research fixture BHA schematic">
     <header className="jarV6SchematicHeader"><h2>OES BHA · schematic</h2><span>Stage 8 fixture · not to scale</span></header>
     <div className="jarV6SchematicGrid">
-      <svg className="jarV6SchematicSvg" viewBox="0 0 61 208" preserveAspectRatio="xMidYMid meet" role="img" data-testid="stage8-fixture-assembly"
-        aria-label={`Stage 8 OES fixture; selected hypothetical jar centre ${format(selectedPositionFt)} feet; fixed fixture reference jar centre 641.83 feet`}>
-        <line x1={rail} y1={yTop} x2={rail} y2={yBottom} className="jarV6Rail" />
-        <rect x={rail - 6} y="2" width="12" height="7" rx="2" className="jarV6SchematicShape jarV6Pipe" />
-        <rect x={rail - 8} y="10" width="16" height="9" rx="2" className="jarV6SchematicShape jarV6Hwdp" />
-        {rect(yTop, y(jarTop), 13, 'jarV6Dc', 'upper-dc')}
-        {rect(y(jarTop), y(jarBottom), 20, 'jarV6Jar', 'hypothetical-jar')}
-        {rect(y(jarBottom), fixedTop, 13, 'jarV6Dc', 'lower-dc')}
-        {lowerStack.map((type, index) => {
-          const a = fixedTop + index * step, b = index === 5 ? yBottom : fixedTop + (index + 1) * step;
-          return <g key={`${type}-${index}`}>
-            {rect(a, b, widths[index], `jarV6${type[0].toUpperCase()}${type.slice(1)}`, `stack-${index}`)}
-            {type === 'stb' && <rect x={rail - 13} y={a + 1} width="26" height={Math.max(1, b - a - 2)} className="jarV6Blade" />}
-          </g>;
-        })}
-        <line x1={fixtureX - 10} y1={fixtureY} x2={fixtureX + 10} y2={fixtureY} className="jarV6FixtureGuide" />
-        <circle cx={fixtureX} cy={fixtureY} r="3.5" className="jarV6FixtureMarker" data-testid="fixture-reference-marker" />
-        <line x1={candidateX - 10} y1={candidateY} x2={candidateX + 10} y2={candidateY} className="jarV6CandidateGuide" />
-        <circle cx={candidateX} cy={candidateY} r="3.8" className="jarV6CandidateMarker" data-testid="hypothetical-position-marker" />
-        <path d={`M${rail - 9} ${yBottom - 1}l9 8 9-8z`} className="jarV6BitTip" />
-      </svg>
+      <V6ContinuousAssemblyDrawing segments={segments} showHeadFittings showBitTip ariaLabel={`Stage 8 OES fixture; selected hypothetical jar centre ${format(selectedPositionFt)} feet; fixed fixture reference jar centre 641.83 feet`} testId="stage8-fixture-assembly"
+        markers={[
+          { key: 'fixture-reference', x: fixtureX, y: fixtureY, guide: 20, guideClass: 'jarV6FixtureGuide', radius: 3.5, className: 'jarV6FixtureMarker', testId: 'fixture-reference-marker' },
+          { key: 'hypothetical-position', x: candidateX, y: candidateY, guide: 20, guideClass: 'jarV6CandidateGuide', radius: 3.8, className: 'jarV6CandidateMarker', testId: 'hypothetical-position-marker' }
+        ]} />
       <div className="jarV6ComponentLabels" aria-label="Stage 8 fixture component geometry">
         <div><b>5 in drillpipe · OD 5.000</b>ID 4.276 in · continues uphole</div>
         <div><b>5 in HWDP</b>OD 5.000 · ID 3.000 in · 274.67 ft</div>
@@ -215,13 +316,23 @@ function EmptyResearchState() {
   return <div className="jarV6ResearchEmpty" role="status">No research data displayed. Select the Stage 8 OES Research Demo mode to opt in to the frozen fixture.</div>;
 }
 
-export default function JarFrameV6Presentation({ bha }) {
+export default function JarFrameV6Presentation({ bha, loadedData, mode: controlledMode, onModeChange }) {
   const [showVelocity, setShowVelocity] = useState(false);
-  const [mode, setMode] = useState('loaded');
+  const [localMode, setLocalMode] = useState('loaded');
+  const mode = controlledMode || localMode;
+  const setMode = onModeChange || setLocalMode;
+  const [selectedLoadedJarKey, setSelectedLoadedJarKey] = useState(null);
+  useEffect(() => setSelectedLoadedJarKey(null), [bha?.id, bha?.selectedJarId]);
   const initialSample = fixtureSamples.findIndex(sample => Math.abs(sample.positionFt - fixtureReferenceFt) < 0.005);
   const [selectedIndex, setSelectedIndex] = useState(Math.max(0, initialSample));
   const selected = fixtureSamples[selectedIndex];
-  const loadedRows = Array.isArray(bha?.rows) ? bha.rows : [];
+  const loadedRows = Array.isArray(loadedData?.geometryBha?.rows) ? loadedData.geometryBha.rows : (Array.isArray(bha?.rows) ? bha.rows : []);
+  const loadedJarOptions = loadedRows.map((row, index) => ({ row, index, key: loadedJarRowKey(row, index) }))
+    .filter(item => String(item.row.category || '').toUpperCase() === 'JAR');
+  const isValidJarKey = key => loadedJarOptions.some(item => item.key === key);
+  const selectedLoadedKey = isValidJarKey(selectedLoadedJarKey) ? selectedLoadedJarKey
+    : isValidJarKey(bha?.selectedJarId) ? bha.selectedJarId
+      : loadedJarOptions.length === 1 ? loadedJarOptions[0].key : '';
   const researchMode = mode === 'stage8' && fixtureIntegrityValid;
   return <section className={`jarV6Presentation ${researchMode ? 'jarV6ResearchDemo' : ''}`} aria-label="JarFrame V6 performance presentation" data-presentation-mode={researchMode ? 'stage8-research-demo' : 'loaded-bha'}>
     <div className="jarV6ModeSelector" role="radiogroup" aria-label="JarFrame data view">
@@ -233,7 +344,7 @@ export default function JarFrameV6Presentation({ bha }) {
     <div className="jarV6FixtureStrip">
       <span><strong>{researchMode ? 'Frozen Stage 8 research fixture' : 'Loaded-BHA dynamic results unavailable'}</strong>
         {researchMode ? ` · ${STAGE8_FIXTURE.fixtureIdentity} · 50 ms window` : ' · no dynamic prediction is connected'}</span>
-      <span className="jarV6NpStrip">NP unavailable · mode / WOB unavailable</span>
+      <span className="jarV6NpStrip">{researchMode ? 'NP unavailable · mode / WOB unavailable' : 'Static load and neutral point shown when valid'}</span>
       <strong className="jarV6Warning">PRELIMINARY — NOT FOR OPERATIONAL USE</strong>
     </div>
     {researchMode && <div className="jarV6Provenance" role="note">
@@ -249,19 +360,27 @@ export default function JarFrameV6Presentation({ bha }) {
         <UnavailableChart title="Peak stuck-point tensile impact force" unit="kN" ticks={[2000, 2500, 3000, 3500]} className="jarV6Force" />
         <UnavailableChart title="50 ms tensile impulse" unit="kN·s" ticks={[0, 30, 60, 90]} className="jarV6Impulse" />
       </>}
-      {researchMode ? <ResearchFixtureSchematic selectedPositionFt={selected.positionFt} /> : <LoadedBhaSchematic bha={bha} rows={loadedRows} />}
+      {researchMode ? <ResearchFixtureSchematic selectedPositionFt={selected.positionFt} /> : <LoadedBhaSchematic
+        rows={loadedRows} positions={loadedData?.positions} selectedJarKey={selectedLoadedKey}
+        schematicSectionsByJarKey={loadedData?.schematicSectionsByJarKey}
+        straight={loadedData?.straight} surveyLoads={loadedData?.surveyLoads} drillingMode={loadedData?.drillingMode || 'slide'} />}
       {showVelocity && (researchMode ? <ResearchChart title="Impact velocity at jar" unit="m/s" field="impactVelocityMS" ticks={[2.5, 3.5, 4.5]} domainMax={5}
         selectedIndex={selectedIndex} onSelect={setSelectedIndex} className="jarV6Velocity" digits={3} /> :
         <UnavailableChart title="Impact velocity at jar" unit="m/s" ticks={[2.5, 3.5, 4.5]} className="jarV6Velocity" />)}
     </section>
     <footer className="jarV6Toolbar" aria-label="JarFrame performance controls">
-      <label className="jarV6Control jarV6PositionControl"><span>Hypothetical jar centre</span>
+      <label className="jarV6Control jarV6PositionControl"><span>{researchMode ? 'Hypothetical jar centre' : 'Selected loaded jar'}</span>
         {researchMode ? <select aria-label="Select hypothetical jar centre" value={selectedIndex} onChange={event => setSelectedIndex(Number(event.target.value))}>
           {fixtureSamples.map((sample, index) => <option key={sample.positionFt} value={index}>{format(sample.positionFt)} ft</option>)}
-        </select> : <select aria-label="Select hypothetical jar centre" value="" disabled><option value="">Unavailable · Loaded BHA mode</option></select>}
+        </select> : <select aria-label="Select loaded BHA jar" value={selectedLoadedKey} disabled={!loadedJarOptions.length}
+          onChange={event => setSelectedLoadedJarKey(event.target.value)}>
+          {!loadedJarOptions.length && <option value="">No jar in loaded BHA</option>}
+          {loadedJarOptions.map(({ row, key }, index) => <option key={key} value={key}>{index + 1}: {row.toolName || 'Jar'} · {format(Number(row.length))} ft</option>)}
+        </select>}
       </label>
       <div className="jarV6ImpactVelocity"><span>Impact velocity</span><strong data-testid="impact-velocity-readout">{researchMode ? `${format(selected.impactVelocityMS, 3)} m/s` : '— m/s'}</strong></div>
-      <div className="jarV6ModeContext">Mode / WOB<br /><b>unavailable</b></div>
+      <div className="jarV6ModeContext">Mode / WOB<br /><b>{researchMode || !loadedData?.straight?.loadProfile?.valid || !validateLoadedBhaWob(bha?.wob).valid
+        ? 'unavailable' : `${loadedData.drillingMode} · ${format(Number(bha.wob))} klbf`}</b></div>
       <div className="jarV6ResearchStatus"><b>{researchMode ? 'Opt-in Stage 8 fixture demo' : 'Loaded BHA selected'}</b><br />
         {researchMode ? 'Fixture data only · not loaded-BHA results' : 'Stage 8 fixture is not displayed'}</div>
       <label className="jarV6Control jarV6VelocityToggle"><input type="checkbox" checked={showVelocity} onChange={event => setShowVelocity(event.target.checked)} /> Show velocity plot</label>

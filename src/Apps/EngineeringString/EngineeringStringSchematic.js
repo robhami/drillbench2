@@ -169,7 +169,7 @@ function ComponentSilhouette({ item, selected, onSelect }) {
     </g>;
 }
 
-const EngineeringStringSchematic = ({ components = [], neutralPointFt = null, jars = [], dcSections = {} }) => {
+const EngineeringStringSchematic = ({ components = [], neutralPointFt = null, jars = [], dcSections = {}, showNotToScaleLabel = true }) => {
     const [view, setView] = useState('bha');
     const [selectedKey, setSelectedKey] = useState(null);
     const layout = useMemo(() => buildSchematicLayout(components, view), [components, view]);
@@ -207,7 +207,7 @@ const EngineeringStringSchematic = ({ components = [], neutralPointFt = null, ja
 
     return <section className="engineeringStringViewer" aria-label="Engineering string BHA schematic">
         <div className="engineeringStringViewerToolbar">
-            <span className="bhaSchematicNotToScale">Schematic · not to scale</span>
+            {showNotToScaleLabel && <span className="bhaSchematicNotToScale">Schematic · not to scale</span>}
             <label className="engineeringStringViewChoice">View <select aria-label="Schematic view" value={view} onChange={event => setView(event.target.value)}>
                 <option value="bha">BHA</option><option value="full">Full String</option>
             </select></label>
