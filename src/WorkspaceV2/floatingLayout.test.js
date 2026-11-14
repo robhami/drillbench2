@@ -1,4 +1,4 @@
-import { FLOAT_KEY, defaultWindows, projectWindow, arrangeWindows, loadFloating, saveFloating, migrateDocking } from './floatingLayout';
+import { FLOAT_KEY, JAR_CONFIGURATION_MIN_WIDTH, JAR_CONFIGURATION_MIN_HEIGHT, defaultWindows, projectWindow, arrangeWindows, loadFloating, saveFloating, migrateDocking, recoverFloatingWindow } from './floatingLayout';
 import { defaultLayout } from './dockingLayout';
 beforeEach(() => localStorage.clear());
 test('fresh desktop opens only setup windows side by side', () => {
@@ -11,6 +11,21 @@ test('viewport adaptation and maximize preserve preferred geometry', () => {
   expect(projectWindow(w, 700, 500)).toEqual({ x: 0, y: 0, width: 700, height: 500 });
   expect(w.x).toBe(1600);
   expect(projectWindow({ ...w, maximized: true }, 1000, 700)).toEqual({ x: 0, y: 0, width: 1000, height: 700 });
+});
+test('Jar Position Analysis enforces its minimum through save, restore, reload and narrow-screen projection', () => {
+  expect([JAR_CONFIGURATION_MIN_WIDTH, JAR_CONFIGURATION_MIN_HEIGHT]).toEqual([700, 440]);
+  const smallSaved = { id: 'jarConfiguration1', type: 'jarConfiguration', x: 800, y: 500, width: 480, height: 300,
+    visible: true, minimized: false, maximized: false, z: 1 };
+  const key = 'jar-minimum';
+  saveFloating(localStorage, key, [smallSaved]);
+  const loaded = loadFloating(localStorage, key, 1200, 800).windows[0];
+  expect(loaded).toMatchObject({ id: 'jarConfiguration1', width: 700, height: 440, x: 500, y: 360 });
+  const restored = recoverFloatingWindow({ ...loaded, maximized: true }, { width: 1000, height: 700 });
+  expect(restored).toMatchObject({ width: 700, height: 440, maximized: true });
+  saveFloating(localStorage, key, [loaded]);
+  expect(loadFloating(localStorage, key, 1200, 800).windows[0]).toMatchObject({ width: 700, height: 440 });
+  expect(projectWindow(loaded, 650, 400)).toMatchObject({ x: 0, y: 0, width: 650, height: 400 });
+  expect(projectWindow({ type: 'jarForces', x: 0, y: 0, width: 100, height: 100 }, 1000, 800)).toMatchObject({ width: 280, height: 100 });
 });
 test.each(['side', 'grid'])('%s arrangement restores open minimized windows and changes only open geometry', mode => {
   const list = defaultWindows(1400, 800).map((w, i) => ({ ...w, visible: i < 4, minimized: i === 3 }));

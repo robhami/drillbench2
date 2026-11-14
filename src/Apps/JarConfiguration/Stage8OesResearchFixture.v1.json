@@ -1,0 +1,34 @@
+{
+  "version": "stage8-oes-research-v1",
+  "stage": 8,
+  "fixtureIdentity": "Reconstructed OES 8.5 in BHA with diagnostic TCI bit",
+  "sourcePath": "docs/ValidationStudies/JarUpScalability/IntegerDelayPrototype/Stage8Results.json",
+  "sourceSha256": "4badaf85e9507c06ef00a7b9c8972ae922be73d7defff7ec45c2f05a61cfbf84",
+  "samplesSha256": "877156a518b42399bcfd7ce64efb9952fd768bfd84625af0f296a4aec77a824e",
+  "windowSeconds": 0.05,
+  "units": {
+    "position": "ft above bit",
+    "peakTensileImpactForce": "kN",
+    "tensileImpulse": "kN·s",
+    "impactVelocity": "m/s"
+  },
+  "conversion": "Peak tensile force N and fixed-window tensile impulse N·s from recorded Stage8Results.json metrics are divided by 1000 for kN and kN·s; impactVelocityMS is copied unchanged.",
+  "samples": [
+    { "positionFt": 132.07, "peakTensileImpactForceKN": 2422.0895455369878, "tensileImpulse50msKNs": 82.87837696407247, "impactVelocityMS": 2.906786355485816 },
+    { "positionFt": 133.06, "peakTensileImpactForceKN": 2417.037966107722, "tensileImpulse50msKNs": 82.79090517513364, "impactVelocityMS": 2.906786355485816 },
+    { "positionFt": 193.06, "peakTensileImpactForceKN": 2239.9146406371483, "tensileImpulse50msKNs": 76.80264845082348, "impactVelocityMS": 2.9104916355372805 },
+    { "positionFt": 253.06, "peakTensileImpactForceKN": 2416.9873836094007, "tensileImpulse50msKNs": 71.13252825854033, "impactVelocityMS": 2.9096955130634767 },
+    { "positionFt": 313.06, "peakTensileImpactForceKN": 2349.486310855526, "tensileImpulse50msKNs": 67.34334606992091, "impactVelocityMS": 3.0475878203914837 },
+    { "positionFt": 373.06, "peakTensileImpactForceKN": 2713.103523108686, "tensileImpulse50msKNs": 61.3155586233429, "impactVelocityMS": 3.2366237243504297 },
+    { "positionFt": 433.06, "peakTensileImpactForceKN": 2752.2171213206634, "tensileImpulse50msKNs": 56.38206081315839, "impactVelocityMS": 3.2263766138181746 },
+    { "positionFt": 493.06, "peakTensileImpactForceKN": 3008.2372826629435, "tensileImpulse50msKNs": 52.031059331081, "impactVelocityMS": 3.2400019633394908 },
+    { "positionFt": 553.06, "peakTensileImpactForceKN": 2864.7270403179687, "tensileImpulse50msKNs": 44.1976458971979, "impactVelocityMS": 3.695675849920224 },
+    { "positionFt": 611.8299999999999, "peakTensileImpactForceKN": 3226.2433017462367, "tensileImpulse50msKNs": 36.959127049060626, "impactVelocityMS": 4.026028923906896 },
+    { "positionFt": 613.06, "peakTensileImpactForceKN": 3230.273139135112, "tensileImpulse50msKNs": 36.80744099297867, "impactVelocityMS": 4.026028923906896 },
+    { "positionFt": 641.8299999999999, "peakTensileImpactForceKN": 3194.433623376509, "tensileImpulse50msKNs": 32.82009655473309, "impactVelocityMS": 4.3047914809231544 },
+    { "positionFt": 671.8299999999999, "peakTensileImpactForceKN": 3330.7957925963487, "tensileImpulse50msKNs": 28.006683641666122, "impactVelocityMS": 4.3599189896978015 },
+    { "positionFt": 673.06, "peakTensileImpactForceKN": 3332.463704443491, "tensileImpulse50msKNs": 27.768052460770978, "impactVelocityMS": 4.3618443394216975 },
+    { "positionFt": 730.79, "peakTensileImpactForceKN": 3010.1964455725997, "tensileImpulse50msKNs": 13.291128073913134, "impactVelocityMS": 4.655826973706628 },
+    { "positionFt": 731.78, "peakTensileImpactForceKN": 2993.502509008974, "tensileImpulse50msKNs": 13.009212992254483, "impactVelocityMS": 4.655712423684557 }
+  ]
+}

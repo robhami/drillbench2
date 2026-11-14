@@ -1,27 +1,89 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Workspace from './Workspace';
+import FloatingWindow from './FloatingWindow';
 import { FLOAT_KEY } from './floatingLayout';
 jest.mock('./Widget', () => props => {
   const React = require('react'); const [draft, setDraft] = React.useState('');
   return <div data-testid={props.widget.type}><input aria-label={`Draft ${props.widget.type}`} value={draft} onChange={e => setDraft(e.target.value)} /><span>{props.analysisBitMdFt}</span></div>;
 });
-jest.mock('react-rnd', () => ({ Rnd: props => <div style={props.style} data-testid="window-frame" data-position={JSON.stringify(props.position)} data-size={JSON.stringify(props.size)} onMouseDown={props.onMouseDown}>
+jest.mock('react-rnd', () => ({ Rnd: props => <div style={props.style} data-testid="window-frame" data-window-type={props.children?.props?.['data-window-type']} data-position={JSON.stringify(props.position)} data-size={JSON.stringify(props.size)} data-min-width={props.minWidth} data-min-height={props.minHeight} onMouseDown={props.onMouseDown}>
   {props.children}<button aria-label="Simulate move" onClick={() => props.onDragStop(null, { x: 80, y: 90 })} />
   <button aria-label="Simulate resize" onClick={() => props.onResizeStop(null, 'right', { style: { width: '750px', height: '550px' } }, {}, { x: 80, y: 90 })} />
+  <button aria-label="Simulate undersized resize" onClick={() => props.onResizeStop(null, 'right', { style: { width: '650px', height: '400px' } }, {}, { x: 80, y: 90 })} />
   </div> }));
 beforeEach(() => { localStorage.clear(); global.ResizeObserver = class { observe() {} disconnect() {} }; });
 const click = name => fireEvent.click(screen.getByRole('button', { name, exact: true }));
 const saved = key => JSON.parse(localStorage.getItem(FLOAT_KEY)).workspaces[key || 'draft'];
+
+test('FloatingWindow applies and enforces JarFrame-only resize minimums without changing other windows', () => {
+  const onChange = jest.fn();
+  const { rerender } = render(<FloatingWindow window={{ id: 'jarConfiguration1', type: 'jarConfiguration', x: 0, y: 0, width: 900, height: 600, z: 1 }}
+    viewport={{ width: 1200, height: 800 }} onChange={onChange}><div>Jar content</div></FloatingWindow>);
+  const jarFrame = screen.getByTestId('window-frame');
+  expect(jarFrame).toHaveAttribute('data-min-width', '700');
+  expect(jarFrame).toHaveAttribute('data-min-height', '440');
+  fireEvent.click(screen.getByLabelText('Simulate undersized resize'));
+  expect(onChange).toHaveBeenCalledWith({ width: 700, height: 440, x: 80, y: 90 });
+  rerender(<FloatingWindow window={{ id: 'jarForces1', type: 'jarForces', x: 0, y: 0, width: 900, height: 600, z: 1 }}
+    viewport={{ width: 1200, height: 800 }} onChange={onChange}><div>General content</div></FloatingWindow>);
+  expect(screen.getByTestId('window-frame')).toHaveAttribute('data-min-width', '300');
+  expect(screen.getByTestId('window-frame')).toHaveAttribute('data-min-height', '180');
+});
 
 test('JarFrame launchers preserve legacy module types and saved layout keys', () => {
   expect(FLOAT_KEY).toBe('wellbenchFloatingLayoutV1');
   render(<Workspace bha={{ id: 'legacy-bha', rows: [] }} />);
   expect(screen.getByText('JARFRAME')).toBeInTheDocument();
   click('Jar Position Analysis'); click('Impact & Impulse');
-  expect(screen.getByLabelText('Jar Position Analysis window')).toHaveTextContent('JarFrame');
-  expect(screen.getByLabelText('Impact & Impulse window')).toHaveTextContent('JarFrame');
+  const jarPositionWindow = screen.getByLabelText('Jar Position Analysis window');
+  const impactWindow = screen.getByLabelText('Impact & Impulse window');
+  expect(jarPositionWindow).toHaveTextContent('Jar Position Analysis');
+  expect(impactWindow).toHaveTextContent('Impact & Impulse');
+  [jarPositionWindow.querySelector('.wbFloatingBrand'), impactWindow.querySelector('.wbFloatingBrand')].forEach(brand => {
+    expect(brand).toHaveAttribute('data-brand', 'jarframe');
+    expect(brand).toHaveTextContent('JARFRAME');
+  });
   expect(saved('legacy-bha').map(w => w.type)).toEqual(expect.arrayContaining(['jarConfiguration', 'jarPlacement']));
+});
+
+test('general Workspace V2 windows use the DrillFrame brand and retain title controls', () => {
+  render(<Workspace bha={{ rows: [] }} />);
+  click('Hookload Calculations');
+  expect(screen.getAllByTestId('window-frame').at(-1)).toHaveAttribute('data-min-width', '300');
+  expect(screen.getAllByTestId('window-frame').at(-1)).toHaveAttribute('data-min-height', '180');
+  const window = screen.getByLabelText('Hookload Calculations window');
+  const brand = window.querySelector('.wbFloatingBrand');
+  expect(brand).toHaveAttribute('data-brand', 'drillframe');
+  expect(brand).toHaveTextContent('DRILLFRAME');
+  expect(screen.getByRole('button', { name: 'Minimise Hookload Calculations' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Maximise Hookload Calculations' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Close Hookload Calculations' })).toBeInTheDocument();
+});
+
+test('Jar Position Analysis keeps its per-BHA window identity through close, reopen and saved-layout restore', () => {
+  const bha = { id: 'jar-route-bha', rows: [] };
+  const view = render(<Workspace bha={bha} />);
+  click('Jar Position Analysis');
+  const original = saved(bha.id).find(w => w.type === 'jarConfiguration');
+  expect(original.id).toBe('jarConfiguration1');
+  // The mock Rnd controls are sibling harness controls. Jar Configuration is
+  // appended as the last floating window opened by this test.
+  fireEvent.click(screen.getAllByLabelText('Simulate resize').at(-1));
+  expect(saved(bha.id).find(w => w.type === 'jarConfiguration')).toMatchObject({ id: original.id, width: 750, height: 550 });
+
+  fireEvent.click(screen.getByRole('button', { name: 'Minimise Jar Position Analysis' }));
+  expect(saved(bha.id).find(w => w.type === 'jarConfiguration')).toMatchObject({ id: original.id, minimized: true });
+  click('Jar Position Analysis');
+  fireEvent.click(screen.getByRole('button', { name: 'Maximise Jar Position Analysis' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Close Jar Position Analysis' }));
+  expect(saved(bha.id).find(w => w.type === 'jarConfiguration')).toMatchObject({ id: original.id, maximized: true, visible: false });
+
+  view.unmount();
+  render(<Workspace bha={bha} />);
+  click('Jar Position Analysis');
+  expect(saved(bha.id).filter(w => w.type === 'jarConfiguration')).toHaveLength(1);
+  expect(saved(bha.id).find(w => w.type === 'jarConfiguration').id).toBe(original.id);
 });
 test('multiple windows, focus, no duplicates and all window controls preserve module state', () => {
   render(<Workspace bha={{ rows: [] }} />); click('Hookload Calculations');

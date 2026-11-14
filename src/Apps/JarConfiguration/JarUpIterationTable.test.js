@@ -123,7 +123,9 @@ test('reviewed OES property loader supplies explicit hypothetical structural are
   const pdc = standardComponents.find(component => component.id === 'bha-187');
   const bit = { rowId: 'oes-pdc-row', category: 'BIT', selectedToolId: pdc.id, toolName: pdc.name, od: '8.5', idSize: '', weight: '', length: '1', componentDefinition: pdc };
   const bha = { ...frozen.workingCopy, rows: [bit, ...frozen.workingCopy.rows] };
-  render(<RealBhaDynamicComparison iterationTable bha={bha} jarIndex={1} bitMdFt={9318} />);
+  // jarIndex addresses the filtered jar list, not the BHA row index of the
+  // inserted bit. This fixture contains one jar, so its selected index is 0.
+  render(<RealBhaDynamicComparison iterationTable bha={bha} jarIndex={0} bitMdFt={9318} />);
   fireEvent.click(screen.getByRole('button', { name: 'Engineering Settings / Diagnostics' }));
   fireEvent.click(screen.getByRole('button', { name: 'Load previously reviewed illustrative OES properties' }));
   expect(screen.getByLabelText(/Row 1 BIT: 8.5-inch PDC Drill Bit — equivalent structural area/)).toHaveValue(Math.PI / 4 * (6 ** 2 - 2.5 ** 2));
@@ -135,7 +137,7 @@ test('reviewed OES property loader supplies explicit hypothetical structural are
   expect(prop.densityKgM3).toBe(7850); expect(prop.youngsModulusPa).toBe(200e9);
   expect(prop.provenance).toBe('Illustrative equivalent PDC bit body based on assumed 6.0-in fishneck OD and 2.5-in bore ID. Not manufacturer specifications or validated dynamic properties.');
   const base = payload.cases.find(candidate => candidate.movementFt === 0);
-  const result = runRealBhaSkeem({ bha: base.bha, bitMdFt: 9318, jarIndex: 1, settings: payload.settings });
+  const result = runRealBhaSkeem({ bha: base.bha, bitMdFt: 9318, jarIndex: 0, settings: payload.settings });
   expect(result.valid).toBe(true); expect(Number.isFinite(result.metrics.peakTensileN)).toBe(true);
 });
 
@@ -150,4 +152,44 @@ test('normal V1 controls contain only position range and preserve the current BH
   expect(within(positioningMethod).getByRole('option', { name: /Mode 2/ })).toBeEnabled();
   expect(within(positioningMethod).getByRole('option', { name: /Mode 1/ })).toBeDisabled();
   expect(within(positioningMethod).getByRole('option', { name: /Mode 3/ })).toBeDisabled();
+});
+
+test('CSV export retains the existing filename, schema and declared units', () => {
+  const row = { scenario: 'Base', candidateId: 'stage0-current', movementFt: 0, jarCentreFt: 640.83,
+    jarToStuckFt: 640.83, totalBhaLengthFt: 9318, drillpipeLengthChangeFt: 0, totalCalculatedWeightLbf: 200000,
+    changeInCalculatedWeightLbf: 0, valid: true, impact: { impactVelocityMS: 4.3, initialImpactForceN: 852848 },
+    metrics: { peakTensileN: 3195413, fixedTensileNs: 33067 } };
+  const NativeBlob = global.Blob;
+  const nativeCreate = URL.createObjectURL, nativeRevoke = URL.revokeObjectURL;
+  const blobFactory = jest.fn((parts, options) => ({ parts, options }));
+  const createUrl = jest.fn(() => 'blob:stage0');
+  const revokeUrl = jest.fn();
+  const click = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function () {
+    expect(this.download).toBe('JarUpPositions.csv');
+  });
+  jest.useFakeTimers();
+  global.Blob = blobFactory;
+  URL.createObjectURL = createUrl;
+  URL.revokeObjectURL = revokeUrl;
+  try {
+    render(<JarUpIterationTable fields={{ load: '185000', stroke: '7.5' }} stuck={0} ack rows={[row]} complete
+      rejected={[]} planned={1} geometry={{ currentCentreFt: 640.83 }} sweep={{ min: 610.83, max: 670.83, increment: 30 }} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Export CSV' }));
+
+    expect(blobFactory).toHaveBeenCalledTimes(1);
+    expect(blobFactory.mock.calls[0][1]).toEqual({ type: 'text/csv;charset=utf-8' });
+    expect(blobFactory.mock.calls[0][0][0]).toContain('Impact velocity (m/s)');
+    expect(blobFactory.mock.calls[0][0][0]).toContain('Peak stuck-point tensile force (kip)');
+    expect(blobFactory.mock.calls[0][0][0]).toContain('Tensile impulse (kip·s)');
+    expect(createUrl).toHaveBeenCalledWith(blobFactory.mock.results[0].value);
+    expect(click).toHaveBeenCalledTimes(1);
+    jest.runOnlyPendingTimers();
+    expect(revokeUrl).toHaveBeenCalledWith('blob:stage0');
+  } finally {
+    click.mockRestore();
+    global.Blob = NativeBlob;
+    if (nativeCreate === undefined) delete URL.createObjectURL; else URL.createObjectURL = nativeCreate;
+    if (nativeRevoke === undefined) delete URL.revokeObjectURL; else URL.revokeObjectURL = nativeRevoke;
+    jest.useRealTimers();
+  }
 });

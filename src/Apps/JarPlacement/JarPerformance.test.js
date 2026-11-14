@@ -51,6 +51,23 @@ test('Up reset restores UI defaults, removes old results and does not change sav
   expect(screen.getByText('488.3 klbf')).toBeInTheDocument();
 });
 
+test('Jar Up input edits persist through the existing BHA callback and reload from saved metadata', () => {
+  const updateBha = jest.fn();
+  const saved = { ...bha, id: 'persisted-jar-inputs' };
+  const view = render(<JarPerformance bha={saved} updateBha={updateBha} />);
+
+  fireEvent.change(screen.getByLabelText('Overpull at jar (klbf)'), { target: { value: '165' } });
+  expect(updateBha).toHaveBeenLastCalledWith({ jarImpactInputs: expect.objectContaining({
+    version: 1,
+    up: { strokeIn: '4', overpullKlbf: '165', stuckPointFt: '0' }
+  }) });
+
+  const reloaded = { ...saved, jarImpactInputs: updateBha.mock.calls[0][0].jarImpactInputs };
+  view.unmount();
+  render(<JarPerformance bha={reloaded} />);
+  expect(screen.getByLabelText('Overpull at jar (klbf)')).toHaveValue(165);
+});
+
 test('inputs precede graph and six primary results; engineering details stay collapsed', async () => {
   render(<JarPerformance bha={bha} />);
   expect(screen.getByText('Idealised research model — Not for operational use')).toHaveClass('jarModelNotice');

@@ -1,0 +1,132 @@
+.jarV6Presentation { container-type: inline-size; width: 100%; max-width: 1500px; min-width: 0; margin: 0 auto; padding: 5px 7px 7px; background: #f7f9fa; color: #172b3a; font: 13px/1.35 "Segoe UI", Arial, sans-serif; --jar-v6-chart-height: 180px; --jar-v6-schematic-height: 208px; }
+.jarV6Presentation:only-child { margin: 0; }
+.jarConfigurationWorkspace:has(.jarV6Presentation) { padding: 0; }
+.wbFloating .wbDockPanel:has(.jarV6Presentation) { padding: 0; }
+.jarV6ModeSelector { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 14px; min-height: 25px; margin-bottom: 3px; padding: 3px 6px; border: 1px solid #d8e2e8; border-radius: 4px; background: #fff; color: #294a5e; font-size: 9px; }
+.jarV6ModeSelector label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; font-weight: 650; }
+.jarV6ModeSelector input { margin: 0; accent-color: #358494; }
+.jarV6FixtureStrip { min-height: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 3px 8px; margin-bottom: 4px; color: #695c43; font-size: 9px; }
+.jarV6FixtureStrip strong { color: #584a31; }
+.jarV6FixtureStrip .jarV6NpStrip { color: #715e41; }
+.jarV6Warning { flex: none; padding: 3px 6px; border-radius: 3px; background: #fff3cd; color: #664d03 !important; font-size: 9px; }
+.jarV6Visuals { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(242px, 265px); gap: 7px; align-items: stretch; }
+.jarV6Panel { min-width: 0; overflow: hidden; border: 1px solid #d8e2e8; border-radius: 5px; background: #fff; box-shadow: 0 1px 5px #17344808; }
+.jarV6Chart { display: flex; flex-direction: column; padding: 5px 5px 3px; --jar-v6-accent: #b77b28; }
+.jarV6Impulse { --jar-v6-accent: #358494; }
+.jarV6Velocity { --jar-v6-accent: #7663a0; }
+.jarV6ChartHeader { min-height: 33px; display: flex; align-items: center; justify-content: space-between; gap: 4px; padding: 0 1px 3px; border-bottom: 1px solid #edf1f3; }
+.jarV6ChartTitle { min-width: 0; color: #294a5e; font-size: 10px; line-height: 1.18; font-weight: 700; }
+.jarV6ChartTitle small { display: block; margin-top: 2px; color: #597080; font-size: 8px; font-weight: 500; }
+.jarV6ChartValue { flex: none; color: var(--jar-v6-accent); font-size: 15px; line-height: 1.1; font-weight: 760; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.jarV6ChartValue small { display: block; margin-top: 1px; color: #597080; font-size: 8px; font-weight: 500; }
+.jarV6ChartSvg { display: block; flex: 0 0 var(--jar-v6-chart-height); width: 100%; height: var(--jar-v6-chart-height); overflow: hidden; touch-action: manipulation; }
+.jarV6Grid { stroke: #e5ecef; stroke-width: 1; }
+.jarV6Axis { stroke: #8297a2; stroke-width: 1; }
+.jarV6Tick { fill: #526c78; font-size: 11px; }
+.jarV6AxisLabel { fill: #415c6c; font-size: 11px; }
+.jarV6NoData { fill: #83959d; font-size: 9px; font-style: italic; }
+.jarV6Series { fill: none; stroke: var(--jar-v6-accent); stroke-width: 1.8; opacity: .78; pointer-events: none; }
+.jarV6SampleMarker { fill: var(--jar-v6-accent); stroke: #fff; stroke-width: 1.5; cursor: pointer; outline: none; }
+.jarV6SampleMarker:hover, .jarV6SampleMarker:focus-visible { stroke: #172b3a; stroke-width: 2.5; }
+.jarV6SelectedGuide { stroke: #526b79; stroke-width: 1; stroke-dasharray: 3 3; pointer-events: none; }
+.jarV6SelectedPoint { fill: #172b3a; stroke: #fff; stroke-width: 2; pointer-events: none; }
+.jarV6UnavailableGuide { stroke: #526b79; stroke-width: 1; stroke-dasharray: 3 3; opacity: .42; }
+.jarV6PlotNote { height: 12px; margin-top: auto; padding: 0 2px; color: #597080; font-size: 8px; line-height: 1.2; white-space: nowrap; }
+.jarV6Schematic { padding: 5px 6px 4px; }
+.jarV6SchematicHeader { min-height: 19px; display: flex; justify-content: space-between; align-items: baseline; gap: 3px; padding-bottom: 3px; border-bottom: 1px solid #e7ecef; }
+.jarV6SchematicHeader h2 { margin: 0; color: #294a5e; font-size: 10px; }
+.jarV6SchematicHeader span { color: #596f7b; font-size: 8px; text-align: right; }
+.jarV6SchematicGrid { display: grid; grid-template-columns: 61px minmax(0, 1fr); gap: 6px; padding-top: 3px; }
+.jarV6SchematicSvg { display: block; width: 61px; height: 208px; overflow: visible; }
+.jarV6Rail { stroke: #91a4ad; stroke-width: 7; stroke-linecap: round; }
+.jarV6SchematicShape { stroke-width: 1; }
+.jarV6Pipe { fill: #bdcbd1; stroke: #738b97; }
+.jarV6Hwdp { fill: #a7bbc4; stroke: #68818d; }
+.jarV6Dc { fill: #839faa; stroke: #526f7d; }
+.jarV6Stb { fill: #718a96; stroke: #4f6976; }
+.jarV6Blade { fill: #d9e2e6; stroke: #8a9ca4; stroke-width: 1; stroke-dasharray: 2 1; }
+.jarV6Jar { fill: #d5ad6e; stroke: #95682c; stroke-width: 1.4; }
+.jarV6Bit { fill: #667f8a; stroke: #435d68; }
+.jarV6FixtureGuide { stroke: #526c78; stroke-dasharray: 3 2; }
+.jarV6FixtureMarker { fill: #fff; stroke: #526c78; stroke-width: 1.7; }
+.jarV6CandidateGuide { stroke: #ae762c; stroke-width: 2; }
+.jarV6CandidateMarker { fill: #bd873d; stroke: #fff; stroke-width: 1.3; }
+.jarV6BitTip { fill: #667f8a; stroke: #435d68; stroke-width: 1; }
+.jarV6ComponentLabels { height: 208px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; color: #536b78; font-size: 8.5px; line-height: 1.14; }
+.jarV6ComponentLabels > div { min-width: 0; padding: 1px 0; border-bottom: 1px solid #edf1f3; }
+.jarV6ComponentLabels > div:last-child { border: 0; }
+.jarV6ComponentLabels b { display: block; color: #294a5e; font-size: 8.7px; font-weight: 700; }
+.jarV6SchematicStatus { display: grid; grid-template-columns: 1fr; gap: 2px; margin-top: 3px; padding-top: 3px; border-top: 1px solid #edf1f3; color: #617580; font-size: 8px; line-height: 1.15; }
+.jarV6CandidateLabel { color: #895e24; font-weight: 700; }
+.jarV6NpState { color: #715e41; white-space: nowrap; }
+.jarV6Legend { display: flex; flex-wrap: wrap; gap: 3px 7px; margin-top: 0; color: #647984; font-size: 8px; }
+.jarV6Legend > span { display: inline-flex; align-items: center; gap: 3px; }
+.jarV6Legend i { width: 7px; height: 7px; border: 1px solid #526c78; border-radius: 50%; }
+.jarV6LegendFixture { background: #fff; }
+.jarV6LegendCandidate { border-color: #bd873d !important; background: #bd873d; }
+.jarV6SchematicNote { margin: 3px 0 0; color: #695c43; font-size: 8px; }
+.jarV6Provenance { margin: 0 0 4px; padding: 3px 6px; border-left: 2px solid #bd873d; background: #fffaf0; color: #695c43; font-size: 8px; overflow-wrap: anywhere; }
+.jarV6ResearchEmpty { margin-top: 4px; color: #617580; font-size: 8px; }
+.jarV6LoadedSchematic .engineeringStringViewer { min-width: 0; }
+.jarV6LoadedSchematic .engineeringStringViewerToolbar { min-height: 19px; }
+.jarV6LoadedSchematic .bhaSchematicSvg { max-width: 100%; }
+.jarV6LoadedSchematic .jarV6SchematicGrid { min-height: 208px; }
+.jarV6LoadedSchematic .jarV6ComponentLabels { height: 208px; overflow: hidden; }
+.jarV6LoadedSchematic .jarV6ComponentLabels > div { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.jarV6LoadedSchematic .jarV6ComponentLabels b { overflow: hidden; font-size: 7.5px; text-overflow: ellipsis; white-space: nowrap; }
+.jarV6LoadedSchematic .jarV6Dp { fill: #bdcbd1; stroke: #738b97; }
+.jarV6SelectedLoadedJar { fill: #d5ad6e; stroke: #895e24; stroke-width: 1.8; }
+.jarV6DetailedSchematic { margin-top: 4px; border-top: 1px solid #edf1f3; }
+.jarV6DetailedSchematic summary { padding: 3px 0; color: #536b78; cursor: pointer; font-size: 8px; }
+.jarV6DetailedSchematic[open] .bhaSchematicScroll { max-height: 300px; overflow: auto; }
+.jarV6Toolbar { display: grid; grid-template-columns: minmax(175px, 1.15fr) minmax(118px, .8fr) minmax(95px, .7fr) minmax(155px, 1fr) minmax(150px, .95fr); align-items: center; gap: 6px; margin-top: 5px; padding: 4px 6px; border: 1px solid #d8e2e8; border-radius: 5px; background: #fff; }
+.jarV6Control { display: flex; align-items: center; gap: 5px; min-width: 0; color: #536c7a; font-size: 9px; font-weight: 650; }
+.jarV6PositionControl span { flex: none; white-space: nowrap; }
+.jarV6Control select { min-width: 0; width: 100%; height: 24px; padding: 2px 4px; border: 1px solid #d3dce1; border-radius: 3px; background: #f8fafb; color: #294a5e; font: inherit; }
+.jarV6Control select:disabled { opacity: 1; color: #617580; }
+.jarV6ImpactVelocity { display: flex; align-items: center; justify-content: space-between; gap: 4px; color: #536c7a; font-size: 9px; }
+.jarV6ImpactVelocity strong { color: #7663a0; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.jarV6ModeContext { color: #657984; font-size: 8px; line-height: 1.15; }
+.jarV6ResearchStatus { color: #695c43; font-size: 8px; line-height: 1.15; }
+.jarV6ResearchStatus b { color: #584a31; }
+.jarV6VelocityToggle { white-space: nowrap; }
+.jarV6VelocityToggle input { flex: none; margin: 0; accent-color: #7663a0; }
+.jarV6ExistingWorkflows { margin-top: 7px; border-top: 1px solid #d8e2e8; color: #294a5e; }
+.jarV6ExistingWorkflows summary { padding: 6px 2px; cursor: pointer; font-size: 11px; font-weight: 650; }
+.jarV6WorkflowBody { min-width: 0; }
+@container (max-width: 750px) {
+  .jarV6Toolbar { grid-template-columns: 1.1fr .8fr .75fr 1fr; }
+}
+@container (min-width: 950px) {
+  .jarV6Visuals { --jar-v6-chart-height: clamp(180px, calc(12.98cqi + 63px), 258px); --jar-v6-schematic-height: clamp(208px, calc(15cqi + 73px), 298px); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(265px, 28%); }
+  .jarV6SchematicGrid { grid-template-columns: clamp(61px, calc(4.4cqi + 21px), 87px) minmax(0, 1fr); }
+  .jarV6SchematicSvg { width: 100%; height: var(--jar-v6-schematic-height); max-height: 298px; aspect-ratio: 61 / 208; }
+  .jarV6ComponentLabels { height: var(--jar-v6-schematic-height); min-height: 208px; }
+  .jarV6LoadedSchematic .jarV6ComponentLabels { height: var(--jar-v6-schematic-height); }
+  .jarV6ResearchDemo .jarV6ChartSvg { flex-basis: var(--jar-v6-chart-height); height: var(--jar-v6-chart-height); }
+}
+@container (max-width: 650px) {
+  .jarV6Visuals { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .jarV6Schematic { grid-column: 1 / -1; }
+  .jarV6SchematicGrid { grid-template-columns: 55px minmax(0, 1fr); }
+  .jarV6SchematicSvg { width: 55px; height: 188px; }
+  .jarV6ComponentLabels { height: 208px; min-height: 208px; display: flex; flex-direction: column; }
+  .jarV6ComponentLabels b { font-size: 9px; }
+  .jarV6SchematicStatus, .jarV6Legend { display: inline-flex; margin-right: 10px; }
+  .jarV6Toolbar { grid-template-columns: 1.1fr .8fr .75fr 1fr; }
+  .jarV6ModeContext { display: none; }
+  .jarV6Velocity { grid-column: 1 / 2; }
+}
+@container (max-width: 590px) {
+  .jarV6Visuals { grid-template-columns: minmax(0, 1fr); }
+  .jarV6Schematic { grid-column: auto; }
+  .jarV6Toolbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .jarV6ChartSvg { --jar-v6-chart-height: 150px; flex-basis: 150px; height: 150px; }
+  .jarV6PositionControl { align-items: flex-start; flex-direction: column; }
+  .jarV6FixtureStrip .jarV6NpStrip { display: none; }
+}
+@media (max-width: 460px) {
+  .jarV6Presentation { padding: 5px; }
+  .jarV6Warning { font-size: 8px; }
+  .jarV6PositionControl span { white-space: normal; }
+}

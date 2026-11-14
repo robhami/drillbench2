@@ -9,33 +9,38 @@ import Survey from '../Apps/Survey/Survey';
 import JarClearance from '../Apps/JarClearance/JarClearance';
 import JarForces from '../Apps/JarForces/JarForces';
 const WidgetRegistry = {
-    jarForces: { title: 'Hookload Calculations', component: JarForces },
-    jarClearance: { title: 'Neutral Point Behaviour', component: JarClearance },
-    survey: { title: 'Survey', component: Survey },
-    jarConfiguration: { title: 'Jar Position Analysis', component: JarConfiguration },
-    jarPlacement: { title: 'Impact & Impulse', component: JarPlacement },
+    jarForces: { title: 'Hookload Calculations', component: JarForces, brand: 'drillframe' },
+    jarClearance: { title: 'Neutral Point Behaviour', component: JarClearance, brand: 'drillframe' },
+    survey: { title: 'Survey', component: Survey, brand: 'drillframe' },
+    jarConfiguration: { title: 'Jar Position Analysis', component: JarConfiguration, brand: 'jarframe' },
+    jarPlacement: { title: 'Impact & Impulse', component: JarPlacement, brand: 'jarframe' },
     bhaEntry: {
         title: 'BHA Data Entry',
-        component: BHAEntry
+        component: BHAEntry,
+        brand: 'drillframe'
     },
 
     analysisInputs: {
         title: 'Parameter Entry',
-        component: AnalysisInputs
+        component: AnalysisInputs,
+        brand: 'drillframe'
     },
 
     bhaSummary: {
         title: 'BHA Summary',
-        component: BHASummary
+        component: BHASummary,
+        brand: 'drillframe'
     },
 
     engineeringResults: {
         title: 'Engineering Results',
-        component: EngineeringResults
+        component: EngineeringResults,
+        brand: 'drillframe'
     },
     engineeringString: {
         title: 'Engineering String',
-        component: EngineeringStringCard
+        component: EngineeringStringCard,
+        brand: 'drillframe'
     }
 
 

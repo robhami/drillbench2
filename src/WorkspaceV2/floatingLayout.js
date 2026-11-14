@@ -1,6 +1,8 @@
 import Registry from './WidgetRegistry';
 
 export const FLOAT_KEY = 'wellbenchFloatingLayoutV1';
+export const JAR_CONFIGURATION_MIN_WIDTH = 700;
+export const JAR_CONFIGURATION_MIN_HEIGHT = 440;
 export const MODULES = [
   ['bhaEntry', 'SETUP', 'list-columns'], ['analysisInputs', 'SETUP', 'sliders'],
   ['engineeringString', 'VISUALISATION', 'diagram-3'], ['survey', 'VISUALISATION', 'bezier2'],
@@ -21,7 +23,9 @@ export function projectWindow(w, width, height, minX = 0, minY = 0) {
   if (w.maximized) return { x: minX, y: minY, width: availableWidth, height: availableHeight };
   // Arrangements may use compact tiles: keep each titlebar reachable instead
   // of expanding every tile to 180 px and stacking the last rows on top of it.
-  const result = { width: Math.min(Math.max(280, w.width), availableWidth), height: Math.min(Math.max(44, w.height), availableHeight) };
+  const minWidth = w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_WIDTH : 280;
+  const minHeight = w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_HEIGHT : 44;
+  const result = { width: Math.min(Math.max(minWidth, w.width), availableWidth), height: Math.min(Math.max(minHeight, w.height), availableHeight) };
   return { ...result, x: Math.max(minX, Math.min(w.x, width - result.width)), y: Math.max(minY, Math.min(w.y, height - result.height)) };
 }
 // Bounds in canvas coordinates, including clipping caused by global notices or page scrolling.
@@ -54,7 +58,10 @@ function sanitize(records, width, height) {
     const value = { ...base, id: typeof w.id === 'string' ? w.id : base.id, visible: w.visible !== false,
       minimized: w.minimized === true, maximized: w.maximized === true };
     ['x', 'y', 'width', 'height', 'z'].forEach(k => { if (Number.isFinite(w[k]) && (k === 'x' || k === 'y' || w[k] > 0)) value[k] = w[k]; });
-    return { ...value, z: Number.isFinite(value.z) ? value.z : i + 1 };
+    const restored = { ...value, z: Number.isFinite(value.z) ? value.z : i + 1 };
+    return restored.type === 'jarConfiguration' && !restored.maximized
+      ? { ...restored, ...projectWindow(restored, width, height) }
+      : restored;
   });
 }
 export function migrateDocking(layout, width, height) {
