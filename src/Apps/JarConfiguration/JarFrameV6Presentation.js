@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import V6ContinuousAssemblyDrawing from '../StringFrame/v6Drawing';
 import STAGE8_FIXTURE from './Stage8OesResearchFixture.v1.json';
 import { loadedJarRowKey, validateLoadedBhaWob } from './loadedBhaPresentation';
+import JarUpPositionComparison from './jarUpPositionComparison';
 import '../EngineeringString/EngineeringStringCard.css';
 import './JarFrameV6Presentation.css';
 
@@ -167,7 +168,7 @@ function LoadedBhaStaticSummary({ bha, loadedData, selectedJarKey }) {
         : <div><b>Straight-hole · {loadedData?.drillingMode || 'slide'}:</b> unavailable · {loadedData?.straight?.loadProfile?.error || 'valid deployed-BHA inputs required'}.</div>}
       {loadedData?.surveyLoads?.valid ? <div><b>Survey · {loadedData.surveyLoads.mode}:</b> {surveyJar ? `${format(surveyJar.axialForceLbf, 0)} lbf (+ compression)` : 'selected-jar load unavailable'}; NP {loadedData.surveyLoads.neutralPoints?.length === 1 ? `${format(loadedData.surveyLoads.neutralPoints[0].fromBitFt)} ft above bit` : 'not unique or not found'}.</div>
         : <div><b>Survey · {loadedData?.drillingMode || 'slide'}:</b> unavailable · {loadedData?.surveyLoads?.errors?.join(' ') || 'valid covered survey inputs required'}.</div>}
-      <div className="jarV6StaticProvenance">Positive force is compression; negative force is tension. Dynamic force, impulse and velocity predictions remain unavailable for Loaded BHA.</div>
+      <div className="jarV6StaticProvenance">Positive force is compression; negative force is tension. Static drilling loads are separate from preliminary idealized Jar Up candidate force and impulse predictions.</div>
       {!loadedData?.deployment?.valid && <div className="jarV6BoundaryUnavailable" role="note">Loaded BHA geometry unavailable · {loadedData?.deployment?.errors?.join(' ') || 'valid deployment inputs required'}.</div>}
     </div>
   </aside>;
@@ -207,8 +208,8 @@ export default function JarFrameV6Presentation({ bha, loadedData, mode: controll
     {onOpenStringFrame && <button type="button" className="jarV6OpenStringFrame" aria-label="Open BHA Schematic"
       title="Open or restore the independently movable BHA Schematic" onClick={onOpenStringFrame}>Open BHA Schematic</button>}
     <div className="jarV6FixtureStrip">
-      <span><strong>{researchMode ? 'Frozen Stage 8 research fixture' : 'Loaded-BHA dynamic results unavailable'}</strong>
-        {researchMode ? ` · ${STAGE8_FIXTURE.fixtureIdentity} · 50 ms window` : ' · no dynamic prediction is connected'}</span>
+      <span><strong>{researchMode ? 'Frozen Stage 8 research fixture' : 'Loaded-BHA Jar Up position comparison'}</strong>
+        {researchMode ? ` · ${STAGE8_FIXTURE.fixtureIdentity} · 50 ms window` : ' · only individually eligible candidate results are plotted'}</span>
       <span className="jarV6NpStrip">{researchMode ? 'NP unavailable · mode / WOB unavailable' : 'Static load and neutral point shown when valid'}</span>
       <strong className="jarV6Warning">PRELIMINARY — NOT FOR OPERATIONAL USE</strong>
     </div>
@@ -216,16 +217,13 @@ export default function JarFrameV6Presentation({ bha, loadedData, mode: controll
       Opt-in demonstration only · source: Stage8Results.json · SHA-256 {STAGE8_FIXTURE.sourceSha256} · 16 recorded samples · no solver or numerical histories loaded.
     </div>}
     <section className={`jarV6Visuals ${researchMode ? 'jarV6ResearchVisuals' : 'jarV6LoadedVisuals'}`}
-      aria-label={researchMode ? 'Stage 8 research charts and fixture schematic' : 'Loaded-BHA unavailable performance charts'}>
+      aria-label={researchMode ? 'Stage 8 research charts and fixture schematic' : 'Loaded-BHA Jar Up dynamic comparison charts'}>
       {researchMode ? <>
         <ResearchChart title="Peak stuck-point tensile impact force" unit="kN" field="peakTensileImpactForceKN" ticks={[2000, 2500, 3000, 3500]}
           selectedIndex={selectedIndex} onSelect={setSelectedIndex} className="jarV6Force" />
         <ResearchChart title="50 ms tensile impulse" unit="kN·s" field="tensileImpulse50msKNs" ticks={[0, 30, 60, 90]}
           selectedIndex={selectedIndex} onSelect={setSelectedIndex} className="jarV6Impulse" />
-      </> : <>
-        <UnavailableChart title="Peak stuck-point tensile impact force" unit="kN" ticks={[2000, 2500, 3000, 3500]} className="jarV6Force" />
-        <UnavailableChart title="50 ms tensile impulse" unit="kN·s" ticks={[0, 30, 60, 90]} className="jarV6Impulse" />
-      </>}
+      </> : <JarUpPositionComparison bha={bha} selectedJarKey={selectedLoadedKey} />}
       {researchMode && <ResearchFixtureSchematic selectedPositionFt={selected.positionFt} />}
       {showVelocity && (researchMode ? <ResearchChart title="Impact velocity at jar" unit="m/s" field="impactVelocityMS" ticks={[2.5, 3.5, 4.5]} domainMax={5}
         selectedIndex={selectedIndex} onSelect={setSelectedIndex} className="jarV6Velocity" digits={3} /> :

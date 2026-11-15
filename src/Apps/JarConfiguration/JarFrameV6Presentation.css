@@ -109,6 +109,20 @@
 .jarV6LoadedSchematic .jarV6SelectedLoadedJar { fill: #d5ad6e; stroke: #95682c; stroke-width: 1.4; }
 .jarV6SectionGuide { stroke: #9aaab1; stroke-width: .6; stroke-dasharray: 1 1; }
 .jarV6LoadedSummary { min-width: 0; margin-top: 7px; padding: 8px; border: 1px solid #d8e2e8; border-radius: 5px; background: #fff; }
+.jarV6LoadedVisuals .jarUpPositionComparison { grid-column: 1 / -1; }
+.jarUpPositionComparison { min-width: 0; padding: 6px; border: 1px solid #d8e2e8; border-radius: 5px; background: #fff; }
+.jarUpComparisonHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.jarUpComparisonHeader h2 { margin: 0; color: #294a5e; font-size: 13px; }
+.jarUpComparisonHeader p, .jarUpComparisonInputs, .jarUpComparisonQualification, .jarUpComparisonSolverNote { margin: 3px 0; color: #536b78; font-size: 9px; }
+.jarUpComparisonCharts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.jarUpComparisonChart { min-width: 0; }
+.jarUpComparisonPoint { fill: #358494; stroke: #fff; stroke-width: 1.5; }
+.jarUpCandidateTableWrap { max-height: 210px; overflow: auto; margin-top: 5px; }
+.jarUpCandidateTable { width: 100%; border-collapse: collapse; font-size: 8px; }
+.jarUpCandidateTable th, .jarUpCandidateTable td { padding: 3px 4px; border: 1px solid #e4eaed; text-align: right; vertical-align: top; }
+.jarUpCandidateTable th { position: sticky; top: 0; background: #f3f6f7; color: #294a5e; }
+.jarUpCandidateTable th:last-child, .jarUpCandidateTable td:last-child { min-width: 190px; text-align: left; }
+@container (max-width: 590px) { .jarUpComparisonCharts { grid-template-columns: minmax(0, 1fr); } .jarUpComparisonHeader { flex-direction: column; } }
 .jarV6LoadedSummary .jarV6SchematicHeader { align-items: center; }
 .jarV6OpenStringFrame { padding: 5px 8px; border: 1px solid #cad8df; border-radius: 4px; background: #fff; color: #294a5e; font: inherit; font-size: 10px; cursor: pointer; }
 .jarV6OpenStringFrame:hover { background: #eef4f6; }

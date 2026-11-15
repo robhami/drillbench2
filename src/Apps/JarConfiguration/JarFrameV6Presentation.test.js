@@ -6,12 +6,13 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import JarFrameV6Presentation from './JarFrameV6Presentation';
 import { buildLoadedBhaPresentation } from './loadedBhaPresentation';
 import STAGE8_FIXTURE from './Stage8OesResearchFixture.v1.json';
+import * as skeemPerformance from '../JarPlacement/skeemPerformance';
 
 const stage8Path = path.resolve(__dirname, '../../../docs/ValidationStudies/JarUpScalability/IntegerDelayPrototype/Stage8Results.json');
 const byIndex = (selector, index) => document.querySelector(`${selector} [data-sample-index="${index}"]`);
 const withLoadedData = bha => <JarFrameV6Presentation bha={bha} loadedData={buildLoadedBhaPresentation({ bha, survey: { valid: false, errors: [{ message: 'No confirmed survey' }] }, drillingMode: 'slide', surfaceReferenceMdFt: 0 })} />;
 
-test('Loaded BHA mode shows unavailable performance charts and static results without an embedded schematic', () => {
+test('Loaded BHA mode shows Jar Up comparison charts and static results without an embedded schematic', () => {
   const bha = { id: 'loaded-only', drillpipeReferenceBitMdFt: 10000, selectedJarId: 'jar-live', rows: [
     { rowId: 'bit-live', category: 'BIT', toolName: 'Live bit', length: 1, od: 8.5 },
     { rowId: 'jar-live', category: 'JAR', toolName: 'Live jar', length: 33, od: 6.5, idSize: 2.813 },
@@ -22,17 +23,18 @@ test('Loaded BHA mode shows unavailable performance charts and static results wi
   expect(screen.getByRole('radio', { name: 'Loaded BHA' })).toBeChecked();
   expect(screen.getByRole('radio', { name: 'Stage 8 OES Research Demo' })).not.toBeChecked();
   expect(document.querySelector('.jarV6Presentation')).toHaveAttribute('data-presentation-mode', 'loaded-bha');
-  expect(screen.getByRole('img', { name: /Peak stuck-point tensile impact force.*unavailable for Loaded BHA/ })).toBeInTheDocument();
-  expect(screen.getByRole('img', { name: /50 ms tensile impulse.*unavailable for Loaded BHA/ })).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: /Peak stuck-point tensile force versus jar centre above bit.*point-only/ })).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: /Primary stuck-point tensile impulse versus jar centre above bit.*point-only/ })).toBeInTheDocument();
   expect(screen.getByRole('combobox', { name: 'Select loaded BHA jar' })).toHaveValue('jar-live');
-  expect(screen.getByLabelText('Loaded-BHA unavailable performance charts')).toBeInTheDocument();
+  expect(screen.getByLabelText('Loaded-BHA Jar Up dynamic comparison charts')).toBeInTheDocument();
   expect(screen.getByRole('complementary', { name: 'Loaded BHA static engineering results' })).toBeInTheDocument();
   expect(screen.queryByTestId('loaded-bha-assembly')).not.toBeInTheDocument();
   expect(screen.queryByRole('complementary', { name: 'BHA Schematic loaded assembly' })).not.toBeInTheDocument();
-  expect(screen.getByLabelText('Loaded-BHA unavailable performance charts').querySelectorAll('.jarV6Chart')).toHaveLength(2);
+  expect(screen.getByLabelText('Loaded-BHA Jar Up dynamic comparison charts').querySelectorAll('.jarV6Chart')).toHaveLength(2);
   expect(screen.getByText('Stage 8 fixture is not displayed')).toBeInTheDocument();
   expect(screen.getByText('Static load and neutral point shown when valid')).toBeInTheDocument();
-  expect(screen.getByText('PRELIMINARY — NOT FOR OPERATIONAL USE')).toBeVisible();
+  expect(screen.getAllByText('PRELIMINARY — NOT FOR OPERATIONAL USE')).toHaveLength(1);
+  screen.getAllByText('PRELIMINARY — NOT FOR OPERATIONAL USE').forEach(warning => expect(warning).toBeVisible());
   expect(document.querySelectorAll('.jarV6SampleMarker')).toHaveLength(0);
   expect(document.querySelector('[aria-label="Stage 8 OES research fixture BHA schematic"]')).not.toBeInTheDocument();
   expect(screen.queryByText('3,194.43')).not.toBeInTheDocument();
@@ -83,9 +85,11 @@ test('Loaded BHA performance charts use the space freed by the embedded schemati
   const loadedData = buildLoadedBhaPresentation({ bha: liveBha, survey: null, drillingMode: 'slide', surfaceReferenceMdFt: 0 });
   const openSchematic = jest.fn();
   render(<JarFrameV6Presentation bha={liveBha} loadedData={loadedData} onOpenStringFrame={openSchematic} />);
-  const charts = screen.getByLabelText('Loaded-BHA unavailable performance charts');
+  const charts = screen.getByLabelText('Loaded-BHA Jar Up dynamic comparison charts');
   expect(charts).toHaveClass('jarV6LoadedVisuals');
   expect(charts.querySelectorAll('.jarV6Chart')).toHaveLength(2);
+  expect(screen.getByText(/Compared at constant entered jar overpull and stroke/)).toBeInTheDocument();
+  expect(screen.getByRole('table', { name: 'Jar Up candidate results' })).toBeInTheDocument();
   expect(screen.getByRole('complementary', { name: 'Loaded BHA static engineering results' })).toBeInTheDocument();
   expect(charts).not.toContainElement(screen.getByRole('complementary', { name: 'Loaded BHA static engineering results' }));
   expect(screen.queryByTestId('loaded-bha-assembly')).not.toBeInTheDocument();
@@ -93,6 +97,53 @@ test('Loaded BHA performance charts use the space freed by the embedded schemati
   expect(launcher).toHaveAttribute('title', 'Open or restore the independently movable BHA Schematic');
   fireEvent.click(launcher);
   expect(openSchematic).toHaveBeenCalledTimes(1);
+});
+test('Jar Up position charts plot only supported points and leave gaps for invalid candidate positions', () => {
+  const bha = { id: 'jar-up-position-points', selectedJarId: 'jar', jarImpactInputs: { up: { strokeIn: '4', overpullKlbf: '165', stuckPointFt: '25' } }, rows: [
+    { rowId: 'lower', category: 'DC', length: 60, od: 6.25, idSize: 2.75, weight: 84.01718313127864 },
+    { rowId: 'jar', category: 'JAR', length: 10, od: 6.25, idSize: 2.75 },
+    { rowId: 'upper', category: 'DC', length: 180, od: 6.25, idSize: 2.75, weight: 84.01718313127864 },
+    { rowId: 'dp', category: 'DP', length: 3000, od: 4.5, idSize: Math.sqrt(13.95), weight: 16.6 }
+  ] };
+  render(withLoadedData(bha));
+  const rows = screen.getAllByTestId('jar-up-candidate-row');
+  expect(rows).toHaveLength(7);
+  expect(rows.some(row => row.textContent.includes('current position'))).toBe(true);
+  expect(rows.some(row => row.textContent.includes('Dynamic result unavailable'))).toBe(true);
+  expect(rows.some(row => row.textContent.includes('Calculated'))).toBe(true);
+  const validRows = rows.filter(row => row.textContent.includes('Calculated')).length;
+  expect(screen.getByTestId('jar-up-force-chart')).toHaveAttribute('data-series-type', 'points-only');
+  expect(screen.getByTestId('jar-up-impulse-chart')).toHaveAttribute('data-series-type', 'points-only');
+  expect(screen.getAllByTestId('jar-up-force-chart-point')).toHaveLength(validRows);
+  expect(screen.getAllByTestId('jar-up-impulse-chart-point')).toHaveLength(validRows);
+  expect(screen.getByText(/Jar Down dynamic prediction unavailable/)).toBeInTheDocument();
+});
+test('a successful solver response with no finite force history is not plotted and does not hide valid candidates', () => {
+  const bha = { id: 'malformed-force-history', selectedJarId: 'jar', jarImpactInputs: { up: { strokeIn: '4', overpullKlbf: '165', stuckPointFt: '0' } }, rows: [
+    { rowId: 'lower', category: 'DC', length: 60, od: 6.25, idSize: 2.75, weight: 84.01718313127864 },
+    { rowId: 'jar', category: 'JAR', length: 10, od: 6.25, idSize: 2.75 },
+    { rowId: 'upper', category: 'DC', length: 180, od: 6.25, idSize: 2.75, weight: 84.01718313127864 },
+    { rowId: 'dp', category: 'DP', length: 3000, od: 4.5, idSize: Math.sqrt(13.95), weight: 16.6 }
+  ] };
+  const adapter = jest.spyOn(skeemPerformance, 'calculateJarPerformance').mockImplementation(candidateBha => ({
+    valid: true,
+    forceHistory: candidateBha.rows[0].length === 60 ? [{}] : [{ tensileForceLbf: 120000 }],
+    impulseLbfS: 12000,
+    preImpact: { hammerVelocityFtS: 12 },
+    primaryPulseDurationS: 0.0225,
+    impactForceLbf: 210000
+  }));
+  try {
+    render(withLoadedData(bha));
+    expect(screen.getByTestId('jar-up-force-chart').querySelectorAll('circle')).toHaveLength(6);
+    expect(screen.getByTestId('jar-up-impulse-chart').querySelectorAll('circle')).toHaveLength(6);
+    const unavailable = screen.getAllByTestId('jar-up-candidate-row').find(row => row.textContent.includes('no finite stuck-point tensile-force history'));
+    expect(unavailable).toBeInTheDocument();
+    expect(unavailable).not.toHaveTextContent('120.00');
+    expect(screen.getAllByTestId('jar-up-candidate-row').filter(row => row.textContent.includes('Calculated'))).toHaveLength(6);
+  } finally {
+    adapter.mockRestore();
+  }
 });
 test('loaded jar selection is presentation-only and updates static jar output', () => {
   const bha = { rows: [

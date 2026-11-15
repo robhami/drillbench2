@@ -36,8 +36,8 @@ test('active jarConfiguration registry route keeps the raw BHA and forwards shar
   expect(comparison).toHaveAttribute('data-dp-length', '');
   expect(JSON.parse(comparison.getAttribute('data-impact-inputs'))).toEqual(bha.jarImpactInputs);
   expect(screen.getByRole('region', { name: 'JarFrame V6 performance presentation' })).toBeInTheDocument();
-  expect(screen.getByRole('img', { name: /Peak stuck-point tensile impact force versus jar centre/ })).toBeInTheDocument();
-  expect(screen.getByRole('img', { name: /50 ms tensile impulse versus jar centre/ })).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: /Peak stuck-point tensile force versus jar centre above bit.*point-only/ })).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: /Primary stuck-point tensile impulse versus jar centre above bit.*point-only/ })).toBeInTheDocument();
   expect(screen.getAllByText('PRELIMINARY — NOT FOR OPERATIONAL USE')).toHaveLength(2);
   expect(screen.getAllByText(/PRELIMINARY/)).toHaveLength(2);
   const existing = screen.getByText(/Existing Jar Position Analysis workflows/).closest('details');
