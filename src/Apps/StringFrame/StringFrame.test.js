@@ -186,7 +186,7 @@ test('section and tool dimensions use compact units and show available uniform l
   expect(labels.textContent).not.toMatch(/ppf|lb\/ft|#\/ft/);
   expect(labels.querySelector('[data-section="DP"]')).toHaveTextContent('ID 4.28in · 9,000.00ft loaded');
   expect(labels.querySelector('[data-section="Bit"]')).toHaveTextContent('Bit · 8.50in');
-  expect(labels).toHaveTextContent('Each STB · 4.00ft body · OD 6.50in · gauge OD 8.50in');
+  expect(labels).toHaveTextContent('STB specifications vary · hover each stabilizer for dimensions');
   expect(screen.getByTestId('loaded-component-0').getAttribute('title')).toContain('19.5#');
   expect(screen.getByTestId('loaded-component-5').getAttribute('title')).toContain('OD 6.50in · ID 2.81in · 3.00ft');
   expect(screen.getByTestId('loaded-component-8').getAttribute('title')).toContain('OD 8.50in · ID —in · 1.00ft');
@@ -194,7 +194,7 @@ test('section and tool dimensions use compact units and show available uniform l
 
 test('mixed or unavailable section weights are not presented as uniform', () => {
   const weightedBha = { ...bha, rows: bha.rows.map(row => ({ ...row,
-    weight: row.rowId === 'upper-dc' ? 92 : row.rowId === 'dp' ? '' : row.weight })) };
+    weight: row.rowId === 'upper-dc' ? 92 : row.weight })) };
   const extraUpperDc = { rowId: 'upper-dc-2', category: 'DC', toolName: 'Second upper collar', length: 20,
     od: 6.5, idSize: 2.813, weight: 95 };
   const rowIndex = weightedBha.rows.findIndex(row => row.rowId === 'upper-dc');
@@ -207,8 +207,8 @@ test('mixed or unavailable section weights are not presented as uniform', () => 
   expect(upperDc).not.toHaveTextContent('#');
   expect(upperDc.getAttribute('title')).toContain('92.0#');
   expect(upperDc.getAttribute('title')).toContain('95.0#');
-  const dp = labels.querySelector('[data-section="DP"]');
-  expect(dp).not.toHaveTextContent('#');
+  const hwdp = labels.querySelector('[data-section="HWDP"]');
+  expect(hwdp).not.toHaveTextContent('#');
 });
 
 test('resizing BHA Schematic expands long sections while compact sections and the bit stay fixed', () => {

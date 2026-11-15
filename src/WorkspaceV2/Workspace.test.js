@@ -96,7 +96,7 @@ test('saved open diagnostic windows remain hidden normally without losing saved 
   expect(saved().find(s => s.id === other.id)).toEqual(other);
 });
 
-test('both panels share nonzero-start coverage and revalidate the existing surface reference and survey', () => {
+test('Jar Forces reports shared coverage once and revalidates surface reference and survey', () => {
   const { SURVEY_STORAGE_KEY, SURVEY_CHANGED_EVENT } = require('../Apps/Survey/Survey');
   const source = { confirmed: true, originalCsv: 'MD,Inclination,Azimuth\n100,0,90\n1000,0,90' };
   localStorage.setItem(SURVEY_STORAGE_KEY, JSON.stringify(source));
@@ -105,17 +105,16 @@ test('both panels share nonzero-start coverage and revalidate the existing surfa
   render(<Workspace bha={bha} />);
   fireEvent.click(screen.getByRole('button', { name: 'Parameter Entry' }));
   fireEvent.click(screen.getByRole('button', { name: 'Hookload Calculations' }));
-  expect(screen.getAllByText(/Survey coverage warning:/)).toHaveLength(2);
-  expect(screen.getAllByText(/Survey coverage warning:/)[0]).toHaveTextContent('missing 0–100 ft');
+  const coverageWarning = screen.getByText(/Survey coverage warning:/);
+  expect(coverageWarning).toHaveTextContent('missing 0–100 ft');
+  expect(coverageWarning).toHaveTextContent('No extrapolation is permitted.');
   fireEvent.change(screen.getByLabelText('Surface reference MD (ft)'), { target: { value: '100' } });
   expect(screen.queryByText(/Survey coverage warning:/)).not.toBeInTheDocument();
   fireEvent.change(screen.getByLabelText('Surface hookload / axial support (klbf)'), { target: { value: '10' } });
   fireEvent.click(screen.getByRole('button', { name: 'Calculate static jar load' }));
   expect(screen.getByRole('table', { name: 'Jar Force Results' })).toBeInTheDocument();
   fireEvent(window, new CustomEvent(SURVEY_CHANGED_EVENT, { detail: { confirmed: true, originalCsv: 'MD,Inclination,Azimuth\n0,0,90\n1000,NaN,90' } }));
-  const warnings = screen.getAllByText(/Survey coverage warning:/);
-  expect(warnings).toHaveLength(2);
-  expect(warnings[0].textContent).toBe(warnings[1].textContent);
+  expect(screen.getByText(/Survey coverage warning:/)).toHaveTextContent('No extrapolation is permitted.');
   expect(screen.queryByRole('table', { name: 'Jar Force Results' })).not.toBeInTheDocument();
 });
 
@@ -126,14 +125,18 @@ test('survey shorter than synchronized deployed depth warns and never extrapolat
     rows: [{ category: 'JAR', length: 20, weight: 100, od: 6.75 }, { category: 'DP', lengthMode: 'auto', length: 9000, weight: 20, od: 5.5 }] };
   const { rerender } = render(<Workspace bha={bha} />);
   fireEvent.click(screen.getByRole('button', { name: 'Parameter Entry' }));
-  expect(screen.getByText(/Survey coverage warning:/)).toHaveTextContent('1,000');
+  // Parameter Entry now reports trajectory selection/status; the full interval
+  // warning belongs to the calculation panel that enforces coverage.
+  expect(screen.queryByText(/Survey coverage warning:/)).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Hookload Calculations' }));
+  expect(screen.getByText(/Survey coverage warning:/)).toHaveTextContent('1,000');
+  expect(screen.getByText(/Survey coverage warning:/)).toHaveTextContent('No extrapolation is permitted.');
   fireEvent.change(screen.getByLabelText('Surface hookload / axial support (klbf)'), { target: { value: '10' } });
   fireEvent.click(screen.getByRole('button', { name: 'Calculate static jar load' }));
-  const warnings = screen.getAllByText(/Survey coverage warning:/);
-  expect(warnings).toHaveLength(2);
-  expect(warnings[0].textContent).toBe(warnings[1].textContent);
-  expect(warnings[0]).toHaveTextContent('missing 500–1,000 ft');
+  const warning = screen.getByText(/Survey coverage warning:/);
+  expect(warning).toHaveTextContent('missing 500–1,000 ft');
+  expect(warning).toHaveTextContent('No extrapolation is permitted.');
+  expect(screen.queryByRole('table', { name: 'Jar Force Results' })).not.toBeInTheDocument();
   rerender(<Workspace bha={{ ...bha, drillpipeReferenceBitMdFt: 400 }} />);
   expect(screen.queryByText(/Survey coverage warning:/)).not.toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Calculate static jar load' }));
@@ -164,8 +167,14 @@ test('Parameter Entry no longer duplicates BHA-controlled MD fields', () => {
 });
 
 test('shared drilling mode remains editable in Engineering String, outside Parameter Entry', () => {
-  render(<Workspace developerPanels />);
+  const bha = { drillpipeReferenceBitMdFt: 1000, rows: [
+    { category: 'JAR', length: 20, weight: 100, od: 6.75 },
+    { category: 'DP', length: 980, weight: 20, od: 5.5 }
+  ] };
+  render(<Workspace developerPanels bha={bha} />);
+  expect(screen.queryByRole('combobox', { name: 'Drilling Mode' })).not.toBeInTheDocument();
   open();
+  expect(screen.getByRole('combobox', { name: 'Drilling Mode' })).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: 'Engineering Results' }));
   expect(screen.getAllByRole('combobox', { name: 'Drilling Mode' })).toHaveLength(1);
   fireEvent.change(screen.getByRole('combobox', { name: 'Drilling Mode' }), { target: { value: 'rotate' } });
