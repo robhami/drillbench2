@@ -189,6 +189,8 @@ test('Analysis Inputs defaults to 470 px but retains manually saved dimensions',
 test('String registry still renders the separate Engineering String component', () => {
   expect(WidgetRegistry.engineeringString.component).toBe(EngineeringStringCard);
   expect(WidgetRegistry.engineeringString.title).toBe('Engineering String');
+  expect(WidgetRegistry.stringFrame.title).toBe('BHA Schematic');
+  expect(WidgetRegistry).toHaveProperty('stringFrame');
 });
 
 test('Configuration window registers and opens independently without resetting saved layout', () => {

@@ -3,9 +3,11 @@ import Registry from './WidgetRegistry';
 export const FLOAT_KEY = 'wellbenchFloatingLayoutV1';
 export const JAR_CONFIGURATION_MIN_WIDTH = 700;
 export const JAR_CONFIGURATION_MIN_HEIGHT = 440;
+export const STRING_FRAME_MIN_WIDTH = 340;
+export const STRING_FRAME_MIN_HEIGHT = 460;
 export const MODULES = [
   ['bhaEntry', 'SETUP', 'list-columns'], ['analysisInputs', 'SETUP', 'sliders'],
-  ['engineeringString', 'VISUALISATION', 'diagram-3'], ['survey', 'VISUALISATION', 'bezier2'],
+  ['engineeringString', 'VISUALISATION', 'diagram-3'], ['stringFrame', 'VISUALISATION', 'bounding-box'], ['survey', 'VISUALISATION', 'bezier2'],
   ['jarForces', 'ANALYSIS', 'arrow-down-up'], ['jarClearance', 'ANALYSIS', 'graph-up'],
   ['jarConfiguration', 'JARFRAME', 'distribute-vertical'], ['jarPlacement', 'JARFRAME', 'lightning'],
   ['bhaSummary', 'DEVELOPER', 'list-check'], ['engineeringResults', 'DEVELOPER', 'table']
@@ -14,7 +16,8 @@ export const isDeveloper = type => ['bhaSummary', 'engineeringResults'].includes
 export function defaultWindows(width = 1400, height = 800) {
   const side = width >= 1000, first = side ? Math.min(820, width * .63) : width - 24;
   return MODULES.map(([type], i) => ({ id: `${type}1`, type, x: 12 + i * 24, y: 12 + i * 24,
-    width: type === 'bhaEntry' ? first : type === 'jarConfiguration' ? Math.min(1260, width - 24) : type === 'engineeringString' ? 820 : 720, height: Math.min(640, height - 24),
+    width: type === 'bhaEntry' ? first : type === 'jarConfiguration' ? Math.min(1260, width - 24) : type === 'engineeringString' ? 820 : type === 'stringFrame' ? 400 : 720,
+    height: type === 'stringFrame' ? Math.min(800, height - 24) : Math.min(640, height - 24),
     visible: i < 2, minimized: false, maximized: false, z: i + 1,
     ...(i === 1 ? { x: side ? first + 24 : 24, y: side ? 12 : 76, width: side ? width - first - 36 : width - 48 } : {}) }));
 }
@@ -23,9 +26,11 @@ export function projectWindow(w, width, height, minX = 0, minY = 0) {
   if (w.maximized) return { x: minX, y: minY, width: availableWidth, height: availableHeight };
   // Arrangements may use compact tiles: keep each titlebar reachable instead
   // of expanding every tile to 180 px and stacking the last rows on top of it.
-  const minWidth = w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_WIDTH : 280;
-  const minHeight = w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_HEIGHT : 44;
-  const result = { width: Math.min(Math.max(minWidth, w.width), availableWidth), height: Math.min(Math.max(minHeight, w.height), availableHeight) };
+  const minWidth = w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_WIDTH : w.type === 'stringFrame' ? STRING_FRAME_MIN_WIDTH : 280;
+  const minHeight = w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_HEIGHT : w.type === 'stringFrame' ? STRING_FRAME_MIN_HEIGHT : 44;
+  const windowMargin = w.type === 'stringFrame' && availableWidth > minWidth + 24 && availableHeight > minHeight + 24 ? 24 : 0;
+  const result = { width: Math.min(Math.max(minWidth, w.width), Math.max(1, availableWidth - windowMargin)),
+    height: Math.min(Math.max(minHeight, w.height), Math.max(1, availableHeight - windowMargin)) };
   return { ...result, x: Math.max(minX, Math.min(w.x, width - result.width)), y: Math.max(minY, Math.min(w.y, height - result.height)) };
 }
 // Bounds in canvas coordinates, including clipping caused by global notices or page scrolling.

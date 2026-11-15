@@ -10,12 +10,15 @@ export default function JarConfiguration(props) {
   const [mode, setMode] = useState('loaded');
   const source = useActiveSurvey(props.bha);
   const survey = useMemo(() => mode === 'loaded' ? importedGeometry(source) : null, [source, mode]);
-  const loadedData = useMemo(() => mode === 'loaded' ? buildLoadedBhaPresentation({
+  const computedLoadedData = useMemo(() => props.loadedData || (mode === 'loaded' ? buildLoadedBhaPresentation({
     bha: props.bha, survey, drillingMode: props.drillingMode,
     surfaceReferenceMdFt: props.surfaceReferenceMdFt
-  }) : null, [mode, props.bha, survey, props.drillingMode, props.surfaceReferenceMdFt]);
+  }) : null), [props.loadedData, mode, props.bha, survey, props.drillingMode, props.surfaceReferenceMdFt]);
+  const loadedData = computedLoadedData;
   return <section className="jarConfigurationWorkspace" aria-label="Jar Position Analysis">
-    <JarFrameV6Presentation bha={props.bha} loadedData={loadedData} mode={mode} onModeChange={setMode} />
+    <JarFrameV6Presentation bha={props.bha} loadedData={loadedData} mode={mode} onModeChange={setMode}
+      selectedLoadedJarKey={props.selectedLoadedJarKey} onSelectedLoadedJarChange={props.onSelectedLoadedJarChange}
+      onOpenStringFrame={() => props.openWorkspaceWindow?.('stringFrame')} />
     <details className="jarV6ExistingWorkflows">
       <summary>Existing Jar Position Analysis workflows · static comparison, Jar Up, Jar Down and research</summary>
       <div className="jarV6WorkflowBody">

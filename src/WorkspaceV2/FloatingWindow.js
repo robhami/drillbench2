@@ -2,12 +2,12 @@ import React from 'react';
 import { Rnd } from 'react-rnd';
 import Registry from './WidgetRegistry';
 import Widget from './Widget';
-import { projectWindow, JAR_CONFIGURATION_MIN_WIDTH, JAR_CONFIGURATION_MIN_HEIGHT } from './floatingLayout';
+import { projectWindow, JAR_CONFIGURATION_MIN_WIDTH, JAR_CONFIGURATION_MIN_HEIGHT, STRING_FRAME_MIN_WIDTH, STRING_FRAME_MIN_HEIGHT } from './floatingLayout';
 
 export default function FloatingWindow({ window: w, viewport, hidden, onChange, onFocus, inputs, title: titleOverride, children, minimizable = true }) {
   const rect = projectWindow(w, viewport.width, viewport.height, viewport.minX, viewport.minY), entry = Registry[w.type], title = titleOverride || entry?.title || '', brand = entry?.brand || 'drillframe';
-  const minWidth = Math.min(w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_WIDTH : 300, rect.width);
-  const minHeight = Math.min(w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_HEIGHT : 180, rect.height);
+  const minWidth = Math.min(w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_WIDTH : w.type === 'stringFrame' ? STRING_FRAME_MIN_WIDTH : 300, rect.width);
+  const minHeight = Math.min(w.type === 'jarConfiguration' ? JAR_CONFIGURATION_MIN_HEIGHT : w.type === 'stringFrame' ? STRING_FRAME_MIN_HEIGHT : 180, rect.height);
   const brandName = brand === 'jarframe' ? 'JARFRAME' : 'DRILLFRAME';
   return <Rnd bounds="parent" position={{ x: rect.x, y: rect.y }} size={{ width: rect.width, height: rect.height }}
     minWidth={minWidth} minHeight={minHeight}

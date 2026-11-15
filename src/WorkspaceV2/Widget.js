@@ -37,7 +37,7 @@ const Widget = ({
 
 
     const readiness = React.useMemo(() => assessBhaReadiness(bha), [bha]);
-    const requiresCompleteBha = !['bhaEntry', 'analysisInputs', 'survey'].includes(widget.type);
+    const requiresCompleteBha = !['bhaEntry', 'analysisInputs', 'survey', 'stringFrame'].includes(widget.type);
     const deployment = React.useMemo(() => {
         const depth = analysisDepth(bha);
         return depth.valid ? deployDrillstring(bha, depth.bitMdFt) : { valid: false, errors: [depth.error] };

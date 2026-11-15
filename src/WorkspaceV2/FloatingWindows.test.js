@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import Workspace from './Workspace';
 import FloatingWindow from './FloatingWindow';
 import { FLOAT_KEY } from './floatingLayout';
@@ -7,7 +7,7 @@ jest.mock('./Widget', () => props => {
   const React = require('react'); const [draft, setDraft] = React.useState('');
   return <div data-testid={props.widget.type}><input aria-label={`Draft ${props.widget.type}`} value={draft} onChange={e => setDraft(e.target.value)} /><span>{props.analysisBitMdFt}</span></div>;
 });
-jest.mock('react-rnd', () => ({ Rnd: props => <div style={props.style} data-testid="window-frame" data-window-type={props.children?.props?.['data-window-type']} data-position={JSON.stringify(props.position)} data-size={JSON.stringify(props.size)} data-min-width={props.minWidth} data-min-height={props.minHeight} onMouseDown={props.onMouseDown}>
+jest.mock('react-rnd', () => ({ Rnd: props => <div style={props.style} data-testid="window-frame" data-window-type={props.children?.props?.['data-window-type']} data-position={JSON.stringify(props.position)} data-size={JSON.stringify(props.size)} data-min-width={props.minWidth} data-min-height={props.minHeight} data-drag-handle={props.dragHandleClassName} data-cancel={props.cancel} onMouseDown={props.onMouseDown}>
   {props.children}<button aria-label="Simulate move" onClick={() => props.onDragStop(null, { x: 80, y: 90 })} />
   <button aria-label="Simulate resize" onClick={() => props.onResizeStop(null, 'right', { style: { width: '750px', height: '550px' } }, {}, { x: 80, y: 90 })} />
   <button aria-label="Simulate undersized resize" onClick={() => props.onResizeStop(null, 'right', { style: { width: '650px', height: '400px' } }, {}, { x: 80, y: 90 })} />
@@ -59,6 +59,63 @@ test('general Workspace V2 windows use the DrillFrame brand and retain title con
   expect(screen.getByRole('button', { name: 'Minimise Hookload Calculations' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Maximise Hookload Calculations' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Close Hookload Calculations' })).toBeInTheDocument();
+});
+
+test('Jar Position Analysis automatically opens a separate BHA Schematic that closes and reopens independently', () => {
+  render(<Workspace bha={{ id: 'string-frame-window', rows: [] }} />);
+  click('Jar Position Analysis');
+  expect(screen.getByLabelText('Jar Position Analysis window')).toBeInTheDocument();
+  expect(screen.getByLabelText('BHA Schematic window')).toBeInTheDocument();
+  const stringRecord = saved('string-frame-window').find(w => w.type === 'stringFrame');
+  expect(stringRecord.visible).toBe(true);
+  expect(stringRecord.id).toBe('stringFrame1');
+  expect(screen.getByRole('button', { name: 'BHA Schematic' })).toHaveAttribute('title', 'BHA Schematic');
+  expect(screen.getByLabelText('BHA Schematic window')).toHaveTextContent('BHA Schematic');
+  expect(stringRecord.width).toBeLessThanOrEqual(400);
+  expect(stringRecord.height).toBeGreaterThanOrEqual(460);
+  expect(stringRecord.height).toBeLessThanOrEqual(800);
+  fireEvent.click(screen.getByRole('button', { name: 'Close BHA Schematic' }));
+  expect(saved('string-frame-window').find(w => w.type === 'stringFrame').visible).toBe(false);
+  expect(screen.getByLabelText('Jar Position Analysis window')).toBeVisible();
+  click('Jar Position Analysis');
+  expect(screen.getByLabelText('BHA Schematic window')).not.toBeVisible();
+  click('BHA Schematic');
+  expect(screen.getByLabelText('BHA Schematic window')).toBeInTheDocument();
+  expect(screen.getByLabelText('BHA Schematic window')).toBeVisible();
+  expect(saved('string-frame-window').filter(w => w.type === 'stringFrame')).toHaveLength(1);
+});
+
+test('BHA Schematic minimizes independently and restores from its launcher', () => {
+  render(<Workspace bha={{ id: 'string-frame-minimize', rows: [] }} />);
+  click('Jar Position Analysis');
+  fireEvent.click(screen.getByRole('button', { name: 'Minimise BHA Schematic' }));
+  expect(saved('string-frame-minimize').find(w => w.type === 'stringFrame')).toMatchObject({ visible: true, minimized: true });
+  expect(screen.getByLabelText('BHA Schematic window')).not.toBeVisible();
+  expect(screen.getByLabelText('Jar Position Analysis window')).toBeVisible();
+  click('BHA Schematic');
+  expect(saved('string-frame-minimize').find(w => w.type === 'stringFrame')).toMatchObject({ visible: true, minimized: false });
+  expect(screen.getByLabelText('BHA Schematic window')).toBeVisible();
+});
+
+test('BHA Schematic title bar drag persists its independent position', () => {
+  render(<Workspace bha={{ id: 'string-frame-drag', rows: [] }} />);
+  click('Jar Position Analysis');
+  const frame = screen.getAllByTestId('window-frame').find(item => item.dataset.windowType === 'stringFrame');
+  expect(frame).toHaveAttribute('data-drag-handle', 'wbFloatingTitlebar');
+  expect(frame).toHaveAttribute('data-cancel', '.wbFloatingActions');
+  fireEvent.click(within(frame).getByLabelText('Simulate move'));
+  expect(saved('string-frame-drag').find(w => w.type === 'stringFrame')).toMatchObject({ x: 80, y: 90 });
+});
+
+test('opening JarFrame preserves saved custom JarFrame and BHA Schematic positions', () => {
+  localStorage.setItem(FLOAT_KEY, JSON.stringify({ version: 1, workspaces: { 'string-frame-saved-position': [
+    { id: 'jarConfiguration1', type: 'jarConfiguration', x: 20, y: 20, width: 720, height: 500, visible: false, z: 1 },
+    { id: 'stringFrame1', type: 'stringFrame', x: 300, y: 30, width: 360, height: 500, visible: false, z: 2 }
+  ] } }));
+  render(<Workspace bha={{ id: 'string-frame-saved-position', rows: [] }} />);
+  click('Jar Position Analysis');
+  expect(saved('string-frame-saved-position').find(w => w.type === 'jarConfiguration')).toMatchObject({ x: 20, y: 20 });
+  expect(saved('string-frame-saved-position').find(w => w.type === 'stringFrame')).toMatchObject({ x: 300, y: 30 });
 });
 
 test('Jar Position Analysis keeps its per-BHA window identity through close, reopen and saved-layout restore', () => {

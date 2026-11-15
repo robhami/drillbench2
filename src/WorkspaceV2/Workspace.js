@@ -7,14 +7,24 @@ import ComponentLibrary from '../Components/BHABuilder/ComponentLibrary';
 import ComponentEditorContext from '../Components/BHABuilder/ComponentEditorContext';
 import useWorkspaceAnalysis from './useWorkspaceAnalysis';
 import { MODULES, isDeveloper, defaultWindows, arrangeWindows, loadFloating, saveFloating, visibleWorkspaceViewport, recoverFloatingWindow } from './floatingLayout';
+import { useActiveSurvey } from '../Apps/Survey/surveyAssociation';
+import { importedGeometry } from '../Apps/JarClearance/clearanceData';
+import { buildLoadedBhaPresentation } from '../Apps/JarConfiguration/loadedBhaPresentation';
 
 // Layout operations never write BHA data or calculate engineering results.
 export default function Workspace(props) {
   const { bha, developerPanels = false } = props;
   const analysis = useWorkspaceAnalysis(bha), canvas = useRef(null);
+  const activeSurveySource = useActiveSurvey(bha);
+  const activeSurvey = React.useMemo(() => importedGeometry(activeSurveySource), [activeSurveySource]);
   const [viewport, setViewport] = useState({ width: Math.max(320, window.innerWidth - 224), height: Math.max(240, window.innerHeight - 72) });
   const [initial] = useState(() => loadFloating(localStorage, bha?.id || 'draft', viewport.width, viewport.height));
   const [windows, setWindows] = useState(initial.windows), [message, setMessage] = useState(initial.message || '');
+  const hasJarStringView = windows.some(window => ['jarConfiguration', 'stringFrame'].includes(window.type) && window.visible);
+  const loadedBhaData = React.useMemo(() => hasJarStringView ? buildLoadedBhaPresentation({ bha, survey: activeSurvey,
+    drillingMode: props.drillingMode || 'slide', surfaceReferenceMdFt: props.surfaceReferenceMdFt ?? 0 }) : null,
+  [hasJarStringView, bha, activeSurvey, props.drillingMode, props.surfaceReferenceMdFt]);
+  const [selectedJarKey, setSelectedJarKey] = useState(bha?.selectedJarId || '');
   const [collapsed, setCollapsed] = useState(false), [menu, setMenu] = useState(false);
   const [mountEpoch, setMountEpoch] = useState(0);
   const [editor, setEditor] = useState(null);
@@ -33,7 +43,8 @@ export default function Workspace(props) {
   // visible origin. Measure after commits as well as browser geometry events.
   const measureViewport = () => {
     const next = visibleWorkspaceViewport(canvas.current?.getBoundingClientRect(), window.innerWidth, window.innerHeight,
-      { width: canvas.current?.clientWidth || 320, height: canvas.current?.clientHeight || 240 });
+      { width: canvas.current?.clientWidth || Math.max(320, window.innerWidth - 224),
+        height: canvas.current?.clientHeight || Math.max(240, window.innerHeight - 72) });
     setViewport(previous => Object.keys(next).every(k => previous[k] === next[k]) ? previous : next);
   };
   useLayoutEffect(measureViewport);
@@ -62,22 +73,51 @@ export default function Workspace(props) {
     // Geometry adaptation is display-only; switching ownership does not rewrite saved positions.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bha]);
+  useEffect(() => setSelectedJarKey(bha?.selectedJarId || ''), [bha?.id, bha?.selectedJarId]);
   const focus = type => update(list => {
     const w = list.find(p => p.type === type), top = Math.max(editor?.z || 0, ...list.map(p => p.z));
     return !w || w.z === top ? list : list.map(p => p.type === type ? { ...p, z: top + 1 } : p);
   });
   const open = type => {
     if (isDeveloper(type) && !developerPanels) return;
-    setMounted(set => new Set([...set, type]));
+    const jarWasVisible = current.current.some(window => window.type === 'jarConfiguration' && window.visible);
+    const openJarAndString = type === 'jarConfiguration' && !jarWasVisible;
+    const opening = openJarAndString ? ['jarConfiguration', 'stringFrame'] : [type];
+    setMounted(set => new Set([...set, ...opening]));
     update(list => {
-      const top = Math.max(editor?.z || 0, ...list.map(p => p.z)), existing = list.find(p => p.type === type);
-      const item = existing || { ...defaultWindows(viewport.width, viewport.height).find(p => p.type === type), x: 30 + list.filter(p => p.visible).length * 24, y: 30 + list.filter(p => p.visible).length * 24 };
       const visible = visibleWorkspaceViewport(canvas.current?.getBoundingClientRect(), window.innerWidth, window.innerHeight, viewport);
-      const targetWidth = Math.max(1, Math.min(1260, visible.width - 24));
-      const presentationItem = type === 'jarConfiguration' && item.width < Math.min(1050, targetWidth)
-        ? { ...item, x: visible.minX + 12, width: targetWidth }
-        : item;
-      return [...list.filter(p => p.type !== type), { ...recoverFloatingWindow(presentationItem, visible), visible: true, minimized: false, z: top + 1 }];
+      const defaults = defaultWindows(viewport.width, viewport.height);
+      const next = [...list];
+      let top = Math.max(editor?.z || 0, ...next.map(p => p.z));
+      opening.forEach((openType, index) => {
+        const existingIndex = next.findIndex(p => p.type === openType);
+        const existing = existingIndex >= 0 ? next[existingIndex] : defaults.find(p => p.type === openType);
+        const item = existing || { type: openType, id: `${openType}1`, width: 400, height: 760, x: 20, y: 20 };
+        const presentationItem = { ...item, x: item.x ?? 24, y: item.y ?? 24 };
+        const recovered = { ...recoverFloatingWindow(presentationItem, visible), visible: true, minimized: false, z: ++top };
+        if (existingIndex >= 0) next[existingIndex] = recovered;
+        else next.push(recovered);
+      });
+      if (openJarAndString) {
+        const jar = next.find(p => p.type === 'jarConfiguration'), string = next.find(p => p.type === 'stringFrame');
+        const canTile = visible.width >= 700 + 340 + 36;
+        const defaultJar = recoverFloatingWindow(defaults.find(p => p.type === 'jarConfiguration'), visible);
+        const defaultString = recoverFloatingWindow(defaults.find(p => p.type === 'stringFrame'), visible);
+        const hasCustomPlacement = [jar, string].some((item, index) => {
+          const base = index === 0 ? defaultJar : defaultString;
+          return item.x !== base.x || item.y !== base.y || item.width !== base.width || item.height !== base.height;
+        });
+        if (jar && string && canTile && !hasCustomPlacement) {
+          const stringWidth = Math.min(400, visible.width - 700 - 24);
+          const jarWidth = Math.max(700, visible.width - stringWidth - 24);
+          Object.assign(jar, { x: visible.minX + 8, y: visible.minY + 8, width: jarWidth, height: Math.min(jar.height, visible.height - 16) });
+          Object.assign(string, { x: visible.minX + 8 + jarWidth + 12, y: visible.minY + 8, width: stringWidth, height: Math.min(800, visible.height - 24) });
+        } else if (jar && string && !hasCustomPlacement) {
+          Object.assign(jar, { x: visible.minX + 12, y: visible.minY + 12, width: Math.min(jar.width, visible.width - 24) });
+          Object.assign(string, { x: visible.minX + 28, y: visible.minY + 28, width: Math.min(400, visible.width - 40), height: Math.min(760, visible.height - 24) });
+        }
+      }
+      return next;
     });
   };
   const arrange = mode => {
@@ -121,7 +161,9 @@ export default function Workspace(props) {
       <div className="wbFloatingCanvas" ref={canvas} aria-label="Floating workspace">
         {windows.filter(w => mounted.has(w.type)).map(w => <FloatingWindow key={`${mountEpoch}:${w.type}`} window={w} viewport={visibleViewport}
           hidden={!w.visible || w.minimized || (isDeveloper(w.type) && !developerPanels)} onFocus={() => focus(w.type)}
-          onChange={patch => update(list => list.map(p => p.type === w.type ? { ...p, ...patch } : p))} inputs={{ ...props, ...analysis }} />)}
+          onChange={patch => update(list => list.map(p => p.type === w.type ? { ...p, ...patch } : p))}
+          inputs={{ ...props, ...analysis, loadedData: loadedBhaData, selectedLoadedJarKey: selectedJarKey,
+            onSelectedLoadedJarChange: setSelectedJarKey, openWorkspaceWindow: open }} />)}
         {editor && <FloatingWindow window={editor} viewport={editorViewport} title="Add Component" minimizable={false}
           onFocus={() => setEditor(w => w ? { ...w, z: Math.max(w.z, ...current.current.map(p => p.z)) + 1 } : w)}
           onChange={patch => patch.visible === false ? closeEditor() : setEditor(w => ({ ...w, ...patch }))}>

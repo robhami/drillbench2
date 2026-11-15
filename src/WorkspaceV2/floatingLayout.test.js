@@ -1,4 +1,4 @@
-import { FLOAT_KEY, JAR_CONFIGURATION_MIN_WIDTH, JAR_CONFIGURATION_MIN_HEIGHT, defaultWindows, projectWindow, arrangeWindows, loadFloating, saveFloating, migrateDocking, recoverFloatingWindow } from './floatingLayout';
+import { FLOAT_KEY, JAR_CONFIGURATION_MIN_WIDTH, JAR_CONFIGURATION_MIN_HEIGHT, STRING_FRAME_MIN_WIDTH, STRING_FRAME_MIN_HEIGHT, defaultWindows, projectWindow, arrangeWindows, loadFloating, saveFloating, migrateDocking, recoverFloatingWindow } from './floatingLayout';
 import { defaultLayout } from './dockingLayout';
 beforeEach(() => localStorage.clear());
 test('fresh desktop opens only setup windows side by side', () => {
@@ -60,6 +60,13 @@ test('Jar Position Analysis opens with a wide desktop workspace default', () => 
   expect(defaultWindows(1440, 900).find(w => w.type === 'jarConfiguration').width).toBe(1260);
   expect(defaultWindows(900, 700).find(w => w.type === 'jarConfiguration').width).toBe(876);
   expect(defaultWindows(1440, 900).find(w => w.type === 'engineeringString').width).toBe(820);
+});
+test('BHA Schematic defaults tall and narrow while retaining its legacy saved-window identity', () => {
+  const string = defaultWindows(1400, 900).find(w => w.type === 'stringFrame');
+  expect(string).toMatchObject({ id: 'stringFrame1', type: 'stringFrame', width: 400, height: 800, visible: false });
+  expect([STRING_FRAME_MIN_WIDTH, STRING_FRAME_MIN_HEIGHT]).toEqual([340, 460]);
+  expect(projectWindow(string, 1200, 740)).toMatchObject({ width: 400, height: 716 });
+  expect(projectWindow(string, 300, 360)).toMatchObject({ width: 300, height: 360 });
 });
 test('corrupt or future layout falls back without overwriting original', () => {
   localStorage.setItem(FLOAT_KEY, '{"version":99}');

@@ -10,6 +10,8 @@
 .jarV6FixtureStrip .jarV6NpStrip { color: #715e41; }
 .jarV6Warning { flex: none; padding: 3px 6px; border-radius: 3px; background: #fff3cd; color: #664d03 !important; font-size: 9px; }
 .jarV6Visuals { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(242px, 265px); gap: 7px; align-items: stretch; }
+.jarV6Visuals.jarV6LoadedVisuals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.jarV6LoadedVisuals .jarV6Velocity { grid-column: 1 / -1; }
 .jarV6Panel { min-width: 0; overflow: hidden; border: 1px solid #d8e2e8; border-radius: 5px; background: #fff; box-shadow: 0 1px 5px #17344808; }
 .jarV6Chart { display: flex; flex-direction: column; padding: 5px 5px 3px; --jar-v6-accent: #b77b28; }
 .jarV6Impulse { --jar-v6-accent: #358494; }
@@ -106,6 +108,10 @@
 .jarV6LoadedSchematic .jarV6UnknownOd { fill: #d0d8dc; stroke: #8b9ca3; stroke-dasharray: 2 1; }
 .jarV6LoadedSchematic .jarV6SelectedLoadedJar { fill: #d5ad6e; stroke: #95682c; stroke-width: 1.4; }
 .jarV6SectionGuide { stroke: #9aaab1; stroke-width: .6; stroke-dasharray: 1 1; }
+.jarV6LoadedSummary { min-width: 0; margin-top: 7px; padding: 8px; border: 1px solid #d8e2e8; border-radius: 5px; background: #fff; }
+.jarV6LoadedSummary .jarV6SchematicHeader { align-items: center; }
+.jarV6OpenStringFrame { padding: 5px 8px; border: 1px solid #cad8df; border-radius: 4px; background: #fff; color: #294a5e; font: inherit; font-size: 10px; cursor: pointer; }
+.jarV6OpenStringFrame:hover { background: #eef4f6; }
 @container (max-width: 750px) {
   .jarV6Toolbar { grid-template-columns: 1.1fr .8fr .75fr 1fr; }
 }
@@ -140,6 +146,7 @@
 }
 @container (max-width: 590px) {
   .jarV6Visuals { grid-template-columns: minmax(0, 1fr); }
+  .jarV6Visuals.jarV6LoadedVisuals { grid-template-columns: minmax(0, 1fr); }
   .jarV6Schematic { grid-column: auto; }
   .jarV6Toolbar { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .jarV6ChartSvg { --jar-v6-chart-height: 150px; flex-basis: 150px; height: 150px; }

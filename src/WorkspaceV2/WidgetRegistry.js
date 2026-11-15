@@ -8,6 +8,7 @@ import EngineeringStringCard from '../Apps/EngineeringString/EngineeringStringCa
 import Survey from '../Apps/Survey/Survey';
 import JarClearance from '../Apps/JarClearance/JarClearance';
 import JarForces from '../Apps/JarForces/JarForces';
+import StringFrame from '../Apps/StringFrame/StringFrame';
 const WidgetRegistry = {
     jarForces: { title: 'Hookload Calculations', component: JarForces, brand: 'drillframe' },
     jarClearance: { title: 'Neutral Point Behaviour', component: JarClearance, brand: 'drillframe' },
@@ -41,7 +42,8 @@ const WidgetRegistry = {
         title: 'Engineering String',
         component: EngineeringStringCard,
         brand: 'drillframe'
-    }
+    },
+    stringFrame: { title: 'BHA Schematic', component: StringFrame, brand: 'drillframe' }
 
 
 
