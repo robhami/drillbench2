@@ -1,6 +1,7 @@
 import React from 'react';
 import EngineeringStringSchematic, { schematicToolType, schematicComponentHeight } from '../EngineeringString/EngineeringStringSchematic';
 import V6ContinuousAssemblyDrawing from './v6Drawing';
+import { buildNeutralPointPresentation } from './neutralPointPresentation';
 import { buildLoadedBhaSchematicSections, loadedJarRowKey } from '../JarConfiguration/loadedBhaPresentation';
 import '../EngineeringString/EngineeringStringCard.css';
 import '../JarConfiguration/JarFrameV6Presentation.css';
@@ -138,7 +139,7 @@ export function calculateStringFrameLabelLayout(groups, charsPerLine = 42, lower
   });
 }
 
-export default function LoadedBhaSchematic({ rows, positions, selectedJarKey, schematicSectionsByJarKey, straight, surveyLoads, drillingMode = 'slide', extraOverviewHeight = 0, tall = false }) {
+export default function LoadedBhaSchematic({ rows, positions, selectedJarKey, schematicSectionsByJarKey, straight, surveyLoads, drillingMode = 'slide', setDrillingMode, controllingWob, surveyMode = false, extraOverviewHeight = 0, tall = false }) {
   const sourceRows = Array.isArray(rows) ? rows.filter(row => row && (row.category || row.toolName || row.selectedToolId || row.length)) : [];
   const components = positions?.components || [];
   const componentFor = (row, index) => components.find(component => row.rowId && component.rowId === row.rowId) || components[index] || null;
@@ -147,7 +148,7 @@ export default function LoadedBhaSchematic({ rows, positions, selectedJarKey, sc
   });
   const assemblyItems = groups.flatMap(group => group.items.map(item => ({ ...item, section: group.label })));
   const boundary = schematicSectionsByJarKey?.[selectedJarKey];
-  const labelArgs = [groups, tall ? 42 : 27, boundary?.lowerConnectionUnverified];
+  const labelArgs = [groups, tall ? 36 : 27, boundary?.lowerConnectionUnverified];
   const baseLabels = calculateStringFrameLabelLayout(...labelArgs);
   const baseLabelHeight = baseLabels.reduce((sum, row) => sum + row.height, 0);
   // Standard StringFrame uses a compact 420 px BHA overview. Complex labels
@@ -228,13 +229,27 @@ export default function LoadedBhaSchematic({ rows, positions, selectedJarKey, sc
     ? `${format(result.neutralPoints[0].fromBitFt)} ft above bit` : result.neutralIntervals?.length ? 'Neutral interval · no unique point'
       : result.neutralPoints?.length > 1 ? 'Multiple crossings · no unique point' : 'No neutral point within deployed BHA';
   const bitSegment = segments.filter(segment => segment.section === 'Bit').at(-1);
+  const neutralPresentation = tall ? buildNeutralPointPresentation({ straight, surveyLoads, drillingMode,
+    positions, segments, totalLength, jarCentreFromBitFt: selectedPosition?.centreFromBit,
+    compactBitGeometry: true, surveyMode }) : { markers: [], outputs: [] };
   return <aside className={`jarV6Panel jarV6Schematic jarV6LoadedSchematic stringFrameSchematic ${tall ? 'stringFrameTall' : ''}`} aria-label="BHA Schematic loaded assembly">
     <header className="jarV6SchematicHeader"><h2>BHA Schematic · loaded assembly · not to scale</h2><span>{totalLength > 0 ? `${format(totalLength)}ft deployed` : 'Deployment unavailable'}</span></header>
+    {tall && <div className="stringFrameModeControl">
+      <label htmlFor="string-frame-drilling-mode">Drilling mode</label>
+      <select id="string-frame-drilling-mode" aria-label="BHA Schematic drilling mode" value={drillingMode} disabled={!setDrillingMode}
+        onChange={event => setDrillingMode?.(event.target.value)}>
+        <option value="reference" disabled={surveyMode}>Reference{surveyMode ? ' (unavailable for survey)' : ''}</option>
+        <option value="slide">Slide</option><option value="rotate">Rotate</option>
+      </select>
+      <span className="stringFrameControllingWob" aria-label="Controlling WOB">Controlling WOB · {controllingWob !== undefined && controllingWob !== null && String(controllingWob).trim() !== '' && Number.isFinite(Number(controllingWob)) ? `${format(Number(controllingWob))} klbf` : 'Unavailable'}</span>
+      {surveyMode && <span className="stringFrameModeNote" role="status">Survey neutral points require covered Slide or Rotate results.</span>}
+    </div>}
     {!positions?.components?.length && <div className="stringFrameUnavailable" role="status">Live BHA geometry unavailable. {positions?.errors?.join(' ') || 'Check deployment inputs.'}</div>}
     <div className={`jarV6SchematicGrid ${tall ? 'stringFrameGrid' : ''}`} style={tall ? { '--string-frame-height': `${viewHeight}px` } : undefined}>
       <div className="stringFrameSvgScroll">
-        <V6ContinuousAssemblyDrawing viewHeight={viewHeight} yTop={inset} yBottom={viewHeight - inset - 1}
+        <V6ContinuousAssemblyDrawing viewWidth={tall ? 166 : 61} viewHeight={viewHeight} yTop={inset} yBottom={viewHeight - inset - 1}
           segments={segments.map((segment, index) => ({ key: segment.key, y1: segment.y1, y2: segment.y2, width: segment.width,
+            componentIndex: segment.componentIndex,
             className: segment.className, section: segment.section, category: segment.row.category, unknownOd: segment.unknownOd,
             selected: segment.key === selectedKey, testId: `loaded-component-${index}`, bladeWidth: segment.bladeWidth,
             title: segment.title }))}
@@ -244,7 +259,7 @@ export default function LoadedBhaSchematic({ rows, positions, selectedJarKey, sc
             width: Math.max(...segments.filter(segment => segment.section === 'DP').map(segment => segment.width))
           }] : []}
           sectionGuides={tall ? [] : compactRows.map((row, index) => ({ key: index, y: row.center }))} slimStabilizerBlades
-          markers={jarY == null ? [] : [{ key: selectedKey, x: 31, y: jarY, guide: 20, guideClass: 'jarV6CandidateGuide', radius: 3.8, className: 'jarV6CandidateMarker', testId: 'loaded-selected-jar-marker' }]}
+          markers={[...(jarY == null ? [] : [{ key: selectedKey, x: 31, y: jarY, guide: 20, guideClass: 'jarV6CandidateGuide', radius: 3.8, className: 'jarV6CandidateMarker', testId: 'loaded-selected-jar-marker' }]), ...neutralPresentation.markers]}
           showBitTip={assemblyItems.some(item => item.section === 'Bit')}
           bitTipY={bitSegment?.y2} bitTipWidth={tall ? bitSegment?.width : undefined} compactBitGeometry={tall}
           ariaLabel={`Complete loaded BHA assembly${selected ? `; selected jar ${selected.row.toolName || selected.row.category} highlighted` : '; no jar row available'}`} testId="loaded-bha-assembly" />
@@ -272,6 +287,13 @@ export default function LoadedBhaSchematic({ rows, positions, selectedJarKey, sc
         {!groups.length && <div className="stringFrameEmptyLabel"><b>No BHA components</b><span>Load rows to view the assembly.</span></div>}
       </div>
     </div>
+    {tall && <section className="stringFrameNeutralStatus" aria-label="Neutral point status">
+      {neutralPresentation.outputs.map(output => <p key={output.kind} data-testid={`neutral-point-status-${output.kind}`}>
+        <b>{output.label}:</b> {output.point
+          ? `${output.jarDistanceLabel || 'NP — jar-relative distance unavailable'} · Neutral point ${output.approximate ? 'approximately within DP section · ' : ''}${format(output.point.fromBitFt)} ft above bit${Number.isFinite(output.point.mdFt) ? ` · MD ${format(output.point.mdFt)} ft` : ''}${output.jarDistanceReason ? ` · ${output.jarDistanceReason}` : ''}${output.reason ? ` · ${output.reason}` : ''}.`
+          : output.reason}
+      </p>)}
+    </section>}
     <details className="stringFrameStaticDetails"><summary>Static calculations and boundary details</summary>
     <div className="jarV6LiveStatic stringFrameStatic" aria-label="Loaded BHA geometry and static results">
       <div className="jarV6CandidateLabel">{selected ? `Selected jar · ${selected.row.toolName || selected.row.category}` : 'No jar selected'}</div>

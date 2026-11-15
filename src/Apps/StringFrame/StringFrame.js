@@ -7,7 +7,7 @@ import './StringFrame.css';
 
 export { calculateStringFrameLabelLayout, allocateCompressedComponentHeights, compressedLengthWeight, schematicWidthForOd } from './LoadedBhaSchematic';
 
-export default function StringFrame({ bha, loadedData: suppliedData, drillingMode = 'slide', surfaceReferenceMdFt = 0, selectedLoadedJarKey }) {
+export default function StringFrame({ bha, loadedData: suppliedData, drillingMode = 'slide', setDrillingMode, surfaceReferenceMdFt = 0, selectedLoadedJarKey }) {
   const contentRef = useRef(null);
   const initialHeight = useRef(null);
   const [extraOverviewHeight, setExtraOverviewHeight] = useState(0);
@@ -34,6 +34,7 @@ export default function StringFrame({ bha, loadedData: suppliedData, drillingMod
     return () => observer.disconnect();
   }, []);
   const surveySource = useActiveSurvey(bha);
+  const surveyMode = bha?.trajectoryMode === 'directional';
   const survey = useMemo(() => importedGeometry(surveySource), [surveySource]);
   const computed = useMemo(() => suppliedData || buildLoadedBhaPresentation({ bha, survey, drillingMode, surfaceReferenceMdFt }),
     [suppliedData, bha, survey, drillingMode, surfaceReferenceMdFt]);
@@ -45,6 +46,8 @@ export default function StringFrame({ bha, loadedData: suppliedData, drillingMod
     <LoadedBhaSchematic rows={rows} positions={computed?.positions} selectedJarKey={selectedKey}
       schematicSectionsByJarKey={computed?.schematicSectionsByJarKey} straight={computed?.straight}
       surveyLoads={computed?.surveyLoads} drillingMode={computed?.drillingMode || drillingMode} deployment={computed?.deployment}
+      controllingWob={bha?.wob}
+      setDrillingMode={setDrillingMode} surveyMode={surveyMode}
       extraOverviewHeight={extraOverviewHeight} tall />
   </main>;
 }

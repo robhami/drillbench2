@@ -67,7 +67,7 @@ function crossingDirection(load, point) {
     return bitSide.axialForceLbf > 0 ? 'Compression → tension toward surface' : 'Tension → compression toward surface';
 }
 
-const EngineeringStringCard = ({ bha: inputBha, engModel, drillingMode = 'slide', setDrillingMode, updateBha, analysisBitMdFt, surfaceReferenceMdFt = 0, surveyCoverage, summaryOnly = false, collapsible = false }) => {
+const EngineeringStringCard = ({ bha: inputBha, engModel, drillingMode = 'slide', setDrillingMode, analysisBitMdFt, surfaceReferenceMdFt = 0, surveyCoverage, summaryOnly = false, collapsible = false }) => {
     const [stringView, setStringView] = useState('bha');
     const bha = inputBha || engModel?.bha;
     const source = useActiveSurvey(bha);
@@ -82,7 +82,7 @@ const EngineeringStringCard = ({ bha: inputBha, engModel, drillingMode = 'slide'
     const load = useMemo(() => {
         if (!deployment.valid) return { valid: false, errors: deployment.errors };
         if (!coverage.covered) return { valid: false, errors: [coverage.message] };
-        if (!finite(bha?.wob)) return { valid: false, errors: ['Enter a specific nonnegative WOB in the Analysis WOB control. Low and High WOB define the Neutral Point Behaviour sweep only.'] };
+        if (!finite(bha?.wob) || Number(bha.wob) < 0) return { valid: false, errors: ['Enter a specific nonnegative Controlling WOB in Parameter Entry. Low and High WOB define the Neutral Point Behaviour sweep only.'] };
         return calcSurveyAxialLoads({ bha: deployment.bha, survey, bitMdFt: depth, mode: drillingMode,
             wobLbf: Number(bha.wob) * 1000, mudWeightPpg: bha?.mudWeight,
             frictionCoefficient: bha?.frictionCoefficient, rpm: bha?.rpm, ropFtHr: bha?.rop });
@@ -106,12 +106,10 @@ const EngineeringStringCard = ({ bha: inputBha, engModel, drillingMode = 'slide'
     }), [bhaSummary.geometry]);
     const content = <div className="engineeringStringCard engineeringStringSurveyCard">
         <div className="engineeringStringSummary">
-            {(setDrillingMode || updateBha) && <div className="engineeringStringControls">
+            {setDrillingMode && <div className="engineeringStringControls">
                 {setDrillingMode && <label>Mode<select aria-label="Drilling Mode" value={drillingMode} onChange={event => setDrillingMode(event.target.value)}>
                     <option value="slide">Slide</option><option value="rotate">Rotate</option><option value="reference">Reference</option>
                 </select></label>}
-                {updateBha && <label title="Specific bit WOB for drilling-load analyses; this value is not inferred from Low or High WOB.">WOB<input aria-label="Analysis WOB (klbf)" type="number" min="0" step="any" value={bha?.wob ?? ''}
-                    onChange={event => updateBha({ wob: event.target.value })} /></label>}
             </div>}
             {!load.valid && <div className="engineeringStringUnavailable" role="alert">Drilling Neutral Point unavailable. {load.errors.join(' ')}</div>}
             {load.valid && !jars.length && <div role="status">No jar is available for the drilling load comparison.</div>}

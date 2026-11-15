@@ -30,6 +30,10 @@ const createEmptyRow = () => ({
   length: ''
 });
 
+const withBaselineFrictionCoefficient = bha => bha?.frictionCoefficient == null
+  ? { ...bha, frictionCoefficient: 0.25 }
+  : bha;
+
 
 
 class App extends Component {
@@ -62,6 +66,7 @@ class App extends Component {
         holeSize: '',
         mudWeight: '',
         wob: '',
+        frictionCoefficient: 0.25,
         wobAnalysis: { ...WOB_ANALYSIS_DEFAULTS },
         inclination: 0,
         rows: [createEmptyRow()]
@@ -84,18 +89,18 @@ class App extends Component {
         name: parsedWell.name || '',
         field: parsedWell.field || '',
         operator: parsedWell.operator || '',
-        currentBha: {
+        currentBha: withBaselineFrictionCoefficient({
           id: '',
           name: '',
           holeSize: '',
           mudWeight: '',
           wob: '',
-        inclination: 0,
+          inclination: 0,
           rows: [createEmptyRow()],
           ...parsedWell.currentBha
-        },
+        }),
         rigLimits: parsedWell.rigLimits || { maximumAllowableHookloadKlbf: '' },
-        savedBhas: parsedWell.savedBhas || []
+        savedBhas: (parsedWell.savedBhas || []).map(withBaselineFrictionCoefficient)
       });
     }
 
@@ -320,7 +325,7 @@ class App extends Component {
         well: {
           ...currentState.well,
           currentBha: {
-            ...bhaToLoad
+            ...withBaselineFrictionCoefficient(bhaToLoad)
           }
         }
       };
@@ -351,6 +356,7 @@ class App extends Component {
           holeSize: '',
           mudWeight: '',
           wob: '',
+          frictionCoefficient: 0.25,
           wobAnalysis: { ...WOB_ANALYSIS_DEFAULTS },
         inclination: 0,
           rows: [createEmptyRow()]

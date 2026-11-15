@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import StringFrame, { calculateStringFrameLabelLayout, compressedLengthWeight } from './StringFrame';
 import { buildLoadedBhaPresentation, buildLoadedBhaSchematicSections } from '../JarConfiguration/loadedBhaPresentation';
 
@@ -42,7 +42,7 @@ test('BHA Schematic follows Stage 8 label styling and aligns concise labels to t
   const groups = buildLoadedBhaSchematicSections({ rows: loadedData.geometryBha.rows,
     components: loadedData.positions.components, selectedJarKey: 'jar',
     sectionData: loadedData.schematicSectionsByJarKey.jar }).groups;
-  const expectedLayout = calculateStringFrameLabelLayout(groups, 42, true, 399);
+  const expectedLayout = calculateStringFrameLabelLayout(groups, 36, true, 399);
   const renderedRows = [...labels.querySelectorAll('[data-section]')];
   expect(labels).toHaveClass('stringFrameLabels');
   expect(labels.closest('.stringFrameTall')).toBeInTheDocument();
@@ -114,6 +114,86 @@ test('BHA Schematic follows Stage 8 label styling and aligns concise labels to t
   expect(triangle[3]).toBeCloseTo(bitBottom, 6);
   expect(triangle[5]).toBeGreaterThan(bitBottom);
   expect(segments.find(segment => segment.dataset.rowKey === 'bit').querySelectorAll('rect')).toHaveLength(1);
+});
+
+test('mode selector is accessible, uses the shared callback, and displays only the selected mode NP', () => {
+  const setDrillingMode = jest.fn();
+  const bhaWithWob = { ...bha, wob: '22' };
+  const makeData = mode => {
+    const data = buildLoadedBhaPresentation({ bha: bhaWithWob, survey: null, drillingMode: mode, surfaceReferenceMdFt: 0 });
+    const jarIndex = data.positions.components.findIndex(component => component.category === 'JAR');
+    const components = data.positions.components.map((component, index) => ({
+      startFromBit: component.startFromBit, endFromBit: component.endFromBit,
+      bottomAxialForce: index === jarIndex ? 100 : 200,
+      topAxialForce: index === jarIndex ? -100 : 200
+    }));
+    const jar = data.positions.components[jarIndex];
+    return { ...data, straight: { drillingMode: mode, neutralPointFt: (jar.startFromBit + jar.endFromBit) / 2,
+      loadProfile: { valid: true, bitAxialForce: 100, components } } };
+  };
+  const { rerender } = render(<StringFrame bha={bhaWithWob} loadedData={makeData('slide')} drillingMode="slide"
+    setDrillingMode={setDrillingMode} selectedLoadedJarKey="jar" />);
+  const selector = screen.getByRole('combobox', { name: 'BHA Schematic drilling mode' });
+  expect(selector).toHaveValue('slide');
+  expect(screen.getByLabelText('Controlling WOB')).toHaveTextContent('22.00 klbf');
+  expect(screen.queryByLabelText('Controlling WOB (klbf)')).not.toBeInTheDocument();
+  for (const mode of ['reference', 'rotate', 'slide']) {
+    fireEvent.change(screen.getByRole('combobox', { name: 'BHA Schematic drilling mode' }), { target: { value: mode } });
+    expect(setDrillingMode).toHaveBeenLastCalledWith(mode);
+    rerender(<StringFrame bha={bhaWithWob} loadedData={makeData(mode)} drillingMode={mode}
+      setDrillingMode={setDrillingMode} selectedLoadedJarKey="jar" />);
+    expect(screen.getByRole('combobox', { name: 'BHA Schematic drilling mode' })).toHaveValue(mode);
+    expect(screen.getByTestId('neutral-point-straight-line')).toHaveAttribute('data-mode', mode);
+  }
+  expect(screen.getAllByTestId(/^neutral-point-.*-line$/)).toHaveLength(1);
+  expect(screen.getByTestId('loaded-selected-jar-marker')).toBeInTheDocument();
+  rerender(<StringFrame bha={{ ...bhaWithWob, wob: '25.5' }} loadedData={makeData('slide')} drillingMode="slide"
+    setDrillingMode={setDrillingMode} selectedLoadedJarKey="jar" />);
+  expect(screen.getByLabelText('Controlling WOB')).toHaveTextContent('25.50 klbf');
+});
+
+test('neutral-point SVG label is compact, single-line and has no vertical connector; invalid results suppress it', () => {
+  const loadedData = buildLoadedBhaPresentation({ bha, survey: null, drillingMode: 'slide', surfaceReferenceMdFt: 0 });
+  const jarIndex = loadedData.positions.components.findIndex(component => component.category === 'JAR');
+  const components = loadedData.positions.components.map((component, index) => ({
+    startFromBit: component.startFromBit, endFromBit: component.endFromBit,
+    bottomAxialForce: index === jarIndex ? 100 : 200, topAxialForce: index === jarIndex ? -100 : 200
+  }));
+  const jar = loadedData.positions.components[jarIndex];
+  const crossing = (jar.startFromBit + jar.endFromBit) / 2;
+  const data = { ...loadedData, straight: { drillingMode: 'slide', neutralPointFt: crossing,
+    loadProfile: { valid: true, bitAxialForce: 100, components } } };
+  const { rerender, container } = render(<StringFrame bha={bha} loadedData={data} drillingMode="slide" selectedLoadedJarKey="jar" />);
+  const svg = screen.getByTestId('loaded-bha-assembly');
+  const line = screen.getByTestId('neutral-point-straight-line');
+  const marker = line.closest('g');
+  const label = screen.getByTestId('neutral-point-straight-label');
+  expect(label).toHaveTextContent(/^NP (?:[−+][\d,.]+|0\.00)ft$/);
+  expect(label).not.toHaveTextContent(/above jar|below jar/);
+  expect(label.getAttribute('dominant-baseline')).toBe('middle');
+  expect(Number(label.getAttribute('x')) + Number(label.getAttribute('textLength'))).toBeLessThanOrEqual(166);
+  expect(Number(line.getAttribute('y1'))).toBeGreaterThanOrEqual(0);
+  expect(Number(line.getAttribute('y1'))).toBeLessThanOrEqual(Number(svg.getAttribute('viewBox').split(' ')[3]));
+  expect(marker.querySelectorAll('line')).toHaveLength(1);
+  expect(marker.querySelectorAll('path')).toHaveLength(0);
+  expect(container.querySelector('.stringFrameNeutralCallout')).not.toBeInTheDocument();
+  const invalid = { ...data, straight: { drillingMode: 'slide', neutralPointFt: null,
+    loadProfile: { valid: false, error: 'WOB unavailable.', components: [] } } };
+  rerender(<StringFrame bha={bha} loadedData={invalid} drillingMode="slide" selectedLoadedJarKey="jar" />);
+  expect(screen.queryByTestId('neutral-point-straight-line')).not.toBeInTheDocument();
+  expect(screen.queryByTestId('neutral-point-straight-label')).not.toBeInTheDocument();
+  expect(screen.getByTestId('neutral-point-status-straight')).toHaveTextContent('WOB unavailable.');
+});
+
+test('directional survey mode disables Reference and suppresses unsupported survey NP markers', () => {
+  const surveyBha = { ...bha, trajectoryMode: 'directional' };
+  const loadedData = buildLoadedBhaPresentation({ bha: surveyBha, survey: null, drillingMode: 'reference', surfaceReferenceMdFt: 0 });
+  const view = render(<StringFrame bha={surveyBha} loadedData={loadedData} drillingMode="reference"
+    setDrillingMode={jest.fn()} selectedLoadedJarKey="jar" />);
+  expect(screen.getByRole('option', { name: 'Reference (unavailable for survey)' })).toBeDisabled();
+  expect(screen.getByRole('status')).toHaveTextContent('Survey neutral points require covered Slide or Rotate results.');
+  expect(view.container.querySelectorAll('.stringFrameNeutralGuide')).toHaveLength(0);
+  expect(screen.getByTestId('neutral-point-status-survey')).toHaveTextContent(/Survey Reference is unavailable/);
 });
 
 test('loaded bit renders one compact OD-width body joined directly to its cutting profile', () => {

@@ -4,7 +4,7 @@ import React from 'react';
 export default function V6ContinuousAssemblyDrawing({
   segments, markers = [], sectionGuides = [], discontinuities = [], slimStabilizerBlades = false,
   showHeadFittings = false, showBitTip = false, ariaLabel, testId,
-  viewHeight = 208, yTop = 7, yBottom = 189, bitTipY = yBottom, bitTipWidth,
+  viewWidth = 61, viewHeight = 208, yTop = 7, yBottom = 189, bitTipY = yBottom, bitTipWidth,
   compactBitGeometry = false
 }) {
   const rail = 31;
@@ -20,7 +20,7 @@ export default function V6ContinuousAssemblyDrawing({
     ? finalLowerBhaSegment?.y2 ?? compactBitSegment.y1 +
       (compactBitSegment.y2 - compactBitSegment.y1 - (compactBitBodyHeight + compactBitCuttingHeight)) / 2
     : yBottom;
-  return <svg className="jarV6SchematicSvg" viewBox={`0 0 61 ${viewHeight}`} preserveAspectRatio="xMidYMid meet"
+  return <svg className="jarV6SchematicSvg" viewBox={`0 0 ${viewWidth} ${viewHeight}`} preserveAspectRatio="xMidYMid meet"
     role="img" aria-label={ariaLabel} data-testid={testId}>
     <line x1={rail} y1={yTop} x2={rail} y2={compactBitSegment ? compactBitBodyY : yBottom} className="jarV6Rail" />
     {showHeadFittings && <>
@@ -60,8 +60,14 @@ export default function V6ContinuousAssemblyDrawing({
       ? <line key={guide.key} x1="43" y1={guide.y} x2="61" y2={guide.y} className="jarV6SectionGuide" aria-hidden="true" />
       : <path key={guide.key} d={`M43 ${guide.fromY} L61 ${guide.y}`} className="jarV6SectionGuide" aria-hidden="true" data-section-guide={guide.section} data-from-y={guide.fromY} data-to-y={guide.y} />)}
     {markers.map(marker => <g key={marker.key}>
-      {marker.guide && <line x1={marker.x - marker.guide / 2} y1={marker.y} x2={marker.x + marker.guide / 2} y2={marker.y} className={marker.guideClass} />}
-      <circle cx={marker.x} cy={marker.y} r={marker.radius} className={marker.className} data-testid={marker.testId} />
+      {marker.title && <title>{marker.title}</title>}
+      {marker.guide && <line x1={marker.fullWidth ? .5 : marker.x - marker.guide / 2} y1={marker.y}
+        x2={marker.fullWidth ? 60.5 : marker.x + marker.guide / 2} y2={marker.y} className={marker.guideClass}
+        data-mode={marker.mode} data-testid={marker.testId ? `${marker.testId}-line` : undefined} />}
+      {marker.label && <text x="64" y={marker.y} dominantBaseline="middle" className="stringFrameNeutralText"
+        textLength={Math.min(99, marker.label.length * 4.6)} lengthAdjust="spacingAndGlyphs"
+        data-testid={marker.testId ? `${marker.testId}-label` : undefined}>{marker.label}</text>}
+      {!marker.lineOnly && <circle cx={marker.x} cy={marker.y} r={marker.radius} className={marker.className} data-testid={marker.testId} />}
     </g>)}
     {showBitTip && !compactBitGeometry && <path d={bitTipWidth
       ? `M${rail - bitTipWidth / 2} ${bitTipY - .5} L${rail + bitTipWidth / 2} ${bitTipY - .5} L${rail} ${bitTipY + 7} Z`

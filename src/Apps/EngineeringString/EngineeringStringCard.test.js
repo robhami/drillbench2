@@ -53,13 +53,12 @@ test('neutral point direction relative to the jar follows actual positions, incl
     expect(neutralPointRelativeToJar(null, 175)).toBeNull();
 });
 
-test('specific analysis WOB and drilling mode stay editable in Engineering String, independently of the sweep range', () => {
+test('Engineering String keeps shared mode control but no editable WOB field', () => {
     const updateBha = jest.fn(), setDrillingMode = jest.fn();
     render(<EngineeringStringCard bha={{ ...bha, wob: '22', wobAnalysis: { minWobKlbf: '10', maxWobKlbf: '35' } }}
         updateBha={updateBha} setDrillingMode={setDrillingMode} drillingMode="rotate" analysisBitMdFt={1000} summaryOnly />);
-    expect(screen.getByLabelText('Analysis WOB (klbf)')).toHaveValue(22);
-    fireEvent.change(screen.getByLabelText('Analysis WOB (klbf)'), { target: { value: '24' } });
-    expect(updateBha).toHaveBeenCalledWith({ wob: '24' });
+    expect(screen.queryByLabelText('Analysis WOB (klbf)')).not.toBeInTheDocument();
+    expect(updateBha).not.toHaveBeenCalled();
     fireEvent.change(screen.getByLabelText('Drilling Mode'), { target: { value: 'slide' } });
     expect(setDrillingMode).toHaveBeenCalledWith('slide');
 });

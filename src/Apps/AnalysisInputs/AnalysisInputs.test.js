@@ -9,15 +9,19 @@ const legacyBha = {
   neutralPointAnalysis: { minWob: '12', maxWob: '30', samples: '7' }
 };
 
-test('Parameter Entry exposes only the five requested controls in a compact grid', () => {
+test('Parameter Entry groups shared drilling conditions separately from the WOB comparison range', () => {
   render(<AnalysisInputs bha={legacyBha} updateBha={jest.fn()} />);
-  ['Mud Weight (ppg)', 'Low WOB (klbf)', 'High WOB (klbf)', 'RPM', 'ROP (ft/hr)']
+  ['Controlling WOB (klbf)', 'Mud Weight (ppg)', 'RPM', 'ROP (ft/hr)', 'Baseline friction coefficient (0–1)', 'Low WOB (klbf)', 'High WOB (klbf)']
     .forEach(label => expect(screen.getByLabelText(label)).toBeInTheDocument());
+  expect(screen.getByRole('region', { name: 'Drilling Conditions' })).toBeInTheDocument();
+  expect(screen.getByRole('region', { name: 'WOB Comparison' })).toBeInTheDocument();
+  expect(screen.getByLabelText('Controlling WOB (klbf)')).toHaveValue(22);
+  expect(screen.getByLabelText('Baseline friction coefficient (0–1)')).toHaveValue(0.25);
   expect(screen.getByLabelText('Low WOB (klbf)')).toHaveValue(12);
   expect(screen.getByLabelText('High WOB (klbf)')).toHaveValue(30);
-  expect(screen.getByLabelText('Mud Weight (ppg)').closest('.parameterEntryGrid')).toBeInTheDocument();
+  expect(screen.getByLabelText('Mud Weight (ppg)').closest('.parameterEntrySection')).toHaveTextContent('Drilling Conditions');
   ['Inclination', 'Current WOB', 'BHA Name', 'Bit Depth', 'Hole Size',
-    'Drilling Mode', 'Friction coefficient', 'WOB Samples', 'WOB Analysis', 'Trajectory input']
+    'Drilling Mode', 'Additional friction coefficients', 'WOB Samples', 'WOB Analysis', 'Trajectory input']
     .forEach(label => expect(screen.queryByText(new RegExp(label, 'i'))).not.toBeInTheDocument());
   expect(screen.getByRole('group', { name: 'Well Trajectory' })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Vertical' })).toHaveAttribute('aria-pressed', 'true');
@@ -54,11 +58,38 @@ test('Low and High WOB update the shared sweep range and preserve sample count a
   fireEvent.change(screen.getByLabelText('High WOB (klbf)'), { target: { value: '32' } });
   expect(patches).toHaveBeenNthCalledWith(1, { wobAnalysis: { minWobKlbf: '14', maxWobKlbf: '30', samples: '7', source: 'user' } });
   expect(patches).toHaveBeenNthCalledWith(2, { wobAnalysis: { minWobKlbf: '14', maxWobKlbf: '32', samples: '7', source: 'user' } });
+  expect(patches.mock.calls.every(([patch]) => !Object.prototype.hasOwnProperty.call(patch, 'wob'))).toBe(true);
   expect(wobAnalysisInputs({ ...legacyBha, wobAnalysis: { minWobKlbf: '14', maxWobKlbf: '32', samples: '7', source: 'user' } }))
     .toEqual({ minWobKlbf: '14', maxWobKlbf: '32', samples: '7', source: 'user' });
   expect(screen.getByLabelText('Low WOB (klbf)')).toHaveValue(14);
   expect(screen.getByLabelText('High WOB (klbf)')).toHaveValue(32);
-  expect(screen.queryByLabelText('Analysis WOB (klbf)')).not.toBeInTheDocument();
+});
+
+test('controlling WOB and baseline friction update only their root fields without coercing blanks or invalid values', () => {
+  const updateBha = jest.fn();
+  function Harness() {
+    const [bha, setBha] = React.useState({ ...legacyBha, wob: '', frictionCoefficient: '' });
+    return <AnalysisInputs bha={bha} updateBha={patch => { updateBha(patch); setBha(current => ({ ...current, ...patch })); }} />;
+  }
+  render(<Harness />);
+  expect(screen.getByLabelText('Controlling WOB (klbf)')).toHaveValue(null);
+  expect(screen.getByLabelText('Baseline friction coefficient (0–1)')).toHaveValue(null);
+  fireEvent.change(screen.getByLabelText('Controlling WOB (klbf)'), { target: { value: '24.5' } });
+  expect(updateBha).toHaveBeenLastCalledWith({ wob: '24.5' });
+  fireEvent.change(screen.getByLabelText('Baseline friction coefficient (0–1)'), { target: { value: '1.2' } });
+  expect(updateBha).toHaveBeenLastCalledWith({ frictionCoefficient: '1.2' });
+  expect(screen.getByLabelText('Baseline friction coefficient (0–1)')).toHaveValue(1.2);
+  expect(screen.getByRole('alert')).toHaveTextContent('Axial friction coefficient must be between 0 and 1.');
+  fireEvent.change(screen.getByLabelText('Baseline friction coefficient (0–1)'), { target: { value: '' } });
+  expect(updateBha).toHaveBeenLastCalledWith({ frictionCoefficient: '' });
+  expect(screen.getByLabelText('Baseline friction coefficient (0–1)')).toHaveValue(null);
+  expect(screen.getByRole('alert')).toHaveTextContent('Axial friction coefficient must be explicitly supplied between 0 and 1.');
+});
+
+test('baseline friction accepts the existing zero coefficient without a validation warning', () => {
+  render(<AnalysisInputs bha={{ ...legacyBha, frictionCoefficient: 0 }} updateBha={jest.fn()} />);
+  expect(screen.getByLabelText('Baseline friction coefficient (0–1)')).toHaveValue(0);
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });
 
 test('mud weight edits update the shared BHA field while saved BHA fields remain untouched until edited', () => {
